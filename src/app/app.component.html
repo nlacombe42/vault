@@ -1,18 +1,7 @@
 <section class="app">
-	<nav>
-		<md-toolbar color="primary">
-			<button md-button (click)="sideMenu.toggle()">
-				<md-icon>menu</md-icon>
-			</button>
-			Vault
-		</md-toolbar>
-	</nav>
-
+	<toolbar [sideMenu]="sideMenu"></toolbar>
 	<md-sidenav-container>
-		<md-sidenav #sideMenu mode="over" class="sideMenu">
-			test1
-		</md-sidenav>
-
+		<side-menu #sideMenu></side-menu>
 		<main>
 			Main content
 		</main>
