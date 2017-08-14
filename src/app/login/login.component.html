@@ -1,0 +1,22 @@
+<section>
+	<md-card class="login-box">
+		<form>
+			<md-card-title>Login</md-card-title>
+			<md-card-content>
+				<div>
+					<md-input-container class="control-full-width">
+						<input mdInput [(ngModel)]="username" name="username" placeholder="Username"/>
+					</md-input-container>
+				</div>
+				<div>
+					<md-input-container class="control-full-width">
+						<input mdInput type="password" [(ngModel)]="password" name="password" placeholder="Password"/>
+					</md-input-container>
+				</div>
+				<button (click)="login(username, password)" md-raised-button color="primary"
+						class="login-button control-full-width">Login
+				</button>
+			</md-card-content>
+		</form>
+	</md-card>
+</section>
