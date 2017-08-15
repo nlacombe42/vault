@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Router} from "@angular/router";
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {StorageService} from "./storage.service";
+import {Observable} from "rxjs/Observable";
 
 class AuthToken {
 	token: string
@@ -12,19 +12,22 @@ class AuthToken {
 export class AuthService {
 	private readonly authenticateUrl: string = environment.apiBaseUrls.userWs + '/v1/authentication/usernameAndPassword';
 
-	constructor(private router: Router, private http: HttpClient, private storageService: StorageService) {
+	constructor(private http: HttpClient, private storageService: StorageService) {
 	}
 
-	login(username: string, password: string) {
-		this.http.post<AuthToken>(this.authenticateUrl, {
-			username,
-			password
-		}).subscribe(response => {
-			this.storageService.setAuthToken(response.token);
-			this.router.navigate(['/overview']);
-		}, (errorResponse: HttpErrorResponse) => {
-			this.storageService.setAuthToken(null);
-			console.error('Error getting authentication', errorResponse.error);
+	login(username: string, password: string): Observable<boolean> {
+		return new Observable<boolean>((observer) => {
+			this.http.post<AuthToken>(this.authenticateUrl, {
+				username,
+				password
+			}).subscribe(response => {
+				this.storageService.setAuthToken(response.token);
+				observer.next(true);
+				observer.complete();
+			}, (errorResponse: HttpErrorResponse) => {
+				this.storageService.setAuthToken(null);
+				observer.error(errorResponse.error);
+			});
 		});
 	}
 
