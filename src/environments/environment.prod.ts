@@ -1,3 +1,7 @@
 export const environment = {
-	production: true
+	production: true,
+	apiBaseUrls: {
+		userWs: 'https://user-api.nlacombe.net',
+		vaultWs: 'https://vault-api.nlacombe.net'
+	}
 };
