@@ -5,7 +5,7 @@ import {Router} from "@angular/router";
 import {isRestException, RestExceptionErrorCodes} from "../shared/rest-exception.model";
 
 @Component({
-	selector: 'app-login',
+	selector: 'login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss']
 })
@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.checkIfAuthTokenExpired();
 	}
 
 	login(username: string, password: string) {
@@ -36,5 +37,12 @@ export class LoginComponent implements OnInit {
 				this.errorMessage = 'Unknown error.';
 			}
 		});
+	}
+
+	private checkIfAuthTokenExpired() {
+		if (this.authService.isAuthTokenExpired()) {
+			this.errorMessage = "Your session expired.";
+			this.authService.clearAuthToken();
+		}
 	}
 }

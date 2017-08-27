@@ -17,6 +17,9 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./shared/auth-interceptor";
 import {FormsModule} from "@angular/forms";
 import {StorageService} from "./shared/storage.service";
+import {TransactionsService} from "./shared/transactions.service";
+import {LocalDatePipe} from "./shared/localdate.pipe";
+import {AmountComponent} from "./amount/amount.component";
 
 
 @NgModule({
@@ -27,7 +30,9 @@ import {StorageService} from "./shared/storage.service";
 		OverviewComponent,
 		UncategorizedTransactionsComponent,
 		PageNotFoundComponent,
-		LoginComponent
+		LoginComponent,
+		AmountComponent,
+		LocalDatePipe
 	],
 	imports: [
 		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMdModule
@@ -38,7 +43,7 @@ import {StorageService} from "./shared/storage.service";
 			useClass: AuthInterceptor,
 			multi: true
 		},
-		AuthGuard, AuthService, StorageService
+		AuthGuard, AuthService, StorageService, TransactionsService
 	],
 	bootstrap: [VaultComponent]
 })

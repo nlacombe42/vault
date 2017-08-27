@@ -1,3 +1,18 @@
-<p>
-	uncategorized-transactions works!
-</p>
+<section>
+	<md-table #table [dataSource]="dataSource">
+		<ng-container cdkColumnDef="datetime">
+			<md-header-cell *cdkHeaderCellDef>Datetime</md-header-cell>
+			<md-cell *cdkCellDef="let transaction">{{transaction.datetime | localdate}}</md-cell>
+		</ng-container>
+		<ng-container cdkColumnDef="description">
+			<md-header-cell *cdkHeaderCellDef>Description</md-header-cell>
+			<md-cell *cdkCellDef="let transaction" [class.align-left]="true">{{transaction.description}}</md-cell>
+		</ng-container>
+		<ng-container cdkColumnDef="amount">
+			<md-header-cell *cdkHeaderCellDef>Amount</md-header-cell>
+			<md-cell *cdkCellDef="let transaction" [class.align-right]="true"><amount [amount]="transaction.amount"></amount></md-cell>
+		</ng-container>
+		<md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
+		<md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
+	</md-table>
+</section>
