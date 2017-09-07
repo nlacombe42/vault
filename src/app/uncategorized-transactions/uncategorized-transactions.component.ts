@@ -1,12 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {Transaction} from "../shared/transaction.model";
 import {TransactionsService} from "../shared/transactions.service";
-import {DataSource} from "@angular/cdk";
-import {Observable} from "rxjs/Observable";
 import "rxjs/add/operator/toArray";
 import "rxjs/add/operator/do";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import "rxjs/add/operator/take";
+import {MdDialog} from "@angular/material";
+import {SelectCategoryDialog} from "../select-category-dialog/select-category-dialog.component";
+
+class DisplayedTransaction extends Transaction {
+	dateOnly: Date
+}
 
 @Component({
 	selector: 'uncategorized-transactions',
@@ -14,32 +17,44 @@ import "rxjs/add/operator/take";
 	styleUrls: ['./uncategorized-transactions.component.scss']
 })
 export class UncategorizedTransactionsComponent implements OnInit {
+	transactions: Transaction[];
+	displayedTransactions: DisplayedTransaction[];
 
-	displayedColumns = ['datetime', 'description', 'amount'];
-	dataSource: ExampleDataSource;
-	dataChange: BehaviorSubject<Transaction[]> = new BehaviorSubject<Transaction[]>([]);
-
-	constructor(private transactionService: TransactionsService) {
-		this.dataSource = new ExampleDataSource(this.dataChange);
+	constructor(private transactionService: TransactionsService, private selectCategoryDialog: MdDialog) {
+		this.transactions = [];
+		this.displayedTransactions = [];
 	}
 
 	ngOnInit() {
-		this.transactionService.getUncategorizedTransactions().take(25).toArray()
-			.subscribe(transactions => {
-				this.dataChange.next(transactions);
+		this.transactionService.getUncategorizedTransactions()
+			.subscribe(transaction => {
+				this.transactions.push(transaction);
+
+				this.displayedTransactions.push(this.toDisplayedTransaction(transaction));
 			});
 	}
-}
 
-class ExampleDataSource extends DataSource<Transaction> {
-	constructor(private dataChange: BehaviorSubject<Transaction[]>) {
-		super();
+	openSelectCategoryDialog() {
+		let dialogRef = this.selectCategoryDialog.open(SelectCategoryDialog, {
+			width: '250px'
+		});
+
+		dialogRef.afterClosed().subscribe(result => {
+			console.log('The dialog was closed. result:', result);
+		});
 	}
 
-	connect(): Observable<Transaction[]> {
-		return this.dataChange;
-	}
+	private toDisplayedTransaction(transaction: Transaction): DisplayedTransaction {
+		let displayedTransaction = new DisplayedTransaction();
 
-	disconnect() {
+		displayedTransaction.transactionId = transaction.transactionId;
+		displayedTransaction.accountId = transaction.accountId;
+		displayedTransaction.categoryId = transaction.categoryId;
+		displayedTransaction.datetime = transaction.datetime;
+		displayedTransaction.description = transaction.description;
+		displayedTransaction.amount = transaction.amount;
+		displayedTransaction.dateOnly = new Date(transaction.datetime.toDateString());
+
+		return displayedTransaction;
 	}
 }

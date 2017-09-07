@@ -5,7 +5,6 @@ import {VaultComponent} from './vault.component';
 import {ToolbarComponent} from './toolbar/toolbar.component';
 import {SideMenuComponent} from './side-menu/side-menu.component';
 import {OverviewComponent} from './overview/overview.component';
-import {UncategorizedTransactionsComponent} from './uncategorized-transactions/uncategorized-transactions.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {VaultRoutingModule} from "./shared/vault-routing.module";
 import {LoginComponent} from './login/login.component';
@@ -20,6 +19,10 @@ import {StorageService} from "./shared/storage.service";
 import {TransactionsService} from "./shared/transactions.service";
 import {LocalDatePipe} from "./shared/localdate.pipe";
 import {AmountComponent} from "./amount/amount.component";
+import {CategoriesService} from "./shared/categories.service";
+import {GroupByPipe} from "./shared/group-by.pipe";
+import {UncategorizedTransactionsComponent} from "./uncategorized-transactions/uncategorized-transactions.component";
+import {SelectCategoryDialog} from "./select-category-dialog/select-category-dialog.component";
 
 
 @NgModule({
@@ -32,7 +35,12 @@ import {AmountComponent} from "./amount/amount.component";
 		PageNotFoundComponent,
 		LoginComponent,
 		AmountComponent,
-		LocalDatePipe
+		SelectCategoryDialog,
+		LocalDatePipe,
+		GroupByPipe
+	],
+	entryComponents: [
+		SelectCategoryDialog
 	],
 	imports: [
 		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMdModule
@@ -43,7 +51,7 @@ import {AmountComponent} from "./amount/amount.component";
 			useClass: AuthInterceptor,
 			multi: true
 		},
-		AuthGuard, AuthService, StorageService, TransactionsService
+		AuthGuard, AuthService, StorageService, TransactionsService, CategoriesService
 	],
 	bootstrap: [VaultComponent]
 })

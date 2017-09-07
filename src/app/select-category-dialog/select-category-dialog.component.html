@@ -1,0 +1,10 @@
+<section>
+	<h3 md-dialog-title>Select a Category</h3>
+	<md-dialog-content>
+		<md-select placeholder="Category" class="align-right">
+			<md-option *ngFor="let category of categories" [value]="category.categoryId">
+				{{category.name}}
+			</md-option>
+		</md-select>
+	</md-dialog-content>
+</section>

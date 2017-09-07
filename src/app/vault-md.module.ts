@@ -1,9 +1,26 @@
 import {NgModule} from '@angular/core';
-import {MdButtonModule, MdCardModule, MdIconModule, MdInputModule, MdSidenavModule, MdTableModule, MdToolbarModule} from "@angular/material";
-import {CdkTableModule} from "@angular/cdk";
+import {
+	MdButtonModule,
+	MdCardModule,
+	MdDialogModule,
+	MdIconModule,
+	MdInputModule,
+	MdListModule,
+	MdSelectModule,
+	MdSidenavModule,
+	MdToolbarModule
+} from "@angular/material";
 
 const mdImports = [
-	MdToolbarModule, MdButtonModule, MdIconModule, MdSidenavModule, MdInputModule, MdCardModule, MdTableModule, CdkTableModule
+	MdToolbarModule,
+	MdButtonModule,
+	MdIconModule,
+	MdSidenavModule,
+	MdInputModule,
+	MdCardModule,
+	MdListModule,
+	MdSelectModule,
+	MdDialogModule
 ];
 
 @NgModule({
