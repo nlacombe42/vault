@@ -4,8 +4,9 @@ import {TransactionsService} from "../shared/transactions.service";
 import "rxjs/add/operator/toArray";
 import "rxjs/add/operator/do";
 import "rxjs/add/operator/take";
-import {MdDialog} from "@angular/material";
-import {SelectCategoryDialog} from "../select-category-dialog/select-category-dialog.component";
+import {Category} from "../shared/category.model";
+import {CategoriesService} from "../shared/categories.service";
+import {ArrayUtils, Grouping} from "../shared/array.util";
 
 class DisplayedTransaction extends Transaction {
 	dateOnly: Date
@@ -17,31 +18,28 @@ class DisplayedTransaction extends Transaction {
 	styleUrls: ['./uncategorized-transactions.component.scss']
 })
 export class UncategorizedTransactionsComponent implements OnInit {
-	transactions: Transaction[];
-	displayedTransactions: DisplayedTransaction[];
 
-	constructor(private transactionService: TransactionsService, private selectCategoryDialog: MdDialog) {
-		this.transactions = [];
-		this.displayedTransactions = [];
+	categories: Category[];
+	transactionsByDate: Grouping<Date, DisplayedTransaction>[];
+
+	constructor(private transactionService: TransactionsService, private categoriesService: CategoriesService) {
+		this.categories = [];
+		this.transactionsByDate = [];
 	}
 
 	ngOnInit() {
+		this.categoriesService.getUserCategories()
+			.subscribe(category => this.categories.push(category));
+
+		let displayedTransactions: DisplayedTransaction[] = [];
+
 		this.transactionService.getUncategorizedTransactions()
 			.subscribe(transaction => {
-				this.transactions.push(transaction);
-
-				this.displayedTransactions.push(this.toDisplayedTransaction(transaction));
+				displayedTransactions.push(this.toDisplayedTransaction(transaction));
+			}, undefined, () => {
+				this.transactionsByDate = ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
+					displayedTransaction => displayedTransaction.dateOnly.getTime());
 			});
-	}
-
-	openSelectCategoryDialog() {
-		let dialogRef = this.selectCategoryDialog.open(SelectCategoryDialog, {
-			width: '250px'
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-			console.log('The dialog was closed. result:', result);
-		});
 	}
 
 	private toDisplayedTransaction(transaction: Transaction): DisplayedTransaction {

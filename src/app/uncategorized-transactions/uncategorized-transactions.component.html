@@ -1,16 +1,19 @@
 <section>
 	<h2>Uncategorized Transactions</h2>
 	<md-list>
-		<ng-template ngFor [ngForOf]="displayedTransactions | groupBy:'dateOnly'" let-transactionsForDate>
-			<h3 md-subheader>{{transactionsForDate.key | localdate}}</h3>
+		<ng-template ngFor [ngForOf]="transactionsByDate" let-transactionByDate>
+			<h3 md-subheader>{{transactionByDate.key | localdate}}</h3>
 
-			<md-list-item *ngFor="let transaction of transactionsForDate.value"
-						  (click)="openSelectCategoryDialog()"
-						  class="list-box">
+			<md-list-item *ngFor="let transaction of transactionByDate.values" class="list-box">
 				<p md-line class="align-left">{{transaction.description}}</p>
 				<p md-line class="align-left">
 					<amount [amount]="transaction.amount"></amount>
 				</p>
+				<md-select placeholder="Categories">
+					<md-option *ngFor="let category of categories" [value]="category.categoryId">
+						{{category.name}}
+					</md-option>
+				</md-select>
 			</md-list-item>
 		</ng-template>
 	</md-list>

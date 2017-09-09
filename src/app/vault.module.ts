@@ -20,10 +20,7 @@ import {TransactionsService} from "./shared/transactions.service";
 import {LocalDatePipe} from "./shared/localdate.pipe";
 import {AmountComponent} from "./amount/amount.component";
 import {CategoriesService} from "./shared/categories.service";
-import {GroupByPipe} from "./shared/group-by.pipe";
 import {UncategorizedTransactionsComponent} from "./uncategorized-transactions/uncategorized-transactions.component";
-import {SelectCategoryDialog} from "./select-category-dialog/select-category-dialog.component";
-
 
 @NgModule({
 	declarations: [
@@ -35,12 +32,7 @@ import {SelectCategoryDialog} from "./select-category-dialog/select-category-dia
 		PageNotFoundComponent,
 		LoginComponent,
 		AmountComponent,
-		SelectCategoryDialog,
-		LocalDatePipe,
-		GroupByPipe
-	],
-	entryComponents: [
-		SelectCategoryDialog
+		LocalDatePipe
 	],
 	imports: [
 		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMdModule

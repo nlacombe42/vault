@@ -25,6 +25,8 @@ export class TransactionsService {
 					observer.next(transaction);
 				}, (errorResponse: HttpErrorResponse) => {
 					observer.error(errorResponse.error);
+				}, () => {
+					observer.complete();
 				});
 		});
 	}
