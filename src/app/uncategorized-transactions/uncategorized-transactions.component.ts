@@ -9,7 +9,7 @@ import {CategoriesService} from "../shared/categories.service";
 import {ArrayUtils, Grouping} from "../shared/array.util";
 
 class DisplayedTransaction extends Transaction {
-	dateOnly: Date
+	dateOnly: Date;
 }
 
 @Component({
@@ -31,14 +31,29 @@ export class UncategorizedTransactionsComponent implements OnInit {
 		this.categoriesService.getUserCategories()
 			.subscribe(category => this.categories.push(category));
 
+		this.refreshDisplayedTransactions();
+	}
+
+	categorizeTransaction(transaction: Transaction, categoryId: number) {
+		this.transactionService.categorize(transaction.transactionId, categoryId)
+			.subscribe(undefined, undefined, () => {
+				this.refreshDisplayedTransactions();
+			});
+	}
+
+	private refreshDisplayedTransactions() {
 		let displayedTransactions: DisplayedTransaction[] = [];
 
 		this.transactionService.getUncategorizedTransactions()
 			.subscribe(transaction => {
 				displayedTransactions.push(this.toDisplayedTransaction(transaction));
 			}, undefined, () => {
-				this.transactionsByDate = ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
+				let transactionsByDate = ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
 					displayedTransaction => displayedTransaction.dateOnly.getTime());
+
+				this.transactionsByDate = transactionsByDate.sort(function (grouping1, grouping2) {
+					return grouping1.key - grouping2.key;
+				});
 			});
 	}
 

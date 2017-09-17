@@ -9,7 +9,7 @@
 				<p md-line class="align-left">
 					<amount [amount]="transaction.amount"></amount>
 				</p>
-				<md-select placeholder="Categories">
+				<md-select placeholder="Categories" (change)="categorizeTransaction(transaction, $event.value)">
 					<md-option *ngFor="let category of categories" [value]="category.categoryId">
 						{{category.name}}
 					</md-option>

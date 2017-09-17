@@ -1,0 +1,16 @@
+<section>
+	<h2>Transactions</h2>
+	<md-list>
+		<ng-template ngFor [ngForOf]="transactionsByDate" let-transactionByDate>
+			<h3 md-subheader>{{transactionByDate.key | localdate}}</h3>
+
+			<md-list-item *ngFor="let transaction of transactionByDate.values"
+						  infiniteScroll [infiniteScrollDistance]="1" (scrolled)="fetchMoreTransactions()"
+						  class="list-box">
+				<p md-line class="align-left">{{transaction.description}}</p>
+				<p md-line class="align-left">{{transaction.categoryName}}</p>
+				<amount [amount]="transaction.amount"></amount>
+			</md-list-item>
+		</ng-template>
+	</md-list>
+</section>

@@ -21,6 +21,8 @@ import {LocalDatePipe} from "./shared/localdate.pipe";
 import {AmountComponent} from "./amount/amount.component";
 import {CategoriesService} from "./shared/categories.service";
 import {UncategorizedTransactionsComponent} from "./uncategorized-transactions/uncategorized-transactions.component";
+import {TransactionsComponent} from "./transactions/transactions.component";
+import {InfiniteScrollModule} from "ngx-infinite-scroll";
 
 @NgModule({
 	declarations: [
@@ -32,10 +34,12 @@ import {UncategorizedTransactionsComponent} from "./uncategorized-transactions/u
 		PageNotFoundComponent,
 		LoginComponent,
 		AmountComponent,
+		TransactionsComponent,
 		LocalDatePipe
 	],
 	imports: [
-		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMdModule
+		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMdModule,
+		InfiniteScrollModule
 	],
 	providers: [
 		{
