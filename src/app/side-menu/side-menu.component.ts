@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MdSidenav} from "@angular/material";
+import {AuthService} from "../shared/auth.service";
 
 @Component({
 	selector: 'side-menu',
@@ -10,7 +11,7 @@ export class SideMenuComponent implements OnInit {
 
 	@ViewChild(MdSidenav) sideNav;
 
-	constructor() {
+	constructor(private authService: AuthService) {
 	}
 
 	ngOnInit() {
@@ -18,5 +19,9 @@ export class SideMenuComponent implements OnInit {
 
 	toggle() {
 		this.sideNav.toggle();
+	}
+
+	logout() {
+		this.authService.logout();
 	}
 }

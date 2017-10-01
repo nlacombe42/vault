@@ -1,4 +1,4 @@
-<section>
+<section class="uncategorized-transactions">
 	<h2>Uncategorized Transactions</h2>
 	<md-list>
 		<ng-template ngFor [ngForOf]="transactionsByDate" let-transactionByDate>
@@ -16,5 +16,8 @@
 				</md-select>
 			</md-list-item>
 		</ng-template>
+		<p *ngIf="transactionsByDate.length === 0">
+			There is no uncategorized transactions.
+		</p>
 	</md-list>
 </section>

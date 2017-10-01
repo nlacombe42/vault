@@ -1,0 +1,26 @@
+.dialog-toolbar {
+	background-color: #fafafa;
+	box-shadow: 1px 2px 1px #b7b7b7;
+}
+
+.dialog-toolbar-title {
+	flex: 1 1 auto;
+	margin: 0 10px;
+}
+
+.dialog-content {
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.dialog-form {
+	min-width: 150px;
+	max-width: 500px;
+	width: 100%;
+	text-align: center;
+}
+
+.dialog-form-element {
+	width: 100%;
+	margin: 10px 0;
+}

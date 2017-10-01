@@ -44,6 +44,11 @@ export class AuthService {
 		});
 	}
 
+	logout() {
+		this.clearAuthToken();
+		this.router.navigate(['/login']);
+	}
+
 	clearAuthToken(): void {
 		this.storageService.clearAuthToken();
 	}

@@ -1,6 +1,6 @@
 <section>
 	<md-card class="login-box">
-		<form>
+		<form #loginForm="ngForm">
 			<md-card-title class="title">Login</md-card-title>
 			<md-card-content>
 				<div>
@@ -16,7 +16,7 @@
 					</md-input-container>
 				</div>
 				<md-error [hidden]="errorMessage != ''">{{errorMessage}}</md-error>
-				<button (click)="login(username, password)"
+				<button (click)="login(username, password)" [disabled]="!loginForm.valid"
 						md-raised-button color="primary" class="login-button control-full-width">
 					Login
 				</button>

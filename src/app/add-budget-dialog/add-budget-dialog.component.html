@@ -1,0 +1,24 @@
+<section>
+	<md-toolbar class="dialog-toolbar">
+		<button md-icon-button (click)="closeDialog()">
+			<md-icon>close</md-icon>
+		</button>
+		<span class="dialog-toolbar-title">Add Budget</span>
+		<button (click)="addBudget()" [disabled]="!addBudgetForm.valid" md-button color="primary">
+			<md-icon>add_box</md-icon>
+		</button>
+	</md-toolbar>
+	<form #addBudgetForm="ngForm" class="dialog-content dialog-form">
+		<div class="dialog-form-element">
+			For the month of {{month | localmonth}}
+		</div>
+		<md-select [(ngModel)]="category" name="category" placeholder="Category" class="dialog-form-element" required>
+			<md-option *ngFor="let category of categories" [value]="category">
+				{{category.name}}
+			</md-option>
+		</md-select>
+		<md-form-field class="dialog-form-element">
+			<input [(ngModel)]="amount" mdInput name="amount" type="number" placeholder="Amount" required>
+		</md-form-field>
+	</form>
+</section>

@@ -23,6 +23,11 @@ import {CategoriesService} from "./shared/categories.service";
 import {UncategorizedTransactionsComponent} from "./uncategorized-transactions/uncategorized-transactions.component";
 import {TransactionsComponent} from "./transactions/transactions.component";
 import {InfiniteScrollModule} from "ngx-infinite-scroll";
+import {BudgetsComponent} from "./budgets/budgets.component";
+import {MonthPickerComponent} from "./month-picker/month-picker.component";
+import {LocalMonthPipe} from "./shared/localmonth.pipe";
+import {AddBudgetDialogComponent} from "./add-budget-dialog/add-budget-dialog.component";
+import {BudgetsService} from "./budgets/budgets.service";
 
 @NgModule({
 	declarations: [
@@ -35,11 +40,18 @@ import {InfiniteScrollModule} from "ngx-infinite-scroll";
 		LoginComponent,
 		AmountComponent,
 		TransactionsComponent,
-		LocalDatePipe
+		BudgetsComponent,
+		MonthPickerComponent,
+		AddBudgetDialogComponent,
+		LocalDatePipe,
+		LocalMonthPipe
 	],
 	imports: [
 		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMdModule,
 		InfiniteScrollModule
+	],
+	entryComponents: [
+		AddBudgetDialogComponent
 	],
 	providers: [
 		{
@@ -47,7 +59,7 @@ import {InfiniteScrollModule} from "ngx-infinite-scroll";
 			useClass: AuthInterceptor,
 			multi: true
 		},
-		AuthGuard, AuthService, StorageService, TransactionsService, CategoriesService
+		AuthGuard, AuthService, StorageService, TransactionsService, CategoriesService, BudgetsService
 	],
 	bootstrap: [VaultComponent]
 })

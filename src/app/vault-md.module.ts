@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {
 	MdButtonModule,
 	MdCardModule,
+	MdDialogModule,
 	MdIconModule,
 	MdInputModule,
 	MdListModule,
@@ -18,7 +19,8 @@ const mdImports = [
 	MdInputModule,
 	MdCardModule,
 	MdListModule,
-	MdSelectModule
+	MdSelectModule,
+	MdDialogModule
 ];
 
 @NgModule({
