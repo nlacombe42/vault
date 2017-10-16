@@ -4,14 +4,16 @@ import {TransactionsService} from "../shared/transactions.service";
 import "rxjs/add/operator/toArray";
 import "rxjs/add/operator/do";
 import "rxjs/add/operator/take";
+import "rxjs/add/observable/merge";
 import {ArrayUtils, Grouping} from "../shared/array.util";
 import {SearchTransactionsRequest} from "../shared/search-transactions-request.model";
-import {Category} from "../shared/category.model";
 import {CategoriesService} from "../shared/categories.service";
+import {Observable} from "rxjs/Observable";
+import {Category} from "../shared/category.model";
 
 class DisplayedTransaction extends Transaction {
 	dateOnly: Date;
-	categoryName: string;
+	category: Category
 }
 
 @Component({
@@ -25,24 +27,15 @@ export class TransactionsComponent implements OnInit {
 	private displayedTransactions: DisplayedTransaction[];
 	private pageNumber: number;
 	private readonly pageSize: number = 25;
-	private categories: Map<number, Category>;
 
 	constructor(private transactionService: TransactionsService, private categoriesService: CategoriesService) {
 		this.transactionsByDate = [];
 		this.displayedTransactions = [];
 		this.pageNumber = 0;
-		this.categories = new Map();
 	}
 
 	ngOnInit() {
-		this.categoriesService.getUserCategories()
-			.subscribe(category => {
-				this.categories.set(category.categoryId, category);
-			}, error => {
-				console.error('Error getting categories', error);
-			}, () => {
-				this.fetchMoreTransactions();
-			});
+		this.fetchMoreTransactions();
 	}
 
 	fetchMoreTransactions() {
@@ -61,33 +54,45 @@ export class TransactionsComponent implements OnInit {
 				pageTransactions = paginationResponse.elements;
 				this.pageNumber++;
 			}, undefined, () => {
-				let pageDisplayedTransactions = pageTransactions.map(transaction => this.toDisplayedTransaction(transaction));
-				this.displayedTransactions = this.displayedTransactions.concat(pageDisplayedTransactions);
-
-				this.transactionsByDate =
-					ArrayUtils.groupByField(this.displayedTransactions, 'dateOnly',
-						displayedTransaction => displayedTransaction.dateOnly.getTime());
+				this.toDisplayedTransactions(pageTransactions)
+					.subscribe(displayedTransaction => this.displayedTransactions.push(displayedTransaction),
+						undefined,
+						() => {
+							this.transactionsByDate =
+								ArrayUtils.groupByField(this.displayedTransactions, 'dateOnly',
+									displayedTransaction => displayedTransaction.dateOnly.getTime());
+						});
 			});
 	}
 
-	private toDisplayedTransaction(transaction: Transaction): DisplayedTransaction {
-		let displayedTransaction = new DisplayedTransaction();
+	private toDisplayedTransactions(transactions: Transaction[]): Observable<DisplayedTransaction> {
+		let conversionObservables: Observable<DisplayedTransaction>[] = [];
 
-		displayedTransaction.transactionId = transaction.transactionId;
-		displayedTransaction.accountId = transaction.accountId;
-		displayedTransaction.categoryId = transaction.categoryId;
-		displayedTransaction.categoryName = this.getCategoryName(transaction);
-		displayedTransaction.datetime = transaction.datetime;
-		displayedTransaction.description = transaction.description;
-		displayedTransaction.amount = transaction.amount;
-		displayedTransaction.dateOnly = new Date(transaction.datetime.toDateString());
+		transactions.forEach(transaction => {
+			conversionObservables.push(this.toDisplayedTransaction(transaction));
+		});
 
-		return displayedTransaction;
+		return Observable.merge(...conversionObservables);
 	}
 
-	private getCategoryName(transaction: Transaction): string {
-		let category = this.categories.get(transaction.categoryId);
+	private toDisplayedTransaction(transaction: Transaction): Observable<DisplayedTransaction> {
+		return new Observable<DisplayedTransaction>(observer => {
+			this.categoriesService.getCategory(transaction.categoryId)
+				.subscribe(category => {
+					let displayedTransaction: DisplayedTransaction = {
+						transactionId: transaction.transactionId,
+						accountId: transaction.accountId,
+						categoryId: transaction.categoryId,
+						category: category,
+						datetime: transaction.datetime,
+						description: transaction.description,
+						amount: transaction.amount,
+						dateOnly: new Date(transaction.datetime.toDateString())
+					};
 
-		return category === undefined ? undefined : category.name;
+					observer.next(displayedTransaction);
+					observer.complete();
+				});
+		});
 	}
 }

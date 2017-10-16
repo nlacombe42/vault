@@ -8,7 +8,7 @@
 						  infiniteScroll [infiniteScrollDistance]="1" (scrolled)="fetchMoreTransactions()"
 						  class="list-box">
 				<p md-line class="align-left">{{transaction.description}}</p>
-				<p md-line class="align-left">{{transaction.categoryName}}</p>
+				<p md-line class="align-left">{{transaction.category.name}}</p>
 				<amount [amount]="transaction.amount"></amount>
 			</md-list-item>
 		</ng-template>

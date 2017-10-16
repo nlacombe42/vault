@@ -1,6 +1,12 @@
 <section>
 	<h1>Budgets</h1>
 	<month-picker [(month)]="monthDisplayed"></month-picker>
+	<md-list>
+		<md-list-item *ngFor="let budget of displayedBudgets">
+			<p md-line class="align-left">{{budget.category.name}}</p>
+			<p class="align-left">{{budget.currentAmount}}/{{budget.plannedMaxAmount}}</p>
+		</md-list-item>
+	</md-list>
 	<button md-fab (click)="showAddBudgetDialog()" class="main-fab">
 		<md-icon>add</md-icon>
 	</button>

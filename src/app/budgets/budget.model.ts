@@ -3,5 +3,6 @@ export class Budget {
 	categoryId: number;
 	startDate: Date;
 	endDate: Date;
-	amount: number;
+	plannedMaxAmount: number;
+	currentAmount: number;
 }

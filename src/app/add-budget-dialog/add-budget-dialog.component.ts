@@ -4,6 +4,7 @@ import {Category} from "../shared/category.model";
 import {CategoriesService} from "../shared/categories.service";
 import {BudgetsService} from "../budgets/budgets.service";
 import {Budget} from "../budgets/budget.model";
+import {DateUtils} from "../shared/date.util";
 
 export class AddBudgetDialogConfig {
 	month: Date;
@@ -39,9 +40,10 @@ export class AddBudgetDialogComponent implements OnInit {
 		let budget: Budget = {
 			budgetId: undefined,
 			categoryId: this.category.categoryId,
-			startDate: new Date(this.month.getFullYear(), this.month.getMonth(), 1),
-			endDate: new Date(this.month.getFullYear(), this.month.getMonth() + 1, 0),
-			amount: this.amount
+			startDate: DateUtils.getFirstSecondOfMonth(this.month),
+			endDate: DateUtils.getLastSecondOfMonth(this.month),
+			plannedMaxAmount: this.amount,
+			currentAmount: undefined
 		};
 
 		this.budgetService.createBudget(budget).subscribe(() => {
