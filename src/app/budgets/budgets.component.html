@@ -6,7 +6,7 @@
 			<p md-line>
 				<span class="budget-title">{{budget.category.name}}</span>
 				<span class="budget-amount">
-					{{budget.currentAmount |  number:'1.2-2'}}/{{budget.plannedMaxAmount | number:'1.2-2'}}
+					{{ (budget.plannedMaxAmount - budget.currentAmount) |  number:'1.2-2'}} left
 				</span>
 			</p>
 			<budgetProgress md-line [currentAmount]="budget.currentAmount" [plannedMaxAmount]="budget.plannedMaxAmount"></budgetProgress>

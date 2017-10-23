@@ -5,6 +5,7 @@
 		 			 'yellow-progress': budgetPercentComplete >= 75 && budgetPercentComplete <= 100,
 		 			 'red-progress': budgetPercentComplete > 100}"
 	>
+		{{budgetCurrentAmount | number:'1.2-2'}} / {{budgetPlannedMaxAmount | number:'1.2-2'}}
 	</div>
 	<span class="day-marker" [style.left.%]="dayProgressPercent"></span>
 </div>
