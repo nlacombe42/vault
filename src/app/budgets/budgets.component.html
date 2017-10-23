@@ -3,8 +3,13 @@
 	<month-picker [(month)]="month"></month-picker>
 	<md-list class="list">
 		<md-list-item *ngFor="let budget of displayedBudgets" class="list-box">
-			<p md-line class="align-left">{{budget.category.name}}</p>
-			<p class="align-left">{{budget.currentAmount}}/{{budget.plannedMaxAmount}}</p>
+			<p md-line>
+				<span class="budget-title">{{budget.category.name}}</span>
+				<span class="budget-amount">
+					{{budget.currentAmount |  number:'1.2-2'}}/{{budget.plannedMaxAmount | number:'1.2-2'}}
+				</span>
+			</p>
+			<budgetProgress md-line [currentAmount]="budget.currentAmount" [plannedMaxAmount]="budget.plannedMaxAmount"></budgetProgress>
 		</md-list-item>
 	</md-list>
 	<button md-fab (click)="showAddBudgetDialog()" class="main-fab">

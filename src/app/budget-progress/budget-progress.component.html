@@ -1,0 +1,10 @@
+<div class="progress-bar">
+	<div class="budget-progress"
+		 [style.width.%]="budgetPercentComplete"
+		 [ngClass]="{'green-progress': budgetPercentComplete < 75,
+		 			 'yellow-progress': budgetPercentComplete >= 75 && budgetPercentComplete <= 100,
+		 			 'red-progress': budgetPercentComplete > 100}"
+	>
+	</div>
+	<span class="day-marker" [style.left.%]="dayProgressPercent"></span>
+</div>

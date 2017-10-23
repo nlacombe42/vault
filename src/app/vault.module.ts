@@ -28,6 +28,7 @@ import {MonthPickerComponent} from "./month-picker/month-picker.component";
 import {LocalMonthPipe} from "./shared/localmonth.pipe";
 import {AddBudgetDialogComponent} from "./add-budget-dialog/add-budget-dialog.component";
 import {BudgetsService} from "./budgets/budgets.service";
+import {BudgetProgressComponent} from "./budget-progress/budget-progress.component";
 
 @NgModule({
 	declarations: [
@@ -43,6 +44,7 @@ import {BudgetsService} from "./budgets/budgets.service";
 		BudgetsComponent,
 		MonthPickerComponent,
 		AddBudgetDialogComponent,
+		BudgetProgressComponent,
 		LocalDatePipe,
 		LocalMonthPipe
 	],
