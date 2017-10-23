@@ -54,6 +54,8 @@ export class BudgetsComponent implements OnInit {
 		let startDate = DateUtils.getFirstSecondOfMonth(this.monthDisplayed);
 		let endDate = DateUtils.getLastSecondOfMonth(this.monthDisplayed);
 
+		this.displayedBudgets = [];
+
 		this.budgetService.getBudgets(startDate, endDate)
 			.subscribe(budget => this.addToDisplayedBudget(budget),
 				undefined,
@@ -86,5 +88,16 @@ export class BudgetsComponent implements OnInit {
 					observer.complete();
 				});
 		});
+	}
+
+	get month(): Date {
+		return this.monthDisplayed;
+	}
+
+	set month(month: Date) {
+		if (!DateUtils.monthEquals(this.monthDisplayed, month)) {
+			this.monthDisplayed = month;
+			this.loadBudgets();
+		}
 	}
 }
