@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {DateUtils} from "../shared/date.util";
 
 @Component({
 	selector: 'month-picker',
@@ -15,13 +16,27 @@ export class MonthPickerComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	previous() {
+		let previousMonth = this.month;
+		previousMonth.setMonth(this.month.getMonth() - 1);
+
+		this.month = previousMonth;
+	}
+
+	next() {
+		let nextMonth = this.month;
+		nextMonth.setMonth(this.month.getMonth() + 1);
+
+		this.month = nextMonth;
+	}
+
 	@Input()
-	get month() {
+	get month(): Date {
 		return this.monthDate;
 	}
 
-	set month(month) {
-		this.monthDate = month;
+	set month(month: Date) {
+		this.monthDate = DateUtils.getFirstSecondOfMonth(month);
 		this.monthChange.emit(this.monthDate);
 	}
 }
