@@ -46,7 +46,7 @@ export class BudgetsComponent implements OnInit {
 		});
 
 		dialog.afterClosed().subscribe(result => {
-			console.log('The dialog was closed with result: ', result);
+			this.loadBudgets();
 		});
 	}
 
