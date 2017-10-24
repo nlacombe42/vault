@@ -1,9 +1,13 @@
 .progress-bar {
 	position: relative;
 	width: 100%;
+	background-color: #888;
+}
+
+.progress-text {
 	padding: 3px 5px;
 	color: #fff;
-	background-color: #888;
+	text-align: left;
 }
 
 .budget-progress {
