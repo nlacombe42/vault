@@ -6,16 +6,30 @@ import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import {Budget} from "./budget.model";
 import {Observable} from "rxjs/Observable";
+import {DatePipe} from "@angular/common";
+
+class MonthBudgetCreationRequest {
+	categoryId: number;
+	month: string;
+	plannedMaxAmount: number;
+}
 
 @Injectable()
 export class BudgetsService {
 	private readonly vaultbudgetsUrl: string = environment.apiBaseUrls.vaultWs + '/v1/budgets';
+	private readonly vaultMonthBudgetsUrl: string = this.vaultbudgetsUrl + '/month';
 
-	constructor(private http: HttpClient) {
+	constructor(private http: HttpClient, private datePipe: DatePipe) {
 	}
 
-	createBudget(budget: Budget): Observable<void> {
-		return this.http.post<void>(this.vaultbudgetsUrl, budget);
+	createBudget(categoryId: number, month: Date, plannedMaxAmount: number): Observable<void> {
+		let monthBudgetCreationRequest: MonthBudgetCreationRequest = {
+			categoryId,
+			month: this.toIsoYearMonth(month),
+			plannedMaxAmount,
+		};
+
+		return this.http.post<void>(this.vaultMonthBudgetsUrl, monthBudgetCreationRequest);
 	}
 
 	getBudgets(startDate: Date, endDate: Date): Observable<Budget> {
@@ -25,5 +39,9 @@ export class BudgetsService {
 
 		return this.http.get<Budget[]>(this.vaultbudgetsUrl, {params: queryParams})
 			.mergeMap(budgets => Observable.from(budgets));
+	}
+
+	private toIsoYearMonth(date: Date): string {
+		return this.datePipe.transform(date, 'y-MM');
 	}
 }

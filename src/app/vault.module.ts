@@ -29,6 +29,7 @@ import {LocalMonthPipe} from "./shared/localmonth.pipe";
 import {AddBudgetDialogComponent} from "./add-budget-dialog/add-budget-dialog.component";
 import {BudgetsService} from "./budgets/budgets.service";
 import {BudgetProgressComponent} from "./budget-progress/budget-progress.component";
+import {DatePipe} from "@angular/common";
 
 @NgModule({
 	declarations: [
@@ -61,6 +62,7 @@ import {BudgetProgressComponent} from "./budget-progress/budget-progress.compone
 			useClass: AuthInterceptor,
 			multi: true
 		},
+		DatePipe,
 		AuthGuard, AuthService, StorageService, TransactionsService, CategoriesService, BudgetsService
 	],
 	bootstrap: [VaultComponent]

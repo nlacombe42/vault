@@ -3,8 +3,6 @@ import {MD_DIALOG_DATA, MdDialogRef} from "@angular/material";
 import {Category} from "../shared/category.model";
 import {CategoriesService} from "../shared/categories.service";
 import {BudgetsService} from "../budgets/budgets.service";
-import {Budget} from "../budgets/budget.model";
-import {DateUtils} from "../shared/date.util";
 
 export class AddBudgetDialogConfig {
 	month: Date;
@@ -37,20 +35,12 @@ export class AddBudgetDialogComponent implements OnInit {
 	}
 
 	addBudget() {
-		let budget: Budget = {
-			budgetId: undefined,
-			categoryId: this.category.categoryId,
-			startDate: DateUtils.getFirstSecondOfMonth(this.month),
-			endDate: DateUtils.getLastSecondOfMonth(this.month),
-			plannedMaxAmount: this.amount,
-			currentAmount: undefined
-		};
-
-		this.budgetService.createBudget(budget).subscribe(() => {
-			this.dialog.close();
-		}, (errorResponse) => {
-			console.error('Error while creating budget.', errorResponse);
-		});
+		this.budgetService.createBudget(this.category.categoryId, this.month, this.amount)
+			.subscribe(() => {
+				this.dialog.close();
+			}, (errorResponse) => {
+				console.error('Error while creating budget.', errorResponse);
+			});
 	}
 
 	closeDialog(): void {
