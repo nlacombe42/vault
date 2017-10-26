@@ -41,6 +41,14 @@ export class BudgetsService {
 			.mergeMap(budgets => Observable.from(budgets));
 	}
 
+	getMonthEverythingElseBudget(month: Date): Observable<Budget> {
+
+		let monthIsoString = this.toIsoYearMonth(month);
+		let url = this.vaultbudgetsUrl + `/month/${monthIsoString}/everythingElse`;
+
+		return this.http.get<Budget>(url);
+	}
+
 	private toIsoYearMonth(date: Date): string {
 		return this.datePipe.transform(date, 'y-MM');
 	}

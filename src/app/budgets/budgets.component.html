@@ -9,7 +9,22 @@
 					{{ (budget.plannedMaxAmount - budget.currentAmount) |  number:'1.2-2'}} left
 				</span>
 			</p>
-			<budgetProgress md-line [currentAmount]="budget.currentAmount" [plannedMaxAmount]="budget.plannedMaxAmount"></budgetProgress>
+			<budgetProgress md-line [currentAmount]="budget.currentAmount"
+							[plannedMaxAmount]="budget.plannedMaxAmount">
+			</budgetProgress>
+		</md-list-item>
+	</md-list>
+	<md-list class="list">
+		<md-list-item *ngIf="everythingElseBudget" class="list-box">
+			<p md-line>
+				<span class="budget-title">Everything Else</span>
+				<span class="budget-amount">
+					{{ (everythingElseBudget.plannedMaxAmount - everythingElseBudget.currentAmount) |  number:'1.2-2'}} left
+				</span>
+			</p>
+			<budgetProgress md-line [currentAmount]="everythingElseBudget.currentAmount"
+							[plannedMaxAmount]="everythingElseBudget.plannedMaxAmount">
+			</budgetProgress>
 		</md-list-item>
 	</md-list>
 	<button md-fab (click)="showAddBudgetDialog()" class="main-fab">

@@ -20,6 +20,7 @@ class DisplayedBudget extends Budget {
 export class BudgetsComponent implements OnInit {
 	monthDisplayed: Date;
 	displayedBudgets: DisplayedBudget[];
+	everythingElseBudget: DisplayedBudget;
 	categories: Category[];
 
 	constructor(public dialog: MdDialog, private budgetService: BudgetsService, private categoryService: CategoriesService) {
@@ -55,6 +56,7 @@ export class BudgetsComponent implements OnInit {
 		let endDate = DateUtils.getLastSecondOfMonth(this.monthDisplayed);
 
 		this.displayedBudgets = [];
+		this.everythingElseBudget = undefined;
 
 		this.budgetService.getBudgets(startDate, endDate)
 			.subscribe(budget => this.addToDisplayedBudget(budget),
@@ -62,6 +64,13 @@ export class BudgetsComponent implements OnInit {
 				() => {
 					this.displayedBudgets = this.displayedBudgets.splice(0);
 				});
+
+		this.budgetService.getMonthEverythingElseBudget(this.monthDisplayed)
+			.subscribe(budget => {
+				this.toDisplayedBudget(budget).subscribe(displayedBudget => {
+					this.everythingElseBudget = displayedBudget;
+				});
+			});
 	}
 
 	private addToDisplayedBudget(budget: Budget): void {
