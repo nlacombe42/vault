@@ -7,6 +7,7 @@ import {DateUtils} from "../shared/date.util";
 import {CategoriesService} from "../shared/categories.service";
 import {Category} from "../shared/category.model";
 import {Observable} from "rxjs/Observable";
+import {MonthStats} from "./month-stats.model";
 
 class DisplayedBudget extends Budget {
 	category: Category;
@@ -21,6 +22,7 @@ export class BudgetsComponent implements OnInit {
 	monthDisplayed: Date;
 	displayedBudgets: DisplayedBudget[];
 	everythingElseBudget: DisplayedBudget;
+	monthStats: MonthStats;
 	categories: Category[];
 
 	constructor(public dialog: MdDialog, private budgetService: BudgetsService, private categoryService: CategoriesService) {
@@ -30,10 +32,7 @@ export class BudgetsComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.categoryService.getUserCategories()
-			.subscribe(category => this.categories.push(category),
-				undefined,
-				() => this.loadBudgets());
+		this.loadCategoriesAndBudgets();
 	}
 
 	showAddBudgetDialog() {
@@ -51,12 +50,22 @@ export class BudgetsComponent implements OnInit {
 		});
 	}
 
+	private loadCategoriesAndBudgets() {
+		this.categoryService.getUserCategories()
+			.subscribe(category => this.categories.push(category),
+				undefined,
+				() => this.loadBudgets());
+	}
+
 	private loadBudgets(): void {
 		let startDate = DateUtils.getFirstSecondOfMonth(this.monthDisplayed);
 		let endDate = DateUtils.getLastSecondOfMonth(this.monthDisplayed);
 
 		this.displayedBudgets = [];
 		this.everythingElseBudget = undefined;
+
+		this.budgetService.getMonthStats(this.month)
+			.subscribe(monthStats => this.monthStats = monthStats);
 
 		this.budgetService.getBudgets(startDate, endDate)
 			.subscribe(budget => this.addToDisplayedBudget(budget),

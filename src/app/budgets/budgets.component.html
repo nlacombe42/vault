@@ -2,6 +2,19 @@
 	<h1>Budgets</h1>
 	<month-picker [(month)]="month"></month-picker>
 	<md-list class="list">
+		<md-list-item *ngIf="monthStats" class="list-box">
+			<p md-line>
+				<span class="budget-title">Month's Total Budget</span>
+				<span class="budget-amount">
+					{{ (monthStats.totalPlannedMaxAmount - monthStats.currentAmount) |  number:'1.2-2'}} left
+				</span>
+			</p>
+			<budgetProgress md-line [currentAmount]="monthStats.currentAmount"
+							[plannedMaxAmount]="monthStats.totalPlannedMaxAmount">
+			</budgetProgress>
+		</md-list-item>
+	</md-list>
+	<md-list class="list">
 		<md-list-item *ngFor="let budget of displayedBudgets" class="list-box">
 			<p md-line>
 				<span class="budget-title">{{budget.category.name}}</span>

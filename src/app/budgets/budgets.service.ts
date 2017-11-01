@@ -5,6 +5,7 @@ import "rxjs/add/observable/from";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import {Budget} from "./budget.model";
+import {MonthStats} from "./month-stats.model";
 import {Observable} from "rxjs/Observable";
 import {DatePipe} from "@angular/common";
 
@@ -42,11 +43,17 @@ export class BudgetsService {
 	}
 
 	getMonthEverythingElseBudget(month: Date): Observable<Budget> {
-
 		let monthIsoString = this.toIsoYearMonth(month);
 		let url = this.vaultbudgetsUrl + `/month/${monthIsoString}/everythingElse`;
 
 		return this.http.get<Budget>(url);
+	}
+
+	getMonthStats(month: Date): Observable<MonthStats> {
+		let monthIsoString = this.toIsoYearMonth(month);
+		let url = this.vaultbudgetsUrl + `/month/${monthIsoString}/stats`;
+
+		return this.http.get<MonthStats>(url);
 	}
 
 	private toIsoYearMonth(date: Date): string {
