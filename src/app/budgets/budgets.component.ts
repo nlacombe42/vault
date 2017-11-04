@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MdDialog} from "@angular/material";
+import {MatDialog} from "@angular/material";
 import {AddBudgetDialogComponent, AddBudgetDialogConfig} from "../add-budget-dialog/add-budget-dialog.component";
 import {Budget} from "./budget.model";
 import {BudgetsService} from "./budgets.service";
@@ -25,7 +25,7 @@ export class BudgetsComponent implements OnInit {
 	monthStats: MonthStats;
 	categories: Category[];
 
-	constructor(public dialog: MdDialog, private budgetService: BudgetsService, private categoryService: CategoriesService) {
+	constructor(public dialog: MatDialog, private budgetService: BudgetsService, private categoryService: CategoriesService) {
 		this.monthDisplayed = new Date();
 		this.displayedBudgets = [];
 		this.categories = [];

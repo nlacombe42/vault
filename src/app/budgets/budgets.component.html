@@ -1,46 +1,46 @@
 <section>
 	<h1>Budgets</h1>
 	<month-picker [(month)]="month"></month-picker>
-	<md-list class="list">
-		<md-list-item *ngIf="monthStats" class="list-box">
-			<p md-line>
+	<mat-list class="list">
+		<mat-list-item *ngIf="monthStats" class="list-box">
+			<p mat-line>
 				<span class="budget-title">Month's Total Budget</span>
 				<span class="budget-amount">
 					{{ (monthStats.totalPlannedMaxAmount - monthStats.currentAmount) |  number:'1.2-2'}} left
 				</span>
 			</p>
-			<budgetProgress md-line [currentAmount]="monthStats.currentAmount"
+			<budgetProgress mat-line [currentAmount]="monthStats.currentAmount"
 							[plannedMaxAmount]="monthStats.totalPlannedMaxAmount">
 			</budgetProgress>
-		</md-list-item>
-	</md-list>
-	<md-list class="list">
-		<md-list-item *ngFor="let budget of displayedBudgets" class="list-box">
-			<p md-line>
+		</mat-list-item>
+	</mat-list>
+	<mat-list class="list">
+		<mat-list-item *ngFor="let budget of displayedBudgets" class="list-box">
+			<p mat-line>
 				<span class="budget-title">{{budget.category.name}}</span>
 				<span class="budget-amount">
 					{{ (budget.plannedMaxAmount - budget.currentAmount) |  number:'1.2-2'}} left
 				</span>
 			</p>
-			<budgetProgress md-line [currentAmount]="budget.currentAmount"
+			<budgetProgress mat-line [currentAmount]="budget.currentAmount"
 							[plannedMaxAmount]="budget.plannedMaxAmount">
 			</budgetProgress>
-		</md-list-item>
-	</md-list>
-	<md-list class="list">
-		<md-list-item *ngIf="everythingElseBudget" class="list-box">
-			<p md-line>
+		</mat-list-item>
+	</mat-list>
+	<mat-list class="list">
+		<mat-list-item *ngIf="everythingElseBudget" class="list-box">
+			<p mat-line>
 				<span class="budget-title">Everything Else</span>
 				<span class="budget-amount">
 					{{ (everythingElseBudget.plannedMaxAmount - everythingElseBudget.currentAmount) |  number:'1.2-2'}} left
 				</span>
 			</p>
-			<budgetProgress md-line [currentAmount]="everythingElseBudget.currentAmount"
+			<budgetProgress mat-line [currentAmount]="everythingElseBudget.currentAmount"
 							[plannedMaxAmount]="everythingElseBudget.plannedMaxAmount">
 			</budgetProgress>
-		</md-list-item>
-	</md-list>
-	<button md-fab (click)="showAddBudgetDialog()" class="main-fab">
-		<md-icon>add</md-icon>
+		</mat-list-item>
+	</mat-list>
+	<button mat-fab (click)="showAddBudgetDialog()" class="main-fab">
+		<mat-icon>add</mat-icon>
 	</button>
 </section>

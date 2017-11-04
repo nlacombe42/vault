@@ -1,16 +1,16 @@
 <section>
 	<h2>Transactions</h2>
-	<md-list class="list">
+	<mat-list class="list">
 		<ng-template ngFor [ngForOf]="transactionsByDate" let-transactionByDate>
-			<h3 md-subheader>{{transactionByDate.key | localdate}}</h3>
+			<h3 mat-subheader>{{transactionByDate.key | localdate}}</h3>
 
-			<md-list-item *ngFor="let transaction of transactionByDate.values"
+			<mat-list-item *ngFor="let transaction of transactionByDate.values"
 						  infiniteScroll [infiniteScrollDistance]="1" (scrolled)="fetchMoreTransactions()"
 						  class="list-box">
-				<p md-line class="align-left">{{transaction.description}}</p>
-				<p md-line class="align-left">{{transaction.category.name}}</p>
+				<p mat-line class="align-left">{{transaction.description}}</p>
+				<p mat-line class="align-left">{{transaction.category.name}}</p>
 				<amount [amount]="transaction.amount"></amount>
-			</md-list-item>
+			</mat-list-item>
 		</ng-template>
-	</md-list>
+	</mat-list>
 </section>

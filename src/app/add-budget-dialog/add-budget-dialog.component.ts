@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MD_DIALOG_DATA, MdDialogRef} from "@angular/material";
 import {Category} from "../shared/category.model";
 import {CategoriesService} from "../shared/categories.service";
 import {BudgetsService} from "../budgets/budgets.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 export class AddBudgetDialogConfig {
 	month: Date;
@@ -20,8 +20,8 @@ export class AddBudgetDialogComponent implements OnInit {
 	category: Category;
 	amount: number;
 
-	constructor(public dialog: MdDialogRef<AddBudgetDialogComponent>,
-				@Inject(MD_DIALOG_DATA) public data: AddBudgetDialogConfig,
+	constructor(public dialog: MatDialogRef<AddBudgetDialogComponent>,
+				@Inject(MAT_DIALOG_DATA) public data: AddBudgetDialogConfig,
 				private categoriesService: CategoriesService,
 				private budgetService: BudgetsService) {
 

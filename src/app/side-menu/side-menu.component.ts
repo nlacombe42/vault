@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MdSidenav} from "@angular/material";
+import {MatSidenav} from "@angular/material";
 import {AuthService} from "../shared/auth.service";
 
 @Component({
@@ -9,7 +9,7 @@ import {AuthService} from "../shared/auth.service";
 })
 export class SideMenuComponent implements OnInit {
 
-	@ViewChild(MdSidenav) sideNav;
+	@ViewChild(MatSidenav) sideNav;
 
 	constructor(private authService: AuthService) {
 	}

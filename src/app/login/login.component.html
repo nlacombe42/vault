@@ -1,26 +1,26 @@
 <section>
-	<md-card class="login-box">
+	<mat-card class="login-box">
 		<form #loginForm="ngForm">
-			<md-card-title class="title">Login</md-card-title>
-			<md-card-content>
+			<mat-card-title class="title">Login</mat-card-title>
+			<mat-card-content>
 				<div>
-					<md-input-container class="control-full-width">
-						<input mdInput [(ngModel)]="username" name="username" placeholder="Username"
+					<mat-input-container class="control-full-width">
+						<input matInput [(ngModel)]="username" name="username" placeholder="Username"
 							   required/>
-					</md-input-container>
+					</mat-input-container>
 				</div>
 				<div>
-					<md-input-container class="control-full-width">
-						<input mdInput type="password" [(ngModel)]="password" name="password" placeholder="Password"
+					<mat-input-container class="control-full-width">
+						<input matInput type="password" [(ngModel)]="password" name="password" placeholder="Password"
 							   required/>
-					</md-input-container>
+					</mat-input-container>
 				</div>
-				<md-error [hidden]="errorMessage != ''">{{errorMessage}}</md-error>
+				<mat-error [hidden]="errorMessage != ''">{{errorMessage}}</mat-error>
 				<button (click)="login(username, password)" [disabled]="!loginForm.valid"
-						md-raised-button color="primary" class="login-button control-full-width">
+						mat-raised-button color="primary" class="login-button control-full-width">
 					Login
 				</button>
-			</md-card-content>
+			</mat-card-content>
 		</form>
-	</md-card>
+	</mat-card>
 </section>

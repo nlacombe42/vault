@@ -1,23 +1,23 @@
 <section class="uncategorized-transactions">
 	<h2>Uncategorized Transactions</h2>
-	<md-list>
+	<mat-list>
 		<ng-template ngFor [ngForOf]="transactionsByDate" let-transactionByDate>
-			<h3 md-subheader>{{transactionByDate.key | localdate}}</h3>
+			<h3 mat-subheader>{{transactionByDate.key | localdate}}</h3>
 
-			<md-list-item *ngFor="let transaction of transactionByDate.values" class="list-box">
-				<p md-line class="align-left">{{transaction.description}}</p>
-				<p md-line class="align-left">
+			<mat-list-item *ngFor="let transaction of transactionByDate.values" class="list-box">
+				<p mat-line class="align-left">{{transaction.description}}</p>
+				<p mat-line class="align-left">
 					<amount [amount]="transaction.amount"></amount>
 				</p>
-				<md-select placeholder="Categories" (change)="categorizeTransaction(transaction, $event.value)">
-					<md-option *ngFor="let category of categories" [value]="category.categoryId">
+				<mat-select placeholder="Categories" (change)="categorizeTransaction(transaction, $event.value)">
+					<mat-option *ngFor="let category of categories" [value]="category.categoryId">
 						{{category.name}}
-					</md-option>
-				</md-select>
-			</md-list-item>
+					</mat-option>
+				</mat-select>
+			</mat-list-item>
 		</ng-template>
 		<p *ngIf="transactionsByDate.length === 0">
 			There is no uncategorized transactions.
 		</p>
-	</md-list>
+	</mat-list>
 </section>

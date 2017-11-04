@@ -10,7 +10,6 @@ import {VaultRoutingModule} from "./shared/vault-routing.module";
 import {LoginComponent} from './login/login.component';
 import {AuthGuard} from "./shared/auth-guard.service";
 import {AuthService} from "./shared/auth.service";
-import {VaultMdModule} from "./vault-md.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./shared/auth-interceptor";
@@ -30,6 +29,7 @@ import {AddBudgetDialogComponent} from "./add-budget-dialog/add-budget-dialog.co
 import {BudgetsService} from "./budgets/budgets.service";
 import {BudgetProgressComponent} from "./budget-progress/budget-progress.component";
 import {DatePipe} from "@angular/common";
+import {VaultMatModule} from "./vault-mat.module";
 
 @NgModule({
 	declarations: [
@@ -50,7 +50,7 @@ import {DatePipe} from "@angular/common";
 		LocalMonthPipe
 	],
 	imports: [
-		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMdModule,
+		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMatModule,
 		InfiniteScrollModule
 	],
 	entryComponents: [
