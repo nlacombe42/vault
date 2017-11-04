@@ -1,26 +1,21 @@
 <section>
 	<mat-card class="login-box">
-		<form #loginForm="ngForm">
-			<mat-card-title class="title">Login</mat-card-title>
-			<mat-card-content>
-				<div>
-					<mat-input-container class="control-full-width">
-						<input matInput [(ngModel)]="username" name="username" placeholder="Username"
-							   required/>
-					</mat-input-container>
-				</div>
-				<div>
-					<mat-input-container class="control-full-width">
-						<input matInput type="password" [(ngModel)]="password" name="password" placeholder="Password"
-							   required/>
-					</mat-input-container>
-				</div>
+		<mat-card-title class="title">Login</mat-card-title>
+		<mat-card-content>
+			<form #loginForm="ngForm">
+				<mat-form-field class="control-full-width">
+					<input matInput [(ngModel)]="username" name="username" placeholder="Username" required/>
+				</mat-form-field>
+				<mat-form-field class="control-full-width">
+					<input matInput type="password" [(ngModel)]="password" name="password" placeholder="Password"
+						   required/>
+				</mat-form-field>
 				<mat-error [hidden]="errorMessage != ''">{{errorMessage}}</mat-error>
 				<button (click)="login(username, password)" [disabled]="!loginForm.valid"
 						mat-raised-button color="primary" class="login-button control-full-width">
 					Login
 				</button>
-			</mat-card-content>
-		</form>
+			</form>
+		</mat-card-content>
 	</mat-card>
 </section>

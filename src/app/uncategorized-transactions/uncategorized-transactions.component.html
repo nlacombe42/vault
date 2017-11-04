@@ -9,11 +9,13 @@
 				<p mat-line class="align-left">
 					<amount [amount]="transaction.amount"></amount>
 				</p>
-				<mat-select placeholder="Categories" (change)="categorizeTransaction(transaction, $event.value)">
-					<mat-option *ngFor="let category of categories" [value]="category.categoryId">
-						{{category.name}}
-					</mat-option>
-				</mat-select>
+				<mat-form-field>
+					<mat-select placeholder="Categories" (change)="categorizeTransaction(transaction, $event.value)">
+						<mat-option *ngFor="let category of categories" [value]="category.categoryId">
+							{{category.name}}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
 			</mat-list-item>
 		</ng-template>
 		<p *ngIf="transactionsByDate.length === 0">

@@ -13,7 +13,6 @@ import {AuthService} from "./shared/auth.service";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./shared/auth-interceptor";
-import {FormsModule} from "@angular/forms";
 import {StorageService} from "./shared/storage.service";
 import {TransactionsService} from "./shared/transactions.service";
 import {LocalDatePipe} from "./shared/localdate.pipe";
@@ -30,6 +29,7 @@ import {BudgetsService} from "./budgets/budgets.service";
 import {BudgetProgressComponent} from "./budget-progress/budget-progress.component";
 import {DatePipe} from "@angular/common";
 import {VaultMatModule} from "./vault-mat.module";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
 	declarations: [
