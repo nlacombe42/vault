@@ -7,10 +7,13 @@ import {DateUtils} from "../shared/date.util";
 	styleUrls: ['./budget-progress.component.scss']
 })
 export class BudgetProgressComponent implements OnInit {
+
 	budgetPlannedMaxAmount: number;
 	budgetCurrentAmount: number;
 	budgetPercentComplete: number;
 	dayProgressPercent: number;
+	progressBarColorClass: string;
+	incomeBudget: boolean;
 
 	constructor() {
 	}
@@ -18,10 +21,39 @@ export class BudgetProgressComponent implements OnInit {
 	ngOnInit() {
 		let now = new Date();
 		this.dayProgressPercent = Math.floor(now.getDate() / DateUtils.getLastSecondOfMonth(now).getDate() * 100);
+		this.incomeBudget = false;
+		this.progressBarColorClass = 'green-progress';
+	}
+
+	private updateProgress() {
+		this.updateBudgetPercentComplete();
+		this.updateProgressColor();
+	}
+
+	private updateProgressColor() {
+		if (this.incomeBudget) {
+			this.progressBarColorClass = 'green-progress';
+		} else {
+			if (this.budgetPercentComplete <= 75) {
+				this.progressBarColorClass = 'green-progress';
+			} else if (this.budgetPercentComplete <= 100) {
+				this.progressBarColorClass = 'yellow-progress';
+			} else {
+				this.progressBarColorClass = 'red-progress';
+			}
+		}
 	}
 
 	private updateBudgetPercentComplete() {
-		this.budgetPercentComplete = Math.floor(this.budgetCurrentAmount / this.budgetPlannedMaxAmount * 100);
+		if (this.budgetPlannedMaxAmount === 0) {
+			if (this.budgetCurrentAmount <= 0)
+				this.budgetPercentComplete = 0;
+			else
+				this.budgetPercentComplete = 101;
+		}
+		else {
+			this.budgetPercentComplete = Math.floor(this.budgetCurrentAmount / this.budgetPlannedMaxAmount * 100);
+		}
 	}
 
 	@Input()
@@ -31,7 +63,7 @@ export class BudgetProgressComponent implements OnInit {
 
 	set currentAmount(currentAmount: number) {
 		this.budgetCurrentAmount = currentAmount;
-		this.updateBudgetPercentComplete();
+		this.updateProgress();
 	}
 
 	@Input()
@@ -41,6 +73,16 @@ export class BudgetProgressComponent implements OnInit {
 
 	set plannedMaxAmount(plannedMaxAmount: number) {
 		this.budgetPlannedMaxAmount = plannedMaxAmount;
-		this.updateBudgetPercentComplete();
+		this.updateProgress();
+	}
+
+	@Input()
+	get income(): boolean {
+		return this.incomeBudget;
+	}
+
+	set income(income: boolean) {
+		this.incomeBudget = income;
+		this.updateProgress();
 	}
 }

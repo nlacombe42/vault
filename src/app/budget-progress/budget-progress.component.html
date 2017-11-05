@@ -1,10 +1,7 @@
 <div class="progress-bar">
 	<div class="budget-progress"
 		 [style.width.%]="budgetPercentComplete <= 100 ? budgetPercentComplete : 100"
-		 [ngClass]="{'green-progress': budgetPercentComplete < 75,
-		 			 'yellow-progress': budgetPercentComplete >= 75 && budgetPercentComplete <= 100,
-		 			 'red-progress': budgetPercentComplete > 100}"
-	>
+		 [ngClass]="progressBarColorClass">
 		<div class="progress-text">
 			{{budgetCurrentAmount | number:'1.2-2'}} / {{budgetPlannedMaxAmount | number:'1.2-2'}}
 		</div>

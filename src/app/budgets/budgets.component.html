@@ -14,8 +14,20 @@
 			</budgetProgress>
 		</mat-list-item>
 	</mat-list>
-	<mat-list class="list">
-		<mat-list-item *ngFor="let budget of displayedBudgets" class="list-box">
+	<h3 *ngIf="incomeBudgets.length > 0">Income</h3>
+	<mat-list *ngIf="incomeBudgets.length > 0" class="list">
+		<mat-list-item *ngFor="let budget of incomeBudgets" class="list-box">
+			<p mat-line>
+				<span class="budget-title">{{budget.category.name}}</span>
+			</p>
+			<budgetProgress mat-line [currentAmount]="budget.currentAmount"
+							[plannedMaxAmount]="budget.plannedMaxAmount">
+			</budgetProgress>
+		</mat-list-item>
+	</mat-list>
+	<h3>Spending</h3>
+	<mat-list *ngIf="spendingBudgets.length > 0" class="list">
+		<mat-list-item *ngFor="let budget of spendingBudgets" class="list-box">
 			<p mat-line>
 				<span class="budget-title">{{budget.category.name}}</span>
 				<span class="budget-amount">

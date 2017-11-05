@@ -14,20 +14,22 @@ class DisplayedBudget extends Budget {
 }
 
 @Component({
-	selector: 'displayedBudgets',
+	selector: 'budgets',
 	templateUrl: './budgets.component.html',
 	styleUrls: ['./budgets.component.scss']
 })
 export class BudgetsComponent implements OnInit {
 	monthDisplayed: Date;
-	displayedBudgets: DisplayedBudget[];
+	incomeBudgets: DisplayedBudget[];
+	spendingBudgets: DisplayedBudget[];
 	everythingElseBudget: DisplayedBudget;
 	monthStats: MonthStats;
 	categories: Category[];
 
 	constructor(public dialog: MatDialog, private budgetService: BudgetsService, private categoryService: CategoriesService) {
 		this.monthDisplayed = new Date();
-		this.displayedBudgets = [];
+		this.spendingBudgets = [];
+		this.incomeBudgets = [];
 		this.categories = [];
 	}
 
@@ -46,7 +48,7 @@ export class BudgetsComponent implements OnInit {
 		});
 
 		dialog.afterClosed().subscribe(result => {
-			this.loadBudgets();
+			this.loadMonthBudgetsInfo();
 		});
 	}
 
@@ -54,37 +56,43 @@ export class BudgetsComponent implements OnInit {
 		this.categoryService.getUserCategories()
 			.subscribe(category => this.categories.push(category),
 				undefined,
-				() => this.loadBudgets());
+				() => this.loadMonthBudgetsInfo());
 	}
 
-	private loadBudgets(): void {
-		let startDate = DateUtils.getFirstSecondOfMonth(this.monthDisplayed);
-		let endDate = DateUtils.getLastSecondOfMonth(this.monthDisplayed);
-
-		this.displayedBudgets = [];
+	private loadMonthBudgetsInfo(): void {
+		this.spendingBudgets = [];
 		this.everythingElseBudget = undefined;
 
-		this.budgetService.getMonthStats(this.month)
-			.subscribe(monthStats => this.monthStats = monthStats);
-
-		this.budgetService.getBudgets(startDate, endDate)
-			.subscribe(budget => this.addToDisplayedBudget(budget),
-				undefined,
-				() => {
-					this.displayedBudgets = this.displayedBudgets.splice(0);
-				});
-
-		this.budgetService.getMonthEverythingElseBudget(this.monthDisplayed)
-			.subscribe(budget => {
-				this.toDisplayedBudget(budget).subscribe(displayedBudget => {
+		this.budgetService.getMonthBudgetsInfo(this.monthDisplayed)
+			.subscribe(monthBudgetsInfo => {
+				this.addSpendingBudgets(monthBudgetsInfo.spendingBudgets);
+				this.addIncomeBudgets(monthBudgetsInfo.incomeBudgets);
+				this.spendingBudgets = this.spendingBudgets.splice(0);
+				this.incomeBudgets = this.incomeBudgets.splice(0);
+				this.monthStats = monthBudgetsInfo.monthStats;
+				this.toDisplayedBudget(monthBudgetsInfo.unbudgeted).subscribe(displayedBudget => {
 					this.everythingElseBudget = displayedBudget;
 				});
 			});
 	}
 
-	private addToDisplayedBudget(budget: Budget): void {
+	private addSpendingBudgets(budgets: Budget[]): void {
+		budgets.forEach(budget => this.addSpendingBudget(budget));
+	}
+
+	private addSpendingBudget(budget: Budget): void {
 		this.toDisplayedBudget(budget).subscribe(displayedBudget => {
-			this.displayedBudgets.push(displayedBudget);
+			this.spendingBudgets.push(displayedBudget);
+		});
+	}
+
+	private addIncomeBudgets(budgets: Budget[]): void {
+		budgets.forEach(budget => this.addIncomeBudget(budget));
+	}
+
+	private addIncomeBudget(budget: Budget): void {
+		this.toDisplayedBudget(budget).subscribe(displayedBudget => {
+			this.incomeBudgets.push(displayedBudget);
 		});
 	}
 
@@ -115,7 +123,7 @@ export class BudgetsComponent implements OnInit {
 	set month(month: Date) {
 		if (!DateUtils.monthEquals(this.monthDisplayed, month)) {
 			this.monthDisplayed = month;
-			this.loadBudgets();
+			this.loadMonthBudgetsInfo();
 		}
 	}
 }
