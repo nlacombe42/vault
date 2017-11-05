@@ -1,6 +1,12 @@
 <section>
 	<h1>Budgets</h1>
 	<month-picker [(month)]="month"></month-picker>
+	<p>
+		{{cashFlowLabel}} :
+		<span [ngClass]="{'amount-green': cashFlow >= 0, 'amount-red': cashFlow < 0}">
+			{{cashFlow | number:'1.2-2'}}
+		</span>
+	</p>
 	<mat-list class="list">
 		<mat-list-item *ngIf="monthStats" class="list-box">
 			<p mat-line>

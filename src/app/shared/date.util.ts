@@ -1,13 +1,17 @@
 export class DateUtils {
-	public static getFirstSecondOfMonth(date: Date): Date {
-		return new Date(date.getFullYear(), date.getMonth(), 1);
+	public static getFirstSecondOfMonth(month: Date): Date {
+		return new Date(month.getFullYear(), month.getMonth(), 1);
 	}
 
-	public static getLastSecondOfMonth(date: Date): Date {
-		return new Date(date.getFullYear(), date.getMonth() + 1, 1, 0, 0, -1);
+	public static getLastSecondOfMonth(month: Date): Date {
+		return new Date(month.getFullYear(), month.getMonth() + 1, 1, 0, 0, -1);
 	}
 
-	public static monthEquals(date1: Date, date2: Date) {
-		return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth();
+	public static monthEquals(month1: Date, month2: Date): boolean {
+		return month1.getFullYear() === month2.getFullYear() && month1.getMonth() === month2.getMonth();
+	}
+
+	public static isPastMonth(month: Date): boolean {
+		return DateUtils.getLastSecondOfMonth(month) < new Date();
 	}
 }

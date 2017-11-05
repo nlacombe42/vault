@@ -2,16 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
 	selector: 'amount',
-	styles: [`
-		.amount-green {
-			color: #080;
-		}
-	`],
-	template: `
-		<span [ngClass]="{'amount-green': amount > 0}">
-			{{amount | number:'1.2-2'}}
-		</span>
-	`
+	templateUrl: './amount.component.html',
+	styleUrls: ['./amount.component.scss']
 })
 export class AmountComponent implements OnInit {
 

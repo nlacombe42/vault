@@ -25,6 +25,8 @@ export class BudgetsComponent implements OnInit {
 	everythingElseBudget: DisplayedBudget;
 	monthStats: MonthStats;
 	categories: Category[];
+	cashFlowLabel: string;
+	cashFlow: number;
 
 	constructor(public dialog: MatDialog, private budgetService: BudgetsService, private categoryService: CategoriesService) {
 		this.monthDisplayed = new Date();
@@ -73,7 +75,36 @@ export class BudgetsComponent implements OnInit {
 				this.toDisplayedBudget(monthBudgetsInfo.unbudgeted).subscribe(displayedBudget => {
 					this.everythingElseBudget = displayedBudget;
 				});
+				this.updateCashFlow();
 			});
+	}
+
+	private updateCashFlow() {
+		if (DateUtils.isPastMonth(this.monthDisplayed)) {
+			let currentTotalIncome = this.getMonthCurrentTotalIncome();
+			this.cashFlowLabel = 'Current cash flow';
+			this.cashFlow = currentTotalIncome - this.monthStats.currentAmount;
+		} else {
+			let planedTotalIncome = this.getMonthPlanedTotalIncome();
+			this.cashFlowLabel = 'Planed cash flow';
+			this.cashFlow = planedTotalIncome - Math.max(this.monthStats.totalPlannedMaxAmount, this.monthStats.currentAmount);
+		}
+	}
+
+	private getMonthCurrentTotalIncome(): number {
+		let currentTotalIncome = 0;
+
+		this.incomeBudgets.forEach(incomeBudget => currentTotalIncome += incomeBudget.currentAmount);
+
+		return currentTotalIncome;
+	}
+
+	private getMonthPlanedTotalIncome(): number {
+		let planedTotalIncome = 0;
+
+		this.incomeBudgets.forEach(incomeBudget => planedTotalIncome += incomeBudget.plannedMaxAmount);
+
+		return planedTotalIncome;
 	}
 
 	private addSpendingBudgets(budgets: Budget[]): void {
