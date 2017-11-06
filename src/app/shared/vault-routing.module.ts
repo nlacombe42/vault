@@ -3,7 +3,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {OverviewComponent} from "../overview/overview.component";
 import {PageNotFoundComponent} from "../page-not-found/page-not-found.component";
 import {LoginComponent} from "../login/login.component";
-import {AuthGuard} from "./auth-guard.service";
+import {AuthGuard} from "../auth/auth-guard.service";
 import {TransactionsComponent} from "../transactions/transactions.component";
 import {BudgetsComponent} from "../budgets/budgets.component";
 

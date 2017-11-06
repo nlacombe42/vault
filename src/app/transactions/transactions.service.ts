@@ -6,7 +6,7 @@ import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/from";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
-import {PaginationResponse} from "./pagination-response.model";
+import {PaginationResponse} from "../shared/pagination-response.model";
 import {SearchTransactionsRequest} from "./search-transactions-request.model";
 
 @Injectable()

@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Transaction} from "../shared/transaction.model";
-import {TransactionsService} from "../shared/transactions.service";
+import {Transaction} from "./transaction.model";
+import {TransactionsService} from "./transactions.service";
 import "rxjs/add/operator/toArray";
 import "rxjs/add/operator/do";
 import "rxjs/add/operator/take";
 import "rxjs/add/observable/merge";
 import {ArrayUtils, Grouping} from "../shared/array.util";
-import {SearchTransactionsRequest} from "../shared/search-transactions-request.model";
+import {SearchTransactionsRequest} from "./search-transactions-request.model";
 import {CategoriesService} from "../shared/categories.service";
 import {Observable} from "rxjs/Observable";
 import {Category} from "../shared/category.model";
