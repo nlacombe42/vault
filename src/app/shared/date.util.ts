@@ -14,4 +14,8 @@ export class DateUtils {
 	public static isPastMonth(month: Date): boolean {
 		return DateUtils.getLastSecondOfMonth(month) < new Date();
 	}
+
+	public static addSeconds(date: Date, seconds: number) {
+		return new Date(date.getTime() + seconds * 1000);
+	}
 }

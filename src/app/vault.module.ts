@@ -30,6 +30,8 @@ import {BudgetProgressComponent} from "./budget-progress/budget-progress.compone
 import {DatePipe} from "@angular/common";
 import {VaultMatModule} from "./vault-mat.module";
 import {FormsModule} from "@angular/forms";
+import {ImportsComponent} from "./imports/imports.component";
+import {ImportsService} from "./imports/imports.service";
 
 @NgModule({
 	declarations: [
@@ -46,6 +48,7 @@ import {FormsModule} from "@angular/forms";
 		MonthPickerComponent,
 		AddBudgetDialogComponent,
 		BudgetProgressComponent,
+		ImportsComponent,
 		LocalDatePipe,
 		LocalMonthPipe
 	],
@@ -63,7 +66,7 @@ import {FormsModule} from "@angular/forms";
 			multi: true
 		},
 		DatePipe,
-		AuthGuard, AuthService, StorageService, TransactionsService, CategoriesService, BudgetsService
+		AuthGuard, AuthService, StorageService, TransactionsService, CategoriesService, BudgetsService, ImportsService
 	],
 	bootstrap: [VaultComponent]
 })

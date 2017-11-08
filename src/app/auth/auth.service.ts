@@ -44,7 +44,7 @@ export class AuthService {
 		});
 	}
 
-	logout() {
+	logout(): void {
 		this.clearAuthToken();
 		this.router.navigate(['/login']);
 	}
@@ -57,7 +57,7 @@ export class AuthService {
 		return this.getAuthToken() !== null;
 	}
 
-	getAuthToken() {
+	getAuthToken(): string {
 		return this.storageService.getAuthToken();
 	}
 

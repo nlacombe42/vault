@@ -7,6 +7,7 @@ import {
 	MatIconModule,
 	MatInputModule,
 	MatListModule,
+	MatProgressSpinnerModule,
 	MatSelectModule,
 	MatSidenavModule,
 	MatToolbarModule
@@ -22,7 +23,8 @@ const MatImports = [
 	MatListModule,
 	MatSelectModule,
 	MatDialogModule,
-	MatCheckboxModule
+	MatCheckboxModule,
+	MatProgressSpinnerModule
 ];
 
 @NgModule({

@@ -1,0 +1,19 @@
+<section>
+	<h2>Imports</h2>
+	<form #importForm="ngForm" class="form">
+		<mat-form-field class="form-element">
+			<input matInput type="password" [(ngModel)]="password" name="password" placeholder="Password" required/>
+		</mat-form-field>
+		<mat-form-field class="form-element">
+			<mat-select [(ngModel)]="rememberPassword" placeholder="Remember password for" required id="rememberPassword" name="rememberPassword">
+				<mat-option [value]="0">Never</mat-option>
+				<mat-option [value]="604800">A week</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<button (click)="import()" mat-raised-button color="primary" [disabled]="!importForm.valid || importInProgress"
+				class="submit-button">
+			Import
+		</button>
+		<mat-spinner *ngIf="importInProgress" class="spinner"></mat-spinner>
+	</form>
+</section>
