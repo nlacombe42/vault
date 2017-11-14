@@ -8,6 +8,7 @@ import {CategoriesService} from "../shared/categories.service";
 import {Category} from "../shared/category.model";
 import {Observable} from "rxjs/Observable";
 import {MonthStats} from "./month-stats.model";
+import {StorageService} from "../shared/storage.service";
 
 class DisplayedBudget extends Budget {
 	category: Category;
@@ -28,8 +29,12 @@ export class BudgetsComponent implements OnInit {
 	cashFlowLabel: string;
 	cashFlow: number;
 
-	constructor(public dialog: MatDialog, private budgetService: BudgetsService, private categoryService: CategoriesService) {
-		this.monthDisplayed = new Date();
+	constructor(public dialog: MatDialog, private budgetService: BudgetsService,
+				private categoryService: CategoriesService, private storageService: StorageService) {
+
+		let storedDisplayedMonth = this.storageService.getDisplayedMonthForBudgets();
+
+		this.monthDisplayed = storedDisplayedMonth !== undefined ? storedDisplayedMonth : new Date();
 		this.spendingBudgets = [];
 		this.incomeBudgets = [];
 		this.categories = [];
@@ -154,6 +159,7 @@ export class BudgetsComponent implements OnInit {
 	set month(month: Date) {
 		if (!DateUtils.monthEquals(this.monthDisplayed, month)) {
 			this.monthDisplayed = month;
+			this.storageService.setDisplayedMonthForBudgets(month);
 			this.loadMonthBudgetsInfo();
 		}
 	}

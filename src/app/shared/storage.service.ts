@@ -38,4 +38,17 @@ export class StorageService {
 		localStorage.removeItem('importPassword.importPassword');
 		localStorage.removeItem('importPassword.passwordStorageExpireTimestamp');
 	}
+
+	setDisplayedMonthForBudgets(month: Date): void {
+		localStorage.setItem('displayedMonthForBudgets', month.getTime().toString());
+	}
+
+	getDisplayedMonthForBudgets(): Date {
+		let displayedMonthTimestamp = localStorage.getItem('displayedMonthForBudgets');
+
+		if (displayedMonthTimestamp === null)
+			return undefined;
+
+		return new Date(+ displayedMonthTimestamp);
+	}
 }
