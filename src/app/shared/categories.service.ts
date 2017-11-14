@@ -14,42 +14,43 @@ export class CategoriesService {
 
 	private categories: Category[];
 	private categoriesById: Map<number, Category>;
+	private categoriesObservable: Observable<Category>;
 
 	constructor(private http: HttpClient) {
-		this.categories = undefined;
-		this.categoriesById = new Map<number, Category>();
 	}
 
 	getUserCategories(): Observable<Category> {
-		return new Observable(subscriber => {
-			this.loadCategories().subscribe(undefined, undefined, () => {
-				this.categories.forEach(category => subscriber.next(category));
-				subscriber.complete();
-			});
-		});
+		if (this.categories !== undefined)
+			return Observable.from(this.categories);
+
+		if (this.categoriesObservable === undefined)
+			this.categoriesObservable = this.createCategoriesObservable();
+
+		return this.categoriesObservable;
 	}
 
 	getCategory(categoryId: number): Observable<Category> {
-		return new Observable(subscriber => {
-			this.loadCategories().subscribe(undefined, undefined, () => {
-				subscriber.next(this.categoriesById.get(categoryId));
-				subscriber.complete();
-			});
+		if (this.categoriesById !== undefined)
+			return Observable.of(this.categoriesById.get(categoryId));
+
+		this.categoriesById = new Map<number, Category>();
+
+		return new Observable(observer => {
+			this.getUserCategories()
+				.subscribe(category => this.categoriesById.set(category.categoryId, category),
+					observer.error,
+					() => {
+						observer.next(this.categoriesById.get(categoryId));
+						observer.complete();
+					});
 		});
 	}
 
-	private loadCategories(): Observable<void> {
-		if (this.categories !== undefined)
-			return Observable.empty<void>();
+	private createCategoriesObservable(): Observable<Category> {
+		let getCategoriesObservable = this.http.get<Category[]>(this.vaultCategoriesUrl).flatMap(categories => Observable.from(categories));
 
-		return new Observable<void>(subscriber => {
-			this.http.get<Category[]>(this.vaultCategoriesUrl)
-				.subscribe(categories => {
-					this.categories = categories;
-					this.categories.forEach(category => this.categoriesById.set(category.categoryId, category));
-					subscriber.next();
-					subscriber.complete();
-				});
-		});
+		getCategoriesObservable.toArray().subscribe(categories => this.categories = categories);
+
+		return getCategoriesObservable;
 	}
 }

@@ -33,17 +33,19 @@
 	</mat-list>
 	<h3>Spending</h3>
 	<mat-list *ngIf="spendingBudgets.length > 0" class="list">
-		<mat-list-item *ngFor="let budget of spendingBudgets" class="list-box">
-			<p mat-line>
-				<span class="budget-title">{{budget.category.name}}</span>
-				<span class="budget-amount">
-					{{ (budget.plannedMaxAmount - budget.currentAmount) |  number:'1.2-2'}} left
-				</span>
-			</p>
-			<budgetProgress mat-line [currentAmount]="budget.currentAmount"
-							[plannedMaxAmount]="budget.plannedMaxAmount">
-			</budgetProgress>
-		</mat-list-item>
+		<a *ngFor="let budget of spendingBudgets" [routerLink]="['/budget', budget.budgetId]">
+			<mat-list-item class="list-box">
+				<p mat-line>
+					<span class="budget-title">{{budget.category.name}}</span>
+					<span class="budget-amount">
+						{{ (budget.plannedMaxAmount - budget.currentAmount) |  number:'1.2-2'}} left
+					</span>
+				</p>
+				<budgetProgress mat-line [currentAmount]="budget.currentAmount"
+								[plannedMaxAmount]="budget.plannedMaxAmount">
+				</budgetProgress>
+			</mat-list-item>
+		</a>
 	</mat-list>
 	<mat-list class="list">
 		<mat-list-item *ngIf="everythingElseBudget" class="list-box">

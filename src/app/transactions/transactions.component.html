@@ -5,7 +5,7 @@
 			<h3 mat-subheader>{{transactionByDate.key | localdate}}</h3>
 
 			<mat-list-item *ngFor="let transaction of transactionByDate.values"
-						  infiniteScroll [infiniteScrollDistance]="1" (scrolled)="fetchMoreTransactions()"
+						  infiniteScroll [infiniteScrollDistance]="1" (scrolled)="fetchNextTransactionPage()"
 						  class="list-box">
 				<p mat-line class="align-left">{{transaction.description}}</p>
 				<p mat-line class="align-left">{{transaction.category.name}}</p>

@@ -32,6 +32,7 @@ import {VaultMatModule} from "./vault-mat.module";
 import {FormsModule} from "@angular/forms";
 import {ImportsComponent} from "./imports/imports.component";
 import {ImportsService} from "./imports/imports.service";
+import {BudgetComponent} from "./budget/budget.component";
 
 @NgModule({
 	declarations: [
@@ -49,6 +50,7 @@ import {ImportsService} from "./imports/imports.service";
 		AddBudgetDialogComponent,
 		BudgetProgressComponent,
 		ImportsComponent,
+		BudgetComponent,
 		LocalDatePipe,
 		LocalMonthPipe
 	],
