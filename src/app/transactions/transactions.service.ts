@@ -62,35 +62,20 @@ export class TransactionsService {
 	}
 
 	searchDisplayedTransactionsByDate(pageNumber: number, pageSize: number): Observable<Grouping<Date, DisplayedTransaction>[]> {
-		return new Observable<Grouping<Date, DisplayedTransaction>[]>(observer => {
-			let pageTransactions: Transaction[];
+		let searchRequest: SearchTransactionsRequest = {
+			paginationRequest: {
+				pageNumber,
+				size: pageSize
+			},
+			categorizedOnly: true
+		};
 
-			let searchRequest: SearchTransactionsRequest = {
-				paginationRequest: {
-					pageNumber,
-					size: pageSize
-				},
-				categorizedOnly: true
-			};
-
-			let displayedTransactions: DisplayedTransaction[] = [];
-
-			this.searchTransactions(searchRequest)
-				.subscribe(paginationResponse => {
-					pageTransactions = paginationResponse.elements;
-				}, undefined, () => {
-					this.toDisplayedTransactions(pageTransactions)
-						.subscribe(displayedTransaction => displayedTransactions.push(displayedTransaction),
-							undefined,
-							() => {
-								let transactionsByDate =
-									ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
-										displayedTransaction => displayedTransaction.dateOnly.getTime());
-								observer.next(transactionsByDate);
-								observer.complete();
-							});
-				});
-		});
+		return this.searchTransactions(searchRequest)
+			.map(paginationResponse => paginationResponse.elements)
+			.flatMap(transactions => Observable.from(transactions))
+			.flatMap(transaction => this.toDisplayedTransaction(transaction))
+			.toArray()
+			.map(displayedTransactions => this.toDisplayedTransactionsByDate(displayedTransactions));
 	}
 
 	categorize(transactionId: number, categoryId: number): Observable<void> {
@@ -99,14 +84,9 @@ export class TransactionsService {
 		return this.http.put<void>(environment.apiBaseUrls.vaultWs + `/v1/transactions/${transactionId}/category`, request);
 	}
 
-	private toDisplayedTransactions(transactions: Transaction[]): Observable<DisplayedTransaction> {
-		let conversionObservables: Observable<DisplayedTransaction>[] = [];
-
-		transactions.forEach(transaction => {
-			conversionObservables.push(this.toDisplayedTransaction(transaction));
-		});
-
-		return Observable.merge(...conversionObservables);
+	private toDisplayedTransactionsByDate(displayedTransactions: DisplayedTransaction[]): Grouping<Date, DisplayedTransaction>[] {
+		return ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
+			displayedTransaction => displayedTransaction.dateOnly.getTime());
 	}
 
 	private toDisplayedTransaction(transaction: Transaction): Observable<DisplayedTransaction> {
