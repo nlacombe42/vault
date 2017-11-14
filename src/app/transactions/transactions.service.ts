@@ -8,13 +8,16 @@ import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import {PaginationResponse} from "../shared/pagination-response.model";
 import {SearchTransactionsRequest} from "./search-transactions-request.model";
+import {DisplayedTransaction} from "./displayed-transaction.model";
+import {CategoriesService} from "../shared/categories.service";
+import {ArrayUtils, Grouping} from "../shared/array.util";
 
 @Injectable()
 export class TransactionsService {
 	private readonly vaultUncategorizedTransactionsUrl: string = environment.apiBaseUrls.vaultWs + '/v1/transactions/uncategorized';
 	private readonly vaultTransactionSearchUrl: string = environment.apiBaseUrls.vaultWs + '/v1/transactions/search';
 
-	constructor(private http: HttpClient) {
+	constructor(private http: HttpClient, private categoriesService: CategoriesService) {
 	}
 
 	getUncategorizedTransactions(): Observable<Transaction> {
@@ -58,10 +61,73 @@ export class TransactionsService {
 		});
 	}
 
+	searchDisplayedTransactionsByDate(pageNumber: number, pageSize: number): Observable<Grouping<Date, DisplayedTransaction>[]> {
+		return new Observable<Grouping<Date, DisplayedTransaction>[]>(observer => {
+			let pageTransactions: Transaction[];
+
+			let searchRequest: SearchTransactionsRequest = {
+				paginationRequest: {
+					pageNumber,
+					size: pageSize
+				},
+				categorizedOnly: true
+			};
+
+			let displayedTransactions: DisplayedTransaction[] = [];
+
+			this.searchTransactions(searchRequest)
+				.subscribe(paginationResponse => {
+					pageTransactions = paginationResponse.elements;
+				}, undefined, () => {
+					this.toDisplayedTransactions(pageTransactions)
+						.subscribe(displayedTransaction => displayedTransactions.push(displayedTransaction),
+							undefined,
+							() => {
+								let transactionsByDate =
+									ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
+										displayedTransaction => displayedTransaction.dateOnly.getTime());
+								observer.next(transactionsByDate);
+								observer.complete();
+							});
+				});
+		});
+	}
+
 	categorize(transactionId: number, categoryId: number): Observable<void> {
 		let request = {categoryId};
 
 		return this.http.put<void>(environment.apiBaseUrls.vaultWs + `/v1/transactions/${transactionId}/category`, request);
+	}
+
+	private toDisplayedTransactions(transactions: Transaction[]): Observable<DisplayedTransaction> {
+		let conversionObservables: Observable<DisplayedTransaction>[] = [];
+
+		transactions.forEach(transaction => {
+			conversionObservables.push(this.toDisplayedTransaction(transaction));
+		});
+
+		return Observable.merge(...conversionObservables);
+	}
+
+	private toDisplayedTransaction(transaction: Transaction): Observable<DisplayedTransaction> {
+		return new Observable<DisplayedTransaction>(observer => {
+			this.categoriesService.getCategory(transaction.categoryId)
+				.subscribe(category => {
+					let displayedTransaction: DisplayedTransaction = {
+						transactionId: transaction.transactionId,
+						accountId: transaction.accountId,
+						categoryId: transaction.categoryId,
+						category: category,
+						datetime: transaction.datetime,
+						description: transaction.description,
+						amount: transaction.amount,
+						dateOnly: new Date(transaction.datetime.toDateString())
+					};
+
+					observer.next(displayedTransaction);
+					observer.complete();
+				});
+		});
 	}
 
 	private toTransaction(rawTransaction) {
