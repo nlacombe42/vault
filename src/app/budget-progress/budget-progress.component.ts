@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DateUtils} from "../shared/date.util";
 
 @Component({
@@ -6,23 +6,21 @@ import {DateUtils} from "../shared/date.util";
 	templateUrl: './budget-progress.component.html',
 	styleUrls: ['./budget-progress.component.scss']
 })
-export class BudgetProgressComponent implements OnInit {
+export class BudgetProgressComponent {
 
 	budgetPlannedMaxAmount: number;
 	budgetCurrentAmount: number;
 	budgetPercentComplete: number;
 	dayProgressPercent: number;
-	progressBarColorClass: string;
-	incomeBudget: boolean;
+	progressBarClasses: string;
+
+	private incomeBudget: boolean;
 
 	constructor() {
-	}
-
-	ngOnInit() {
 		let now = new Date();
 		this.dayProgressPercent = Math.floor(now.getDate() / DateUtils.getLastSecondOfMonth(now).getDate() * 100);
 		this.incomeBudget = false;
-		this.progressBarColorClass = 'green-progress';
+		this.progressBarClasses = 'budget-progress green-progress';
 	}
 
 	private updateProgress() {
@@ -32,14 +30,14 @@ export class BudgetProgressComponent implements OnInit {
 
 	private updateProgressColor() {
 		if (this.incomeBudget) {
-			this.progressBarColorClass = 'green-progress';
+			this.progressBarClasses = 'budget-progress green-progress';
 		} else {
 			if (this.budgetPercentComplete <= 75) {
-				this.progressBarColorClass = 'green-progress';
+				this.progressBarClasses = 'budget-progress green-progress';
 			} else if (this.budgetPercentComplete <= 100) {
-				this.progressBarColorClass = 'yellow-progress';
+				this.progressBarClasses = 'budget-progress yellow-progress';
 			} else {
-				this.progressBarColorClass = 'red-progress';
+				this.progressBarClasses = 'budget-progress red-progress';
 			}
 		}
 	}
@@ -82,7 +80,7 @@ export class BudgetProgressComponent implements OnInit {
 	}
 
 	set income(income: boolean) {
-		this.incomeBudget = income;
+		this.incomeBudget = income === undefined ? false : income;
 		this.updateProgress();
 	}
 }

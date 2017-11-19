@@ -1,7 +1,6 @@
 <div class="progress-bar">
-	<div class="budget-progress"
-		 [style.width.%]="budgetPercentComplete <= 100 ? budgetPercentComplete : 100"
-		 [ngClass]="progressBarColorClass">
+	<div [style.width.%]="budgetPercentComplete <= 100 ? budgetPercentComplete : 100"
+		 [ngClass]="progressBarClasses">
 		<div class="progress-text">
 			{{budgetCurrentAmount | number:'1.2-2'}} / {{budgetPlannedMaxAmount | number:'1.2-2'}}
 		</div>
