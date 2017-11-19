@@ -33,13 +33,14 @@ export class CategoriesService {
 		if (this.categoriesById !== undefined)
 			return Observable.of(this.categoriesById.get(categoryId));
 
-		this.categoriesById = new Map<number, Category>();
+		let categoriesById = new Map<number, Category>();
 
 		return new Observable(observer => {
 			this.getUserCategories()
-				.subscribe(category => this.categoriesById.set(category.categoryId, category),
+				.subscribe(category => categoriesById.set(category.categoryId, category),
 					observer.error,
 					() => {
+						this.categoriesById = categoriesById;
 						observer.next(this.categoriesById.get(categoryId));
 						observer.complete();
 					});
