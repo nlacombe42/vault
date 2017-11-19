@@ -4,12 +4,14 @@
 		<ng-template ngFor [ngForOf]="transactionsByDate" let-transactionByDate>
 			<h3 mat-subheader>{{transactionByDate.key | localdate}}</h3>
 
-			<mat-list-item *ngFor="let transaction of transactionByDate.values" class="list-box">
+			<mat-list-item *ngFor="let transaction of transactionByDate.values"
+						   (click)="goToTransactionDetail(transaction.transactionId)"
+						   class="list-box">
 				<p mat-line class="align-left">{{transaction.description}}</p>
 				<p mat-line class="align-left">
 					<amount [amount]="transaction.amount"></amount>
 				</p>
-				<mat-form-field>
+				<mat-form-field (click)="$event.stopPropagation()">
 					<mat-select placeholder="Categories" (change)="categorizeTransaction(transaction, $event.value)">
 						<mat-option *ngFor="let category of categories" [value]="category.categoryId">
 							{{category.name}}

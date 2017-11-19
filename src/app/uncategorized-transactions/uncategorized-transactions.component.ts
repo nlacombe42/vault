@@ -7,6 +7,7 @@ import "rxjs/add/operator/take";
 import {Category} from "../shared/category.model";
 import {CategoriesService} from "../shared/categories.service";
 import {ArrayUtils, Grouping} from "../shared/array.util";
+import {Router} from "@angular/router";
 
 class DisplayedTransaction extends Transaction {
 	dateOnly: Date;
@@ -22,7 +23,8 @@ export class UncategorizedTransactionsComponent implements OnInit {
 	categories: Category[];
 	transactionsByDate: Grouping<Date, DisplayedTransaction>[];
 
-	constructor(private transactionService: TransactionsService, private categoriesService: CategoriesService) {
+	constructor(private transactionService: TransactionsService, private categoriesService: CategoriesService,
+				private router: Router) {
 		this.categories = [];
 		this.transactionsByDate = [];
 	}
@@ -39,6 +41,10 @@ export class UncategorizedTransactionsComponent implements OnInit {
 			.subscribe(undefined, undefined, () => {
 				this.refreshDisplayedTransactions();
 			});
+	}
+
+	goToTransactionDetail(transactionId: number): void {
+		this.router.navigate(['transaction', transactionId]);
 	}
 
 	private refreshDisplayedTransactions() {

@@ -33,6 +33,7 @@ import {FormsModule} from "@angular/forms";
 import {ImportsComponent} from "./imports/imports.component";
 import {ImportsService} from "./imports/imports.service";
 import {BudgetComponent} from "./budget/budget.component";
+import {TransactionComponent} from "./transaction/transaction.component";
 
 @NgModule({
 	declarations: [
@@ -51,6 +52,7 @@ import {BudgetComponent} from "./budget/budget.component";
 		BudgetProgressComponent,
 		ImportsComponent,
 		BudgetComponent,
+		TransactionComponent,
 		LocalDatePipe,
 		LocalMonthPipe
 	],

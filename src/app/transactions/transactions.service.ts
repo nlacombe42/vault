@@ -14,8 +14,9 @@ import {ArrayUtils, Grouping} from "../shared/array.util";
 
 @Injectable()
 export class TransactionsService {
-	private readonly vaultUncategorizedTransactionsUrl: string = environment.apiBaseUrls.vaultWs + '/v1/transactions/uncategorized';
-	private readonly vaultTransactionSearchUrl: string = environment.apiBaseUrls.vaultWs + '/v1/transactions/search';
+	private readonly vaultTransactionsUrl: string = environment.apiBaseUrls.vaultWs + '/v1/transactions/';
+	private readonly vaultUncategorizedTransactionsUrl: string = this.vaultTransactionsUrl + 'uncategorized';
+	private readonly vaultTransactionSearchUrl: string = this.vaultTransactionsUrl + 'search';
 	private readonly vaultBudgetsUrl: string = environment.apiBaseUrls.vaultWs + '/v1/budgets/';
 
 	constructor(private http: HttpClient, private categoriesService: CategoriesService) {
@@ -93,6 +94,13 @@ export class TransactionsService {
 			.flatMap(rawTransaction => this.toDisplayedTransaction(this.toTransaction(rawTransaction)))
 			.toArray()
 			.map(displayedTransactions => this.toDisplayedTransactionsByDate(displayedTransactions));
+	}
+
+	getTransaction(transactionId: number): Observable<DisplayedTransaction> {
+		let url = this.vaultTransactionsUrl + transactionId;
+
+		return this.http.get<any>(url)
+			.flatMap(rawTransaction => this.toDisplayedTransaction(this.toTransaction(rawTransaction)));
 	}
 
 	private toDisplayedTransactionsByDate(displayedTransactions: DisplayedTransaction[]): Grouping<Date, DisplayedTransaction>[] {
