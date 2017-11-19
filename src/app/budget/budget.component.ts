@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
+import {BudgetsService} from "../budgets/budgets.service";
+import {BudgetWithTransactions} from "../budgets/budget.model";
 
 @Component({
 	selector: 'budget',
@@ -8,12 +10,19 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class BudgetComponent implements OnInit {
 
-	budgetId: number;
+	budget: BudgetWithTransactions;
+	budgetName: string;
 
-	constructor(private route: ActivatedRoute) {
+	constructor(private route: ActivatedRoute, private budgetsService: BudgetsService) {
 	}
 
 	ngOnInit() {
-		this.budgetId = +this.route.snapshot.paramMap.get('budgetId');
+		let budgetId = +this.route.snapshot.paramMap.get('budgetId');
+
+		this.budgetsService.getBudget(budgetId)
+			.subscribe(budget => {
+				this.budget = budget;
+				this.budgetName = this.budget.category === undefined ? 'Unbudgeted' : this.budget.category.name;
+			});
 	}
 }

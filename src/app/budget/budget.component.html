@@ -1,4 +1,12 @@
 <section>
-	<h2>Budget</h2>
-	<transactions [budgetId]="budgetId"></transactions>
+	<h2>{{budgetName}} Budget</h2>
+	<div *ngIf="budget">
+		<section class="details">
+			<budgetProgress [income]="budget.income"
+							[currentAmount]="budget.currentAmount"
+							[plannedMaxAmount]="budget.plannedMaxAmount">
+			</budgetProgress>
+		</section>
+		<transactions [transactions]="budget.transactionsByDate"></transactions>
+	</div>
 </section>

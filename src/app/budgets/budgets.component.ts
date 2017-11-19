@@ -1,18 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material";
 import {AddBudgetDialogComponent, AddBudgetDialogConfig} from "../add-budget-dialog/add-budget-dialog.component";
-import {Budget} from "./budget.model";
+import {DisplayedBudget} from "./budget.model";
 import {BudgetsService} from "./budgets.service";
 import {DateUtils} from "../shared/date.util";
 import {CategoriesService} from "../shared/categories.service";
 import {Category} from "../shared/category.model";
-import {Observable} from "rxjs/Observable";
 import {MonthStats} from "./month-stats.model";
 import {StorageService} from "../shared/storage.service";
-
-class DisplayedBudget extends Budget {
-	category: Category;
-}
 
 @Component({
 	selector: 'budgets',
@@ -67,20 +62,12 @@ export class BudgetsComponent implements OnInit {
 	}
 
 	private loadMonthBudgetsInfo(): void {
-		this.incomeBudgets = [];
-		this.spendingBudgets = [];
-		this.everythingElseBudget = undefined;
-
 		this.budgetService.getMonthBudgetsInfo(this.monthDisplayed)
 			.subscribe(monthBudgetsInfo => {
-				this.addSpendingBudgets(monthBudgetsInfo.spendingBudgets);
-				this.addIncomeBudgets(monthBudgetsInfo.incomeBudgets);
-				this.spendingBudgets = this.spendingBudgets.splice(0);
-				this.incomeBudgets = this.incomeBudgets.splice(0);
+				this.spendingBudgets = monthBudgetsInfo.spendingBudgets;
+				this.incomeBudgets = monthBudgetsInfo.incomeBudgets;
 				this.monthStats = monthBudgetsInfo.monthStats;
-				this.toDisplayedBudget(monthBudgetsInfo.unbudgeted).subscribe(displayedBudget => {
-					this.everythingElseBudget = displayedBudget;
-				});
+				this.everythingElseBudget = monthBudgetsInfo.unbudgeted;
 				this.updateCashFlow();
 			});
 	}
@@ -111,41 +98,6 @@ export class BudgetsComponent implements OnInit {
 		this.incomeBudgets.forEach(incomeBudget => planedTotalIncome += incomeBudget.plannedMaxAmount);
 
 		return planedTotalIncome;
-	}
-
-	private addSpendingBudgets(budgets: Budget[]): void {
-		budgets.forEach(budget => this.addSpendingBudget(budget));
-	}
-
-	private addSpendingBudget(budget: Budget): void {
-		this.toDisplayedBudget(budget).subscribe(displayedBudget => {
-			this.spendingBudgets.push(displayedBudget);
-		});
-	}
-
-	private addIncomeBudgets(budgets: Budget[]): void {
-		budgets.forEach(budget => this.addIncomeBudget(budget));
-	}
-
-	private addIncomeBudget(budget: Budget): void {
-		this.toDisplayedBudget(budget).subscribe(displayedBudget => {
-			this.incomeBudgets.push(displayedBudget);
-		});
-	}
-
-	private toDisplayedBudget(budget: Budget): Observable<DisplayedBudget> {
-		return this.categoryService.getCategory(budget.categoryId)
-			.map(category => {
-				return {
-					budgetId: budget.budgetId,
-					categoryId: budget.categoryId,
-					startDate: budget.startDate,
-					endDate: budget.endDate,
-					plannedMaxAmount: budget.plannedMaxAmount,
-					currentAmount: budget.currentAmount,
-					category
-				};
-			});
 	}
 
 	get month(): Date {

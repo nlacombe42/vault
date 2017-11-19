@@ -4,6 +4,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Transaction} from "./transaction.model";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/from";
+import "rxjs/add/observable/forkJoin";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import {PaginationResponse} from "../shared/pagination-response.model";
@@ -90,10 +91,7 @@ export class TransactionsService {
 		let url = this.vaultBudgetsUrl + budgetId + '/transactions';
 
 		return this.http.get<any[]>(url)
-			.mergeMap(rawTransactions => Observable.from(rawTransactions))
-			.flatMap(rawTransaction => this.toDisplayedTransaction(this.toTransaction(rawTransaction)))
-			.toArray()
-			.map(displayedTransactions => this.toDisplayedTransactionsByDate(displayedTransactions));
+			.flatMap(rawTransactions => this.rawTransactionToDisplayedTransactionsByDate(rawTransactions));
 	}
 
 	getTransaction(transactionId: number): Observable<DisplayedTransaction> {
@@ -101,6 +99,15 @@ export class TransactionsService {
 
 		return this.http.get<any>(url)
 			.flatMap(rawTransaction => this.toDisplayedTransaction(this.toTransaction(rawTransaction)));
+	}
+
+	rawTransactionToDisplayedTransactionsByDate(rawTransactions: any[]): Observable<Grouping<Date, DisplayedTransaction>[]> {
+		return Observable.forkJoin(rawTransactions.map(rawTransaction => this.rawTransactionToDisplayedTransaction(rawTransaction)))
+			.map(displayedTransactions => this.toDisplayedTransactionsByDate(displayedTransactions));
+	}
+
+	rawTransactionToDisplayedTransaction(rawTransaction: any): Observable<DisplayedTransaction> {
+		return this.toDisplayedTransaction(this.toTransaction(rawTransaction));
 	}
 
 	private toDisplayedTransactionsByDate(displayedTransactions: DisplayedTransaction[]): Grouping<Date, DisplayedTransaction>[] {
@@ -124,7 +131,7 @@ export class TransactionsService {
 			});
 	}
 
-	private toTransaction(rawTransaction) {
+	private toTransaction(rawTransaction: any): Transaction {
 		let transaction = new Transaction();
 		transaction.accountId = rawTransaction.accountId;
 		transaction.transactionId = rawTransaction.transactionId;

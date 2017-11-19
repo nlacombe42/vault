@@ -14,28 +14,27 @@ import {DisplayedTransaction} from "./displayed-transaction.model";
 })
 export class TransactionsComponent implements OnInit {
 
-	@Input() budgetId: number;
-
 	transactionsByDate: Grouping<Date, DisplayedTransaction>[];
 
 	private pageNumber: number;
 	private readonly pageSize: number = 25;
+	private transactionWereSpecified: boolean;
 
 	constructor(private transactionService: TransactionsService) {
 		this.transactionsByDate = [];
 		this.pageNumber = 0;
+		this.transactionWereSpecified = false;
 	}
 
 	ngOnInit() {
-		if (this.budgetId !== undefined) {
-			this.loadBudgetTransactions(this.budgetId);
-		} else {
-			this.fetchNextTransactionPage();
-		}
+		if (this.transactionWereSpecified)
+			return;
+
+		this.fetchNextTransactionPage();
 	}
 
 	fetchNextTransactionPage(): void {
-		if (this.budgetId !== undefined)
+		if (this.transactionWereSpecified)
 			return;
 
 		this.transactionService.searchDisplayedTransactionsByDate(this.pageNumber, this.pageSize)
@@ -45,11 +44,9 @@ export class TransactionsComponent implements OnInit {
 			});
 	}
 
-	private loadBudgetTransactions(budgetId: number): void {
-		this.transactionService.getBudgetDisplayedTransactionsByDate(budgetId)
-			.subscribe(transactionsByDate => {
-				this.transactionsByDate = transactionsByDate;
-				this.pageNumber++;
-			});
+	@Input()
+	set transactions(transactions: Grouping<Date, DisplayedTransaction>[]) {
+		this.transactionsByDate = transactions;
+		this.transactionWereSpecified = true;
 	}
 }
