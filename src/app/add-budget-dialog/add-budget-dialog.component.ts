@@ -1,6 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {Category} from "../shared/category.model";
-import {CategoriesService} from "../shared/categories.service";
 import {BudgetsService} from "../budgets/budgets.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
@@ -23,7 +22,6 @@ export class AddBudgetDialogComponent implements OnInit {
 
 	constructor(public dialog: MatDialogRef<AddBudgetDialogComponent>,
 				@Inject(MAT_DIALOG_DATA) public data: AddBudgetDialogConfig,
-				private categoriesService: CategoriesService,
 				private budgetService: BudgetsService) {
 
 		this.categories = [];
@@ -32,7 +30,7 @@ export class AddBudgetDialogComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.categoriesService.getUserCategories()
+		this.budgetService.getUnbudgetedCategories(this.month)
 			.subscribe(category => this.categories.push(category));
 	}
 

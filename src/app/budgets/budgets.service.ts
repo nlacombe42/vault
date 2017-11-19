@@ -8,11 +8,12 @@ import {Observable} from "rxjs/Observable";
 import {DatePipe} from "@angular/common";
 import {MonthBudgetsInfo} from "./month-budgets-info";
 import {MonthBudgetCreationRequest} from "./month-budget-creation-request";
+import {Category} from "../shared/category.model";
 
 @Injectable()
 export class BudgetsService {
-	private readonly vaultbudgetsUrl: string = environment.apiBaseUrls.vaultWs + '/v1/budgets';
-	private readonly vaultMonthBudgetsUrl: string = this.vaultbudgetsUrl + '/month';
+	private readonly vaultBudgetsUrl: string = environment.apiBaseUrls.vaultWs + '/v1/budgets';
+	private readonly vaultMonthBudgetsUrl: string = this.vaultBudgetsUrl + '/month';
 
 	constructor(private http: HttpClient, private datePipe: DatePipe) {
 	}
@@ -30,9 +31,16 @@ export class BudgetsService {
 
 	getMonthBudgetsInfo(month: Date): Observable<MonthBudgetsInfo> {
 		let monthIsoString = this.toIsoYearMonth(month);
-		let url = this.vaultbudgetsUrl + `/month/${monthIsoString}/info`;
+		let url = this.vaultBudgetsUrl + `/month/${monthIsoString}/info`;
 
 		return this.http.get<MonthBudgetsInfo>(url);
+	}
+
+	getUnbudgetedCategories(month: Date): Observable<Category> {
+		let monthIsoString = this.toIsoYearMonth(month);
+		let url = this.vaultBudgetsUrl + `/month/${monthIsoString}/unbudgetedCategories`;
+
+		return this.http.get<Category[]>(url).flatMap(categories => Observable.from(categories));
 	}
 
 	private toIsoYearMonth(date: Date): string {
