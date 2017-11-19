@@ -7,6 +7,7 @@ import "rxjs/add/observable/empty";
 import "rxjs/add/operator/mergeMap";
 import "rxjs/add/operator/map";
 import {Category} from "./category.model";
+import "rxjs/add/operator/share";
 
 @Injectable()
 export class CategoriesService {
@@ -48,7 +49,10 @@ export class CategoriesService {
 	}
 
 	private createCategoriesObservable(): Observable<Category> {
-		let getCategoriesObservable = this.http.get<Category[]>(this.vaultCategoriesUrl).flatMap(categories => Observable.from(categories));
+		let getCategoriesObservable =
+			this.http.get<Category[]>(this.vaultCategoriesUrl)
+				.flatMap(categories => Observable.from(categories))
+				.share();
 
 		getCategoriesObservable.toArray().subscribe(categories => this.categories = categories);
 
