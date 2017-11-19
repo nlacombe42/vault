@@ -67,6 +67,7 @@ export class BudgetsComponent implements OnInit {
 	}
 
 	private loadMonthBudgetsInfo(): void {
+		this.incomeBudgets = [];
 		this.spendingBudgets = [];
 		this.everythingElseBudget = undefined;
 
@@ -133,23 +134,18 @@ export class BudgetsComponent implements OnInit {
 	}
 
 	private toDisplayedBudget(budget: Budget): Observable<DisplayedBudget> {
-		return new Observable<DisplayedBudget>(observer => {
-			this.categoryService.getCategory(budget.categoryId)
-				.subscribe(category => {
-					let displayedBudget: DisplayedBudget = {
-						budgetId: budget.budgetId,
-						categoryId: budget.categoryId,
-						startDate: budget.startDate,
-						endDate: budget.endDate,
-						plannedMaxAmount: budget.plannedMaxAmount,
-						currentAmount: budget.currentAmount,
-						category
-					};
-
-					observer.next(displayedBudget);
-					observer.complete();
-				});
-		});
+		return this.categoryService.getCategory(budget.categoryId)
+			.map(category => {
+				return {
+					budgetId: budget.budgetId,
+					categoryId: budget.categoryId,
+					startDate: budget.startDate,
+					endDate: budget.endDate,
+					plannedMaxAmount: budget.plannedMaxAmount,
+					currentAmount: budget.currentAmount,
+					category
+				};
+			});
 	}
 
 	get month(): Date {

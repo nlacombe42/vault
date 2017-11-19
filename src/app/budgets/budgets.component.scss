@@ -1,7 +1,3 @@
-.budgets {
-	position: relative;
-}
-
 .budget-title {
 	display: inline-block;
 	width: calc(100% - 150px);
@@ -15,4 +11,12 @@
 .budget-amount {
 	display: inline;
 	float: right;
+}
+
+.scrollable {
+	overflow: auto;
+}
+
+a {
+	text-decoration: none;
 }
