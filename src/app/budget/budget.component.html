@@ -6,6 +6,14 @@
 							[currentAmount]="budget.currentAmount"
 							[plannedMaxAmount]="budget.plannedMaxAmount">
 			</budgetProgress>
+			<div>
+				<mat-form-field>
+					<input matInput [(ngModel)]="budget.plannedMaxAmount" type="number" placeholder="Planned Max Amount">
+				</mat-form-field>
+				<button (click)="updatePlannedMaxAmount()" mat-raised-button color="primary">
+					Update
+				</button>
+			</div>
 		</section>
 		<transactions [transactions]="budget.transactionsByDate"></transactions>
 	</div>

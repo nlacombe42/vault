@@ -25,4 +25,8 @@ export class BudgetComponent implements OnInit {
 				this.budgetName = this.budget.category === undefined ? 'Unbudgeted' : this.budget.category.name;
 			});
 	}
+
+	updatePlannedMaxAmount(): void {
+		this.budgetsService.updateBudgetPlannedMaxAmount(this.budget.budgetId, this.budget.plannedMaxAmount).subscribe();
+	}
 }

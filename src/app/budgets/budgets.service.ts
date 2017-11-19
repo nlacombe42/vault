@@ -55,6 +55,12 @@ export class BudgetsService {
 			.flatMap(rawBudgetWithTransactions => this.toBudgetWithTransactions(rawBudgetWithTransactions));
 	}
 
+	updateBudgetPlannedMaxAmount(budgetId: number, plannedMaxAmount: number): Observable<void> {
+		let url = this.vaultBudgetsUrl + `/${budgetId}/plannedMaxAmount`;
+
+		return this.http.put<void>(url, plannedMaxAmount);
+	}
+
 	private toDisplayedMonthBudgetsInfo(monthBudgetsInfo: MonthBudgetsInfo): Observable<DisplayedMonthBudgetsInfo> {
 		let unbudgetedDisplayedBudgetObservable = this.toDisplayedBudget(monthBudgetsInfo.unbudgeted).take(1);
 		let incomeDisplayedBudgetsObservable = Observable.from(monthBudgetsInfo.incomeBudgets)

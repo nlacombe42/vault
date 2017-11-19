@@ -47,6 +47,6 @@ export class TransactionsComponent implements OnInit {
 	@Input()
 	set transactions(transactions: Grouping<Date, DisplayedTransaction>[]) {
 		this.transactionsByDate = transactions;
-		this.transactionWereSpecified = true;
+		this.transactionWereSpecified = transactions !== undefined;
 	}
 }
