@@ -101,24 +101,19 @@ export class TransactionsService {
 	}
 
 	private toDisplayedTransaction(transaction: Transaction): Observable<DisplayedTransaction> {
-		return new Observable<DisplayedTransaction>(observer => {
-			this.categoriesService.getCategory(transaction.categoryId)
-				.subscribe(category => {
-					let displayedTransaction: DisplayedTransaction = {
-						transactionId: transaction.transactionId,
-						accountId: transaction.accountId,
-						categoryId: transaction.categoryId,
-						category: category,
-						datetime: transaction.datetime,
-						description: transaction.description,
-						amount: transaction.amount,
-						dateOnly: new Date(transaction.datetime.toDateString())
-					};
-
-					observer.next(displayedTransaction);
-					observer.complete();
-				});
-		});
+		return this.categoriesService.getCategory(transaction.categoryId)
+			.map(category => {
+				return {
+					transactionId: transaction.transactionId,
+					accountId: transaction.accountId,
+					categoryId: transaction.categoryId,
+					category: category,
+					datetime: transaction.datetime,
+					description: transaction.description,
+					amount: transaction.amount,
+					dateOnly: new Date(transaction.datetime.toDateString())
+				};
+			});
 	}
 
 	private toTransaction(rawTransaction) {
