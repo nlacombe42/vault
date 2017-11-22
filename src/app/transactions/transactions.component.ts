@@ -1,8 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TransactionsService} from "./transactions.service";
-import "rxjs/add/operator/toArray";
-import "rxjs/add/operator/do";
-import "rxjs/add/operator/take";
 import "rxjs/add/observable/merge";
 import {Grouping} from "../shared/array.util";
 import {DisplayedTransaction} from "./displayed-transaction.model";

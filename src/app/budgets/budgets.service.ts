@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import "rxjs/add/observable/from";
-import "rxjs/add/operator/mergeMap";
-import "rxjs/add/operator/map";
 import 'rxjs/add/observable/forkJoin'
 import {Observable} from "rxjs/Observable";
 import {DatePipe} from "@angular/common";
@@ -13,6 +11,7 @@ import {Category} from "../shared/category.model";
 import {TransactionsService} from "../transactions/transactions.service";
 import {Budget, BudgetWithTransactions, DisplayedBudget} from "./budget.model";
 import {CategoriesService} from "../shared/categories.service";
+import {map, mergeMap, take, toArray} from "rxjs/operators";
 
 @Injectable()
 export class BudgetsService {
@@ -38,21 +37,23 @@ export class BudgetsService {
 		let monthIsoString = this.toIsoYearMonth(month);
 		let url = this.vaultBudgetsUrl + `/month/${monthIsoString}/info`;
 
-		return this.http.get<MonthBudgetsInfo>(url).flatMap(monthBudgetsInfo => this.toDisplayedMonthBudgetsInfo(monthBudgetsInfo));
+		return this.http.get<MonthBudgetsInfo>(url)
+			.pipe(mergeMap((monthBudgetsInfo: MonthBudgetsInfo) => this.toDisplayedMonthBudgetsInfo(monthBudgetsInfo)));
 	}
 
 	getUnbudgetedCategories(month: Date): Observable<Category> {
 		let monthIsoString = this.toIsoYearMonth(month);
 		let url = this.vaultBudgetsUrl + `/month/${monthIsoString}/unbudgetedCategories`;
 
-		return this.http.get<Category[]>(url).flatMap(categories => Observable.from(categories));
+		return this.http.get<Category[]>(url)
+			.pipe(mergeMap((categories: Category[]) => Observable.from(categories)));
 	}
 
 	getBudget(budgetId: number): Observable<BudgetWithTransactions> {
 		let url = this.vaultBudgetsUrl + '/' + budgetId;
 
 		return this.http.get<any>(url)
-			.flatMap(rawBudgetWithTransactions => this.toBudgetWithTransactions(rawBudgetWithTransactions));
+			.pipe(mergeMap(rawBudgetWithTransactions => this.toBudgetWithTransactions(rawBudgetWithTransactions)));
 	}
 
 	updateBudgetPlannedMaxAmount(budgetId: number, plannedMaxAmount: number): Observable<void> {
@@ -62,26 +63,26 @@ export class BudgetsService {
 	}
 
 	private toDisplayedMonthBudgetsInfo(monthBudgetsInfo: MonthBudgetsInfo): Observable<DisplayedMonthBudgetsInfo> {
-		let unbudgetedDisplayedBudgetObservable = this.toDisplayedBudget(monthBudgetsInfo.unbudgeted).take(1);
+		let unbudgetedDisplayedBudgetObservable = this.toDisplayedBudget(monthBudgetsInfo.unbudgeted).pipe(take(1));
 		let incomeDisplayedBudgetsObservable = Observable.from(monthBudgetsInfo.incomeBudgets)
-			.flatMap(incomeBudget => this.toDisplayedBudget(incomeBudget)).toArray();
+			.pipe(mergeMap((incomeBudget: Budget) => this.toDisplayedBudget(incomeBudget)), toArray());
 		let spendingDisplayedBudgetsObservable = Observable.from(monthBudgetsInfo.spendingBudgets)
-			.flatMap(spendingBudget => this.toDisplayedBudget(spendingBudget)).toArray();
+			.pipe(mergeMap((spendingBudget: Budget) => this.toDisplayedBudget(spendingBudget)), toArray());
 
 		return Observable.forkJoin(unbudgetedDisplayedBudgetObservable, incomeDisplayedBudgetsObservable, spendingDisplayedBudgetsObservable)
-			.map(results => {
+			.pipe(map(results => {
 				return {
 					monthStats: monthBudgetsInfo.monthStats,
 					unbudgeted: results[0],
 					incomeBudgets: results[1],
 					spendingBudgets: results[2]
 				};
-			});
+			}));
 	}
 
 	private toDisplayedBudget(budget: Budget): Observable<DisplayedBudget> {
 		return this.categoryService.getCategory(budget.categoryId)
-			.map(category => {
+			.pipe(map(category => {
 				return {
 					budgetId: budget.budgetId,
 					categoryId: budget.categoryId,
@@ -92,7 +93,7 @@ export class BudgetsService {
 					income: budget.income,
 					category
 				};
-			});
+			}));
 	}
 
 	private toBudgetWithTransactions(rawBudgetWithTransactions: any): Observable<BudgetWithTransactions> {
@@ -100,7 +101,7 @@ export class BudgetsService {
 		let categoryObservable = this.categoryService.getCategory(rawBudgetWithTransactions.categoryId);
 
 		return Observable.forkJoin(displayedTransactionsByDateObservable, categoryObservable)
-			.map(results => {
+			.pipe(map(results => {
 				return {
 					budgetId: rawBudgetWithTransactions.budgetId,
 					categoryId: rawBudgetWithTransactions.categoryId,
@@ -112,7 +113,7 @@ export class BudgetsService {
 					transactionsByDate: results[0],
 					category: results[1],
 				};
-			});
+			}));
 	}
 
 	private toIsoYearMonth(date: Date): string {

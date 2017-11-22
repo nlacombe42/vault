@@ -2,12 +2,11 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
+import {Category} from "./category.model";
+import 'rxjs/add/observable/of';
 import "rxjs/add/observable/from";
 import "rxjs/add/observable/empty";
-import "rxjs/add/operator/mergeMap";
-import "rxjs/add/operator/map";
-import {Category} from "./category.model";
-import "rxjs/add/operator/share";
+import {mergeMap, share, toArray} from "rxjs/operators";
 
 @Injectable()
 export class CategoriesService {
@@ -51,10 +50,11 @@ export class CategoriesService {
 	private createCategoriesObservable(): Observable<Category> {
 		let getCategoriesObservable =
 			this.http.get<Category[]>(this.vaultCategoriesUrl)
-				.flatMap(categories => Observable.from(categories))
-				.share();
+				.pipe(
+					mergeMap((categories: Category[]) => Observable.from(categories)),
+					share());
 
-		getCategoriesObservable.toArray().subscribe(categories => this.categories = categories);
+		getCategoriesObservable.pipe(toArray()).subscribe((categories: Category[]) => this.categories = categories);
 
 		return getCategoriesObservable;
 	}

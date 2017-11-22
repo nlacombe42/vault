@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Transaction} from "../transactions/transaction.model";
 import {TransactionsService} from "../transactions/transactions.service";
-import "rxjs/add/operator/toArray";
-import "rxjs/add/operator/do";
-import "rxjs/add/operator/take";
 import {Category} from "../shared/category.model";
 import {CategoriesService} from "../shared/categories.service";
 import {ArrayUtils, Grouping} from "../shared/array.util";

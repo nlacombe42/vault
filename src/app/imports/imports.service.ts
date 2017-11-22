@@ -2,14 +2,12 @@ import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import "rxjs/add/observable/from";
-import "rxjs/add/operator/mergeMap";
-import "rxjs/add/operator/map";
 import {Observable} from "rxjs/Observable";
 import {StorageService} from "../shared/storage.service";
 import {ImportPassword} from "./import-password";
 import {DateUtils} from "../shared/date.util";
 import {IntervalObservable} from "rxjs/observable/IntervalObservable";
-import "rxjs/add/operator/takeWhile";
+import {takeWhile} from "rxjs/operators";
 
 @Injectable()
 export class ImportsService implements OnInit, OnDestroy {
@@ -54,7 +52,7 @@ export class ImportsService implements OnInit, OnDestroy {
 
 		if (!this.intervalCreated && importPassword.passwordStorageExpireDate > new Date()) {
 			IntervalObservable.create(this.importIntervalSeconds * 1000)
-				.takeWhile(() => this.alive)
+				.pipe(takeWhile(() => this.alive))
 				.subscribe(() => {
 					this.importOnce(importPassword.password);
 				});

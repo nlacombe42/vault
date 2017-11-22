@@ -5,13 +5,12 @@ import {Transaction} from "./transaction.model";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/from";
 import "rxjs/add/observable/forkJoin";
-import "rxjs/add/operator/mergeMap";
-import "rxjs/add/operator/map";
 import {PaginationResponse} from "../shared/pagination-response.model";
 import {SearchTransactionsRequest} from "./search-transactions-request.model";
 import {DisplayedTransaction} from "./displayed-transaction.model";
 import {CategoriesService} from "../shared/categories.service";
 import {ArrayUtils, Grouping} from "../shared/array.util";
+import {map, mergeMap, toArray} from "rxjs/operators";
 
 @Injectable()
 export class TransactionsService {
@@ -24,20 +23,10 @@ export class TransactionsService {
 	}
 
 	getUncategorizedTransactions(): Observable<Transaction> {
-		return new Observable<Transaction>(observer => {
-			this.http.get<any[]>(this.vaultUncategorizedTransactionsUrl)
-				.mergeMap(rawTransactions => Observable.from(rawTransactions))
-				.map(rawTransaction => {
-					return this.toTransaction(rawTransaction);
-				})
-				.subscribe(transaction => {
-					observer.next(transaction);
-				}, (errorResponse: HttpErrorResponse) => {
-					observer.error(errorResponse.error);
-				}, () => {
-					observer.complete();
-				});
-		});
+		return this.http.get<any[]>(this.vaultUncategorizedTransactionsUrl)
+			.pipe(
+				mergeMap((rawTransactions: any[]) => Observable.from(rawTransactions)),
+				map(rawTransaction => this.toTransaction(rawTransaction)));
 	}
 
 	searchTransactions(searchRequest: SearchTransactionsRequest): Observable<PaginationResponse<Transaction>> {
@@ -51,11 +40,10 @@ export class TransactionsService {
 					observer.error(errorResponse.error);
 				}, () => {
 					Observable.from(rawPaginationResponse.elements)
-						.map(rawTransaction => {
-							return this.toTransaction(rawTransaction);
-						})
-						.toArray()
-						.subscribe(transactions => {
+						.pipe(
+							map(rawTransaction => this.toTransaction(rawTransaction)),
+							toArray())
+						.subscribe((transactions: Transaction[]) => {
 							observer.next(new PaginationResponse<Transaction>(rawPaginationResponse.paginationRequest, rawPaginationResponse.total, transactions));
 						}, undefined, () => {
 							observer.complete();
@@ -74,11 +62,12 @@ export class TransactionsService {
 		};
 
 		return this.searchTransactions(searchRequest)
-			.map(paginationResponse => paginationResponse.elements)
-			.flatMap(transactions => Observable.from(transactions))
-			.flatMap(transaction => this.toDisplayedTransaction(transaction))
-			.toArray()
-			.map(displayedTransactions => this.toDisplayedTransactionsByDate(displayedTransactions));
+			.pipe(
+				map((paginationResponse: PaginationResponse<Transaction>) => paginationResponse.elements),
+				mergeMap((transactions: Transaction[]) => Observable.from(transactions)),
+				mergeMap((transaction: Transaction) => this.toDisplayedTransaction(transaction)),
+				toArray(),
+				map((displayedTransactions: DisplayedTransaction[]) => this.toDisplayedTransactionsByDate(displayedTransactions)));
 	}
 
 	categorize(transactionId: number, categoryId: number): Observable<void> {
@@ -91,19 +80,19 @@ export class TransactionsService {
 		let url = this.vaultBudgetsUrl + budgetId + '/transactions';
 
 		return this.http.get<any[]>(url)
-			.flatMap(rawTransactions => this.rawTransactionToDisplayedTransactionsByDate(rawTransactions));
+			.pipe(mergeMap((rawTransactions: any[]) => this.rawTransactionToDisplayedTransactionsByDate(rawTransactions)));
 	}
 
 	getTransaction(transactionId: number): Observable<DisplayedTransaction> {
 		let url = this.vaultTransactionsUrl + transactionId;
 
 		return this.http.get<any>(url)
-			.flatMap(rawTransaction => this.toDisplayedTransaction(this.toTransaction(rawTransaction)));
+			.pipe(mergeMap((rawTransaction: any) => this.toDisplayedTransaction(this.toTransaction(rawTransaction))));
 	}
 
 	rawTransactionToDisplayedTransactionsByDate(rawTransactions: any[]): Observable<Grouping<Date, DisplayedTransaction>[]> {
 		return Observable.forkJoin(rawTransactions.map(rawTransaction => this.rawTransactionToDisplayedTransaction(rawTransaction)))
-			.map(displayedTransactions => this.toDisplayedTransactionsByDate(displayedTransactions));
+			.pipe(map((displayedTransactions: DisplayedTransaction[]) => this.toDisplayedTransactionsByDate(displayedTransactions)));
 	}
 
 	rawTransactionToDisplayedTransaction(rawTransaction: any): Observable<DisplayedTransaction> {
@@ -117,7 +106,7 @@ export class TransactionsService {
 
 	private toDisplayedTransaction(transaction: Transaction): Observable<DisplayedTransaction> {
 		return this.categoriesService.getCategory(transaction.categoryId)
-			.map(category => {
+			.pipe(map(category => {
 				return {
 					transactionId: transaction.transactionId,
 					accountId: transaction.accountId,
@@ -128,7 +117,7 @@ export class TransactionsService {
 					amount: transaction.amount,
 					dateOnly: new Date(transaction.datetime.toDateString())
 				};
-			});
+			}));
 	}
 
 	private toTransaction(rawTransaction: any): Transaction {
