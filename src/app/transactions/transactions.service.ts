@@ -76,11 +76,10 @@ export class TransactionsService {
 		return this.http.put<void>(environment.apiBaseUrls.vaultWs + `/v1/transactions/${transactionId}/category`, request);
 	}
 
-	getBudgetDisplayedTransactionsByDate(budgetId: number): Observable<Grouping<Date, DisplayedTransaction>[]> {
-		let url = this.vaultBudgetsUrl + budgetId + '/transactions';
+	deleteTransaction(transactionId: number): Observable<void> {
+		let url = this.vaultTransactionsUrl + transactionId;
 
-		return this.http.get<any[]>(url)
-			.pipe(mergeMap((rawTransactions: any[]) => this.rawTransactionToDisplayedTransactionsByDate(rawTransactions)));
+		return this.http.delete<any>(url);
 	}
 
 	getTransaction(transactionId: number): Observable<DisplayedTransaction> {

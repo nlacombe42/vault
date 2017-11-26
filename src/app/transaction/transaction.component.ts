@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
 import {ActivatedRoute} from "@angular/router";
 import {TransactionsService} from "../transactions/transactions.service";
 import {DisplayedTransaction} from "../transactions/displayed-transaction.model";
@@ -17,8 +18,10 @@ export class TransactionComponent implements OnInit {
 	selectedCategoryId: string | number;
 	categories: Category[];
 
-	constructor(private route: ActivatedRoute, private transactionsService: TransactionsService,
+	constructor(private route: ActivatedRoute, private location: Location,
+				private transactionsService: TransactionsService,
 				private categoriesService: CategoriesService) {
+
 		this.categories = [];
 	}
 
@@ -38,5 +41,12 @@ export class TransactionComponent implements OnInit {
 	categorizeTransaction(transaction: Transaction, categoryId: string | number): void {
 		if (typeof categoryId === 'number')
 			this.transactionsService.categorize(transaction.transactionId, categoryId).subscribe();
+	}
+
+	deleteTransaction(transaction: Transaction) {
+		this.transactionsService.deleteTransaction(transaction.transactionId)
+			.subscribe(undefined, undefined, () => {
+				this.location.back();
+			});
 	}
 }
