@@ -14,6 +14,7 @@
 				class="submit-button">
 			Import
 		</button>
+		<p [ngClass]="messageClass" class="message">{{message}}</p>
 		<mat-spinner *ngIf="importInProgress" class="spinner"></mat-spinner>
 	</form>
 </section>

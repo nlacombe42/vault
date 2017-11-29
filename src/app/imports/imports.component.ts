@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ImportsService} from "./imports.service";
+import "rxjs/add/operator/finally";
 
 @Component({
 	selector: 'imports',
@@ -11,6 +12,8 @@ export class ImportsComponent implements OnInit {
 	password: string;
 	rememberPassword: number;
 	importInProgress: boolean;
+	message: string;
+	messageClass: string;
 
 	constructor(private importsService: ImportsService) {
 	}
@@ -22,9 +25,17 @@ export class ImportsComponent implements OnInit {
 	import(): void {
 		this.importInProgress = true;
 		this.importsService.import(this.password, this.rememberPassword)
+			.finally(() => {
+				this.importInProgress = false;
+			})
 			.subscribe(
-				undefined,
-				() => this.importInProgress = false,
-				() => this.importInProgress = false);
+				() => {
+					this.message = "Import successful.";
+					this.messageClass = "message-success";
+				},
+				() => {
+					this.message = "Error during import.";
+					this.messageClass = "message-error";
+				});
 	}
 }

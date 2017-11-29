@@ -8,6 +8,7 @@ import {ImportPassword} from "./import-password";
 import {DateUtils} from "../shared/date.util";
 import {IntervalObservable} from "rxjs/observable/IntervalObservable";
 import {takeWhile} from "rxjs/operators";
+import "rxjs/add/operator/catch";
 
 @Injectable()
 export class ImportsService implements OnInit, OnDestroy {
@@ -63,15 +64,10 @@ export class ImportsService implements OnInit, OnDestroy {
 	}
 
 	private importOnce(password: string): Observable<void> {
-		return new Observable<void>(observer => {
-			this.http.post<void>(this.vaultDesjardinsImportUrl, {importPassword: password})
-				.subscribe(
-					() => observer.next(),
-					(error) => {
-						this.storageService.clearImportPassword();
-						observer.error(error);
-					},
-					()=> observer.complete());
-		});
+		return this.http.post<void>(this.vaultDesjardinsImportUrl, {importPassword: password})
+			.catch((error) => {
+				this.storageService.clearImportPassword();
+				return Observable.throw(error);
+			});
 	}
 }
