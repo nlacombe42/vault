@@ -90,7 +90,9 @@ export class TransactionsService {
 	}
 
 	rawTransactionToDisplayedTransactionsByDate(rawTransactions: any[]): Observable<Grouping<Date, DisplayedTransaction>[]> {
-		return Observable.forkJoin(rawTransactions.map(rawTransaction => this.rawTransactionToDisplayedTransaction(rawTransaction)))
+		let displayedTransactionsObservables = rawTransactions.map(rawTransaction => this.rawTransactionToDisplayedTransaction(rawTransaction));
+
+		return Observable.forkJoin(displayedTransactionsObservables)
 			.pipe(map((displayedTransactions: DisplayedTransaction[]) => this.toDisplayedTransactionsByDate(displayedTransactions)));
 	}
 

@@ -12,6 +12,7 @@ import {TransactionsService} from "../transactions/transactions.service";
 import {Budget, BudgetWithTransactions, DisplayedBudget} from "./budget.model";
 import {CategoriesService} from "../shared/categories.service";
 import {map, mergeMap, take, toArray} from "rxjs/operators";
+import "rxjs/add/operator/defaultIfEmpty";
 
 @Injectable()
 export class BudgetsService {
@@ -97,7 +98,9 @@ export class BudgetsService {
 	}
 
 	private toBudgetWithTransactions(rawBudgetWithTransactions: any): Observable<BudgetWithTransactions> {
-		let displayedTransactionsByDateObservable = this.transactionsService.rawTransactionToDisplayedTransactionsByDate(rawBudgetWithTransactions.transactions);
+		let displayedTransactionsByDateObservable =
+			this.transactionsService.rawTransactionToDisplayedTransactionsByDate(rawBudgetWithTransactions.transactions)
+				.defaultIfEmpty(undefined);
 		let categoryObservable = this.categoryService.getCategory(rawBudgetWithTransactions.categoryId);
 
 		return Observable.forkJoin(displayedTransactionsByDateObservable, categoryObservable)
