@@ -13,10 +13,10 @@
 				<p mat-line>
 					<span class="budget-title">Month's Total Budget</span>
 					<span class="budget-amount">
-					{{ (monthStats.totalPlannedMaxAmount - monthStats.currentAmount) |  number:'1.2-2'}} left
+					{{ (monthStats.totalPlannedMaxAmount - spendingTotal) |  number:'1.2-2'}} left
 				</span>
 				</p>
-				<budgetProgress mat-line [currentAmount]="monthStats.currentAmount"
+				<budgetProgress mat-line [currentAmount]="spendingTotal"
 								[plannedMaxAmount]="monthStats.totalPlannedMaxAmount">
 				</budgetProgress>
 			</mat-list-item>

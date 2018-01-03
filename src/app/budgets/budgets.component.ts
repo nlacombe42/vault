@@ -23,6 +23,7 @@ export class BudgetsComponent implements OnInit {
 	categories: Category[];
 	cashFlowLabel: string;
 	cashFlow: number;
+	spendingTotal: number;
 
 	constructor(public dialog: MatDialog, private budgetService: BudgetsService,
 				private categoryService: CategoriesService, private storageService: StorageService) {
@@ -69,14 +70,14 @@ export class BudgetsComponent implements OnInit {
 				this.monthStats = monthBudgetsInfo.monthStats;
 				this.everythingElseBudget = monthBudgetsInfo.unbudgeted;
 				this.updateCashFlow();
+				this.updateSpendingTotal();
 			});
 	}
 
 	private updateCashFlow() {
 		if (DateUtils.isPastMonth(this.monthDisplayed)) {
-			let currentTotalIncome = this.getMonthCurrentTotalIncome();
 			this.cashFlowLabel = 'Current cash flow';
-			this.cashFlow = currentTotalIncome - this.monthStats.currentAmount;
+			this.cashFlow = this.monthStats.currentAmount;
 		} else {
 			let planedTotalIncome = this.getMonthPlanedTotalIncome();
 			this.cashFlowLabel = 'Planed cash flow';
@@ -84,12 +85,11 @@ export class BudgetsComponent implements OnInit {
 		}
 	}
 
-	private getMonthCurrentTotalIncome(): number {
-		let currentTotalIncome = 0;
-
-		this.incomeBudgets.forEach(incomeBudget => currentTotalIncome += incomeBudget.currentAmount);
-
-		return currentTotalIncome;
+	private updateSpendingTotal() {
+		let spendingBudgetTotal = this.spendingBudgets
+			.map(spendingBudget => spendingBudget.currentAmount)
+			.reduce((totalSpent, budgetSpent) => totalSpent + budgetSpent);
+		this.spendingTotal = spendingBudgetTotal + this.everythingElseBudget.currentAmount;
 	}
 
 	private getMonthPlanedTotalIncome(): number {
