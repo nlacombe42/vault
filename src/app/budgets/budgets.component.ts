@@ -86,10 +86,16 @@ export class BudgetsComponent implements OnInit {
 	}
 
 	private updateSpendingTotal() {
-		let spendingBudgetTotal = this.spendingBudgets
+		this.spendingTotal = this.getSpendingBudgetTotal() + this.everythingElseBudget.currentAmount;
+	}
+
+	private getSpendingBudgetTotal(): number {
+		if (this.spendingBudgets.length == 0)
+			return 0;
+
+		return this.spendingBudgets
 			.map(spendingBudget => spendingBudget.currentAmount)
 			.reduce((totalSpent, budgetSpent) => totalSpent + budgetSpent);
-		this.spendingTotal = spendingBudgetTotal + this.everythingElseBudget.currentAmount;
 	}
 
 	private getMonthPlanedTotalIncome(): number {
