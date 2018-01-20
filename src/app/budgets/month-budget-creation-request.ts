@@ -3,4 +3,5 @@ export class MonthBudgetCreationRequest {
 	month: string;
 	plannedMaxAmount: number;
 	income: boolean;
+	investment: boolean;
 }

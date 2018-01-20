@@ -23,12 +23,13 @@ export class BudgetsService {
 				private categoryService: CategoriesService) {
 	}
 
-	createBudget(categoryId: number, month: Date, plannedMaxAmount: number, income: boolean): Observable<void> {
+	createBudget(categoryId: number, month: Date, plannedMaxAmount: number, income: boolean, investment: boolean): Observable<void> {
 		let monthBudgetCreationRequest: MonthBudgetCreationRequest = {
 			categoryId,
 			month: this.toIsoYearMonth(month),
 			plannedMaxAmount,
-			income
+			income,
+			investment
 		};
 
 		return this.http.post<void>(this.vaultMonthBudgetsUrl, monthBudgetCreationRequest);
@@ -92,6 +93,7 @@ export class BudgetsService {
 					plannedMaxAmount: budget.plannedMaxAmount,
 					currentAmount: budget.currentAmount,
 					income: budget.income,
+					investment: budget.investment,
 					category
 				};
 			}));
@@ -113,6 +115,7 @@ export class BudgetsService {
 					plannedMaxAmount: rawBudgetWithTransactions.plannedMaxAmount,
 					currentAmount: rawBudgetWithTransactions.currentAmount,
 					income: rawBudgetWithTransactions.income,
+					investment: rawBudgetWithTransactions.investment,
 					transactionsByDate: results[0],
 					category: results[1],
 				};

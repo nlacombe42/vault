@@ -1,3 +1,5 @@
+@import "../../variables";
+
 .app, mat-sidenav-container {
 	display: flex;
 	flex-flow: column;
@@ -10,7 +12,7 @@
 }
 
 main {
-	max-width: 1200px;
+	max-width: $maxPageWidth;
 	min-width: 360px;
 	margin: 20px auto;
 

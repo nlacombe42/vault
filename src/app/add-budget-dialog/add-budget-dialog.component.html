@@ -24,6 +24,11 @@
 				Income budget
 			</mat-checkbox>
 		</div>
+		<div class="dialog-form-checkbox">
+			<mat-checkbox [(ngModel)]="investmentBudget" name="investmentBudget">
+				Investment budget
+			</mat-checkbox>
+		</div>
 		<mat-form-field class="dialog-form-element">
 			<input [(ngModel)]="amount" matInput type="number" placeholder="Amount" required name="amount">
 		</mat-form-field>

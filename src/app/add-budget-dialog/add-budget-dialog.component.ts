@@ -19,6 +19,7 @@ export class AddBudgetDialogComponent implements OnInit {
 	category: Category;
 	amount: number;
 	incomeBudget: boolean;
+	investmentBudget: boolean;
 
 	constructor(public dialog: MatDialogRef<AddBudgetDialogComponent>,
 				@Inject(MAT_DIALOG_DATA) public data: AddBudgetDialogConfig,
@@ -27,6 +28,7 @@ export class AddBudgetDialogComponent implements OnInit {
 		this.categories = [];
 		this.month = data.month;
 		this.incomeBudget = false;
+		this.investmentBudget = false;
 	}
 
 	ngOnInit() {
@@ -35,7 +37,7 @@ export class AddBudgetDialogComponent implements OnInit {
 	}
 
 	addBudget() {
-		this.budgetService.createBudget(this.category.categoryId, this.month, this.amount, this.incomeBudget)
+		this.budgetService.createBudget(this.category.categoryId, this.month, this.amount, this.incomeBudget, this.investmentBudget)
 			.subscribe(() => {
 				this.dialog.close();
 			}, (errorResponse) => {

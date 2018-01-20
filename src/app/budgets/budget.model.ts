@@ -10,6 +10,7 @@ export class Budget {
 	plannedMaxAmount: number;
 	currentAmount: number;
 	income: boolean;
+	investment: boolean;
 }
 
 export class DisplayedBudget extends Budget {
