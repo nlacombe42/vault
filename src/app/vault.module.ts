@@ -4,7 +4,6 @@ import {NgModule} from '@angular/core';
 import {VaultComponent} from './vault.component';
 import {ToolbarComponent} from './toolbar/toolbar.component';
 import {SideMenuComponent} from './side-menu/side-menu.component';
-import {OverviewComponent} from './overview/overview.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {VaultRoutingModule} from "./shared/vault-routing.module";
 import {LoginComponent} from './login/login.component';
@@ -40,7 +39,6 @@ import {TransactionComponent} from "./transaction/transaction.component";
 		VaultComponent,
 		ToolbarComponent,
 		SideMenuComponent,
-		OverviewComponent,
 		UncategorizedTransactionsComponent,
 		PageNotFoundComponent,
 		LoginComponent,
