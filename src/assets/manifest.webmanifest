@@ -8,8 +8,13 @@
 	"description": "Personal budget app.",
 	"icons": [
 		{
+			"src": "assets/vault-icon.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
 			"src": "assets/vault-icon.svg",
-			"type": "image/svg+xml"
+			"sizes": "48x48 192x192 512x512"
 		}
 	]
 }
