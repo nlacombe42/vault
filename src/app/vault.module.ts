@@ -33,6 +33,8 @@ import {ImportsComponent} from "./imports/imports.component";
 import {ImportsService} from "./imports/imports.service";
 import {BudgetComponent} from "./budget/budget.component";
 import {TransactionComponent} from "./transaction/transaction.component";
+import {environment} from '../environments/environment';
+import {ServiceWorkerModule} from '@angular/service-worker';
 
 @NgModule({
 	declarations: [
@@ -55,7 +57,8 @@ import {TransactionComponent} from "./transaction/transaction.component";
 		LocalMonthPipe
 	],
 	imports: [
-		BrowserModule, BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMatModule,
+		BrowserModule, environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : [],
+		BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMatModule,
 		InfiniteScrollModule
 	],
 	entryComponents: [

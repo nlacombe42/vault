@@ -21,6 +21,7 @@
 			"styles": [
 				"styles.scss"
 			],
+			"serviceWorker": true,
 			"scripts": [],
 			"environmentSource": "environments/environment.ts",
 			"environments": {
