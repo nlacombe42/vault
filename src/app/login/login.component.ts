@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
 
 	login(username: string, password: string) {
 		this.authService.login(username, password).subscribe(() => {
-			this.router.navigate(['/overview']);
+			this.router.navigate(['/budgets']);
 		}, (error) => {
 			if (isRestException(error) && error.errorCode === RestExceptionErrorCodes.NOT_FOUND) {
 				this.errorMessage = 'Username password combination does not match.';

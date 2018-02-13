@@ -101,8 +101,14 @@ export class TransactionsService {
 	}
 
 	private toDisplayedTransactionsByDate(displayedTransactions: DisplayedTransaction[]): Grouping<Date, DisplayedTransaction>[] {
-		return ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
+		let displayedTransactionsByDate = ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
 			displayedTransaction => displayedTransaction.dateOnly.getTime());
+
+		displayedTransactionsByDate = displayedTransactionsByDate.sort(function (transactionGroup1, transactionGroup2) {
+			return transactionGroup2.key - transactionGroup1.key;
+		});
+
+		return displayedTransactionsByDate;
 	}
 
 	private toDisplayedTransaction(transaction: Transaction): Observable<DisplayedTransaction> {

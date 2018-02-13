@@ -88,17 +88,35 @@ export class BudgetsComponent implements OnInit {
 
 		if (DateUtils.isPastMonth(this.monthDisplayed)) {
 			this.cashFlowWithoutInvestmentLabel = 'Current cash flow (without investment)';
+			this.cashFlowWithoutInvestment = this.cashFlow + this.getCurrentInvestmentTotal();
 		} else {
 			this.cashFlowWithoutInvestmentLabel = 'Planed cash flow (without investment)';
+			this.cashFlowWithoutInvestment = this.cashFlow + this.getPlannedInvestmentTotal();
 		}
-
-		this.cashFlowWithoutInvestment = this.cashFlow + this.getInvestmentTotal();
 	}
 
-	private getInvestmentTotal(): number {
-		return this.spendingBudgets
+	private getCurrentInvestmentTotal(): number {
+		let spendingInvestmentTotal = this.spendingBudgets
 			.filter(spendingBudget => spendingBudget.investment)
 			.reduce((investmentTotal, spendingBudget) => investmentTotal + spendingBudget.currentAmount, 0);
+
+		let incomeInvestmentTotal = this.incomeBudgets
+			.filter(spendingBudget => spendingBudget.investment)
+			.reduce((investmentTotal, incomeBudget) => investmentTotal + incomeBudget.currentAmount, 0);
+
+		return spendingInvestmentTotal - incomeInvestmentTotal;
+	}
+
+	private getPlannedInvestmentTotal(): number {
+		let spendingInvestmentTotal = this.spendingBudgets
+			.filter(spendingBudget => spendingBudget.investment)
+			.reduce((investmentTotal, spendingBudget) => investmentTotal + spendingBudget.plannedMaxAmount, 0);
+
+		let incomeInvestmentTotal = this.incomeBudgets
+			.filter(spendingBudget => spendingBudget.investment)
+			.reduce((investmentTotal, incomeBudget) => investmentTotal + incomeBudget.plannedMaxAmount, 0);
+
+		return spendingInvestmentTotal - incomeInvestmentTotal;
 	}
 
 	private updateSpendingTotal() {
