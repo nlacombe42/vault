@@ -54,7 +54,7 @@ export class AuthService {
 	}
 
 	isUserLoggedIn(): boolean {
-		return this.getAuthToken() !== null;
+		return this.getAuthToken() !== null && !this.isAuthTokenExpired();
 	}
 
 	getAuthToken(): string {
@@ -69,6 +69,6 @@ export class AuthService {
 
 		let authJwt: JwtUser = jwtDecode<JwtUser>(authToken);
 
-		return new Date() >= new Date(authJwt.exp);
+		return new Date() >= new Date(authJwt.exp * 1000);
 	}
 }
