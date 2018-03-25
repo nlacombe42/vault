@@ -10,11 +10,22 @@
 				<mat-option [value]="604800">A week</mat-option>
 			</mat-select>
 		</mat-form-field>
-		<button (click)="import()" mat-raised-button color="primary" [disabled]="!importForm.valid || importInProgress"
+		<button (click)="import()" mat-raised-button color="primary"
+				[disabled]="!importForm.valid || isImportInProgress()"
 				class="submit-button">
 			Import
 		</button>
-		<p [ngClass]="messageClass" class="message">{{message}}</p>
-		<mat-spinner *ngIf="importInProgress" class="spinner"></mat-spinner>
 	</form>
+	<button (click)="stopAutoImports()" mat-raised-button>
+		Stop Auto Imports
+	</button>
+	<section>
+		<p [ngClass]="{'message-error': getLastImportErrorMessage(), 'message-success': !getLastImportErrorMessage()}"
+		   class="message">
+			{{getLastImportErrorMessage() ? getLastImportErrorMessage() : 'Import successful'}}
+		</p>
+		<div class="spinner-wrapper">
+			<mat-spinner *ngIf="isImportInProgress()" class="spinner"></mat-spinner>
+		</div>
+	</section>
 </section>

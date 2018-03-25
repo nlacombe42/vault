@@ -1,73 +1,79 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import "rxjs/add/observable/from";
-import {Observable} from "rxjs/Observable";
 import {StorageService} from "../shared/storage.service";
-import {ImportPassword} from "./import-password";
+import {AutoImportConfig} from "./auto-import-config";
 import {DateUtils} from "../shared/date.util";
-import {IntervalObservable} from "rxjs/observable/IntervalObservable";
-import {takeWhile} from "rxjs/operators";
-import "rxjs/add/operator/catch";
+import {Observable} from "rxjs/Observable";
+import {catchError, mergeMap} from "rxjs/operators";
+import 'rxjs/add/observable/throw';
 
 @Injectable()
-export class ImportsService implements OnInit, OnDestroy {
+export class ImportsService {
 	private readonly vaultDesjardinsImportUrl: string = environment.apiBaseUrls.vaultImportsWs + '/v1/import/desjardins';
-	private readonly importIntervalSeconds: number = 3600;
+	private readonly minMinutesBetweenImport: number = 60;
 
-	private alive: boolean;
-	private intervalCreated: boolean;
+	private importObservable: Observable<void>;
 
 	constructor(private http: HttpClient, private storageService: StorageService) {
-		let importPassword = this.storageService.getImportPassword();
+		let autoImportConfig = this.storageService.getAutoImportConfig();
+		let lastImportInfo = this.storageService.getLastImportInfo();
 
-		if (importPassword !== undefined) {
-			if (importPassword.passwordStorageExpireDate > new Date()) {
-				this.storageService.clearImportPassword();
-			} else {
-				this.setupAutomaticImport(importPassword);
+		if (autoImportConfig.password !== undefined) {
+			if (autoImportConfig.passwordStorageExpireDate > new Date()) {
+				this.stopAutoImports();
+			} else if (!lastImportInfo.importDate || DateUtils.addMinutes(lastImportInfo.importDate, this.minMinutesBetweenImport) < new Date()) {
+				this.startImport(autoImportConfig.password);
 			}
 		}
 	}
 
-	ngOnInit(): void {
-		this.alive = true;
-		this.intervalCreated = false;
+	startImport(password: string): Observable<void> {
+		this.importObservable = this.http.post<void>(this.vaultDesjardinsImportUrl, {importPassword: password})
+			.pipe(mergeMap(() => {
+					this.storageService.setLastImportInfo({
+						importDate: new Date(),
+						errorMessage: undefined
+					});
+					this.importObservable = undefined;
+					return Observable.of();
+				}),
+				catchError((error) => {
+					this.stopAutoImports();
+					this.storageService.setLastImportInfo({
+						importDate: new Date(),
+						errorMessage: 'Error during import.'
+					});
+					this.importObservable = undefined;
+					return Observable.throw(error);
+				}));
+
+		this.importObservable.subscribe();
+
+		return this.importObservable;
 	}
 
-	ngOnDestroy(): void {
-		this.alive = false;
-	}
-
-	import(password: string, rememberPasswordInSeconds: number): Observable<void> {
-		let importPassword: ImportPassword = {
-			password: password,
-			passwordStorageExpireDate: DateUtils.addSeconds(new Date(), rememberPasswordInSeconds)
+	setAutoImportConfig(password: string, rememberPasswordInSeconds: number): void {
+		let autoImportConfig: AutoImportConfig = {
+			password: rememberPasswordInSeconds > 0 ? password : undefined,
+			passwordStorageExpireDate: rememberPasswordInSeconds > 0 ? DateUtils.addSeconds(new Date(), rememberPasswordInSeconds) : undefined
 		};
 
-		return this.setupAutomaticImport(importPassword);
+		this.storageService.setAutoImportConfig(autoImportConfig);
 	}
 
-	private setupAutomaticImport(importPassword: ImportPassword): Observable<void> {
-		this.storageService.setImportPassword(importPassword);
-
-		if (!this.intervalCreated && importPassword.passwordStorageExpireDate > new Date()) {
-			IntervalObservable.create(this.importIntervalSeconds * 1000)
-				.pipe(takeWhile(() => this.alive))
-				.subscribe(() => {
-					this.importOnce(importPassword.password);
-				});
-			this.intervalCreated = true;
-		}
-
-		return this.importOnce(importPassword.password);
+	stopAutoImports(): void {
+		this.storageService.setAutoImportConfig({
+			password: undefined,
+			passwordStorageExpireDate: undefined
+		});
 	}
 
-	private importOnce(password: string): Observable<void> {
-		return this.http.post<void>(this.vaultDesjardinsImportUrl, {importPassword: password})
-			.catch((error) => {
-				this.storageService.clearImportPassword();
-				return Observable.throw(error);
-			});
+	isImportInProgress(): boolean {
+		return this.importObservable != undefined;
+	}
+
+	getLastImportErrorMessage(): string {
+		return this.storageService.getLastImportInfo().errorMessage;
 	}
 }

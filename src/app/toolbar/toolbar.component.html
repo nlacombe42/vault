@@ -4,5 +4,7 @@
 			<mat-icon>menu</mat-icon>
 		</button>
 		Vault
+		<span class="take-all-free-space"></span>
+		<mat-spinner *ngIf="isImportInProgress()" color="accent" diameter="25"></mat-spinner>
 	</mat-toolbar>
 </nav>

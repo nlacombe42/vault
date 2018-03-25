@@ -11,31 +11,27 @@ export class ImportsComponent implements OnInit {
 
 	password: string;
 	rememberPassword: number;
-	importInProgress: boolean;
-	message: string;
-	messageClass: string;
 
 	constructor(private importsService: ImportsService) {
 	}
 
 	ngOnInit() {
-		this.importInProgress = false;
 	}
 
 	import(): void {
-		this.importInProgress = true;
-		this.importsService.import(this.password, this.rememberPassword)
-			.finally(() => {
-				this.importInProgress = false;
-			})
-			.subscribe(
-				() => {
-					this.message = "Import successful.";
-					this.messageClass = "message-success";
-				},
-				() => {
-					this.message = "Error during import.";
-					this.messageClass = "message-error";
-				});
+		this.importsService.setAutoImportConfig(this.password, this.rememberPassword);
+		this.importsService.startImport(this.password);
+	}
+
+	stopAutoImports(): void {
+		this.importsService.stopAutoImports();
+	}
+
+	getLastImportErrorMessage(): string {
+		return this.importsService.getLastImportErrorMessage();
+	}
+
+	isImportInProgress(): boolean {
+		return this.importsService.isImportInProgress();
 	}
 }

@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {SideMenuComponent} from "../side-menu/side-menu.component";
+import {ImportsService} from "../imports/imports.service";
 
 @Component({
 	selector: 'toolbar',
@@ -10,7 +11,7 @@ export class ToolbarComponent implements OnInit {
 
 	@Input() sideMenu: SideMenuComponent;
 
-	constructor() {
+	constructor(private importsService: ImportsService) {
 	}
 
 	ngOnInit() {
@@ -18,5 +19,9 @@ export class ToolbarComponent implements OnInit {
 
 	toggleSideMenu() {
 		this.sideMenu.toggle();
+	}
+
+	isImportInProgress(): boolean {
+		return this.importsService.isImportInProgress();
 	}
 }

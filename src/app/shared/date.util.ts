@@ -16,6 +16,14 @@ export class DateUtils {
 	}
 
 	public static addSeconds(date: Date, seconds: number) {
-		return new Date(date.getTime() + seconds * 1000);
+		let newDate = new Date(date);
+		newDate.setSeconds(newDate.getSeconds() + seconds);
+		return newDate;
+	}
+
+	public static addMinutes(date: Date, minutes: number) {
+		let newDate = new Date(date);
+		newDate.setMinutes(newDate.getSeconds() + minutes);
+		return newDate;
 	}
 }

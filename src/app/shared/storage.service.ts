@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {ImportPassword} from "../imports/import-password";
+import {AutoImportConfig} from "../imports/auto-import-config";
+import {LastImportInfo} from "../imports/last-import-info";
 
 @Injectable()
 export class StorageService {
@@ -19,24 +20,28 @@ export class StorageService {
 		return localStorage.getItem('authToken');
 	}
 
-	setImportPassword(importPassword: ImportPassword): void {
-		localStorage.setItem('importPassword.importPassword', atob(importPassword.password));
-		localStorage.setItem('importPassword.passwordStorageExpireTimestamp', importPassword.passwordStorageExpireDate.getTime().toString());
+	setAutoImportConfig(autoImportConfig: AutoImportConfig): void {
+		localStorage.setItem('autoImportConfig.importPassword', this.encodeBase64(autoImportConfig.password));
+		localStorage.setItem('autoImportConfig.passwordStorageExpireTimestamp', this.dateToTimestampString(autoImportConfig.passwordStorageExpireDate));
 	}
 
-	getImportPassword(): ImportPassword {
-		if (localStorage.getItem('importPassword.importPassword') === undefined)
-			return undefined;
-
+	getAutoImportConfig(): AutoImportConfig {
 		return {
-			password: btoa(localStorage.getItem('importPassword.importPassword')),
-			passwordStorageExpireDate: new Date(localStorage.getItem('importPassword.passwordStorageExpireTimestamp'))
+			password: this.decodeBase64(localStorage.getItem('importPassword.importPassword')),
+			passwordStorageExpireDate: this.timestampStringToDate(localStorage.getItem('importPassword.passwordStorageExpireTimestamp'))
 		}
 	}
 
-	clearImportPassword(): void {
-		localStorage.removeItem('importPassword.importPassword');
-		localStorage.removeItem('importPassword.passwordStorageExpireTimestamp');
+	setLastImportInfo(lastImportInfo: LastImportInfo): void {
+		localStorage.setItem('lastImportInfo.importDate', this.dateToTimestampString(lastImportInfo.importDate));
+		localStorage.setItem('lastImportInfo.errorMessage', lastImportInfo.errorMessage);
+	}
+
+	getLastImportInfo(): LastImportInfo {
+		return {
+			importDate: this.timestampStringToDate(localStorage.getItem('lastImportInfo.importDate')),
+			errorMessage: localStorage.getItem('lastImportInfo.errorMessage')
+		}
 	}
 
 	setDisplayedMonthForBudgets(month: Date): void {
@@ -49,6 +54,34 @@ export class StorageService {
 		if (displayedMonthTimestamp === null)
 			return undefined;
 
-		return new Date(+ displayedMonthTimestamp);
+		return new Date(+displayedMonthTimestamp);
+	}
+
+	private encodeBase64(text: string): string {
+		if (!text)
+			return undefined;
+		else
+			atob(text);
+	}
+
+	private decodeBase64(base64EncodedString: string): string {
+		if (!base64EncodedString)
+			return undefined;
+		else
+			btoa(base64EncodedString);
+	}
+
+	private dateToTimestampString(date: Date): string {
+		if (!date)
+			return undefined;
+		else
+			return date.getTime().toString();
+	}
+
+	private timestampStringToDate(timestamp: any): Date {
+		if (!timestamp)
+			return undefined;
+		else
+			return new Date(timestamp);
 	}
 }
