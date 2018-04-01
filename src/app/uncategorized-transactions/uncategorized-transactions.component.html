@@ -12,7 +12,7 @@
 					<amount [amount]="transaction.amount"></amount>
 				</p>
 				<category-dropdown [categories]="categories"
-								   (selectedCategoryChange)="categorizeTransaction(transaction, $event.value)"
+								   (selectedCategoryChange)="categorizeTransaction(transaction, $event.categoryId)"
 				></category-dropdown>
 			</mat-list-item>
 		</ng-template>

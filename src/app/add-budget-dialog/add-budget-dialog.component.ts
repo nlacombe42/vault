@@ -52,4 +52,8 @@ export class AddBudgetDialogComponent implements OnInit {
 	closeDialog(): void {
 		this.dialog.close();
 	}
+
+	setCategory(category: Category): void {
+		this.category = category;
+	}
 }

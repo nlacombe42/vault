@@ -13,7 +13,7 @@
 			For the month of {{month | localmonth}}
 		</div>
 		<category-dropdown [categories]="categories"
-						   (selectedCategory)="category"
+						   (selectedCategoryChange)="setCategory($event)"
 						   class="dialog-form-element"
 		></category-dropdown>
 		<div class="dialog-form-checkbox">

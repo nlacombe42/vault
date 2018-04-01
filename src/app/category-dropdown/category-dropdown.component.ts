@@ -11,14 +11,14 @@ export class CategoryDropdownComponent {
 	_categories: Category[];
 
 	@Output()
-	selectedCategoryChange = new EventEmitter();
+	selectedCategoryChange: EventEmitter<Category>;
 
 	constructor() {
+		this.selectedCategoryChange = new EventEmitter<Category>();
 	}
 
 	selectCategory(category: Category) {
-		if (this.selectedCategoryChange)
-			this.selectedCategoryChange.emit(category);
+		this.selectedCategoryChange.emit(category);
 	}
 
 	@Input()
