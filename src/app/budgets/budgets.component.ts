@@ -4,8 +4,8 @@ import {AddBudgetDialogComponent, AddBudgetDialogConfig} from "../add-budget-dia
 import {DisplayedBudget} from "./budget.model";
 import {BudgetsService} from "./budgets.service";
 import {DateUtils} from "../shared/date.util";
-import {CategoriesService} from "../shared/categories.service";
-import {Category} from "../shared/category.model";
+import {CategoriesService} from "../categories/categories.service";
+import {Category} from "../categories/category.model";
 import {MonthStats} from "./month-stats.model";
 import {StorageService} from "../shared/storage.service";
 

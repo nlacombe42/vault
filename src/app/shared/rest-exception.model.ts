@@ -1,6 +1,11 @@
 export class RestException {
-	errorCode: string = null;
-	message: string = null;
+	errorCode: string;
+	message: string;
+
+	constructor(errorCode: string, message: string) {
+		this.errorCode = errorCode;
+		this.message = message;
+	}
 }
 
 export enum RestExceptionErrorCodes {
@@ -8,7 +13,7 @@ export enum RestExceptionErrorCodes {
 }
 
 export function isRestException(object): object is RestException {
-	let restException = new RestException();
+	let restException = new RestException("", "");
 
 	for (let prop in restException)
 		if (!(prop in object))

@@ -16,7 +16,7 @@ import {StorageService} from "./shared/storage.service";
 import {TransactionsService} from "./transactions/transactions.service";
 import {LocalDatePipe} from "./shared/localdate.pipe";
 import {AmountComponent} from "./amount/amount.component";
-import {CategoriesService} from "./shared/categories.service";
+import {CategoriesService} from "./categories/categories.service";
 import {UncategorizedTransactionsComponent} from "./uncategorized-transactions/uncategorized-transactions.component";
 import {TransactionsComponent} from "./transactions/transactions.component";
 import {InfiniteScrollModule} from "ngx-infinite-scroll";
@@ -36,6 +36,7 @@ import {TransactionComponent} from "./transaction/transaction.component";
 import {environment} from '../environments/environment';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {CategoryDropdownComponent} from "./category-dropdown/category-dropdown.component";
+import {CategoriesComponent} from "./categories/categories.component";
 
 @NgModule({
 	declarations: [
@@ -55,6 +56,7 @@ import {CategoryDropdownComponent} from "./category-dropdown/category-dropdown.c
 		BudgetComponent,
 		TransactionComponent,
 		CategoryDropdownComponent,
+		CategoriesComponent,
 		LocalDatePipe,
 		LocalMonthPipe
 	],

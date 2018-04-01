@@ -1,4 +1,4 @@
-import {Category} from "../shared/category.model";
+import {Category} from "../categories/category.model";
 import {DisplayedTransaction} from "../transactions/displayed-transaction.model";
 import {Grouping} from "../shared/array.util";
 

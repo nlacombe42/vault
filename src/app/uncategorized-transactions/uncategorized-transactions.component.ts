@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Transaction} from "../transactions/transaction.model";
 import {TransactionsService} from "../transactions/transactions.service";
-import {Category} from "../shared/category.model";
-import {CategoriesService} from "../shared/categories.service";
+import {Category} from "../categories/category.model";
+import {CategoriesService} from "../categories/categories.service";
 import {ArrayUtils, Grouping} from "../shared/array.util";
 import {Router} from "@angular/router";
 

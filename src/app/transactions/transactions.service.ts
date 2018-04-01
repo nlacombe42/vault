@@ -8,7 +8,7 @@ import "rxjs/add/observable/forkJoin";
 import {PaginationResponse} from "../shared/pagination-response.model";
 import {SearchTransactionsRequest} from "./search-transactions-request.model";
 import {DisplayedTransaction} from "./displayed-transaction.model";
-import {CategoriesService} from "../shared/categories.service";
+import {CategoriesService} from "../categories/categories.service";
 import {ArrayUtils, Grouping} from "../shared/array.util";
 import {map, mergeMap, toArray} from "rxjs/operators";
 

@@ -1,4 +1,4 @@
-import {Category} from "../shared/category.model";
+import {Category} from "../categories/category.model";
 import {Transaction} from "./transaction.model";
 
 export class DisplayedTransaction extends Transaction {

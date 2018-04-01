@@ -3,8 +3,8 @@ import {Location} from '@angular/common';
 import {ActivatedRoute} from "@angular/router";
 import {TransactionsService} from "../transactions/transactions.service";
 import {DisplayedTransaction} from "../transactions/displayed-transaction.model";
-import {Category} from "../shared/category.model";
-import {CategoriesService} from "../shared/categories.service";
+import {Category} from "../categories/category.model";
+import {CategoriesService} from "../categories/categories.service";
 import {Transaction} from "../transactions/transaction.model";
 
 @Component({

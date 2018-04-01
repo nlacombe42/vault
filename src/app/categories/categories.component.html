@@ -1,0 +1,20 @@
+<section>
+	<h2>Categories</h2>
+	<form #createCategoryForm="ngForm">
+		<mat-form-field class="dialog-form-element">
+			<input [(ngModel)]="newCategoryName" matInput type="text" placeholder="New Category Name" required
+				   name="name">
+		</mat-form-field>
+		<button (click)="createCategory()" mat-raised-button color="primary"
+				[disabled]="!createCategoryForm.valid || createCategoryInProgress"
+				class="submit-button">
+			Create
+		</button>
+	</form>
+	<mat-error [hidden]="errorMessage != ''">{{errorMessage}}</mat-error>
+	<mat-list class="list">
+		<mat-list-item *ngFor="let category of categories" class="list-box">
+			{{category.name}}
+		</mat-list-item>
+	</mat-list>
+</section>

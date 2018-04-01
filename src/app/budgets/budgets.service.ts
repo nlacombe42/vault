@@ -7,10 +7,10 @@ import {Observable} from "rxjs/Observable";
 import {DatePipe} from "@angular/common";
 import {DisplayedMonthBudgetsInfo, MonthBudgetsInfo} from "./month-budgets-info";
 import {MonthBudgetCreationRequest} from "./month-budget-creation-request";
-import {Category} from "../shared/category.model";
+import {Category} from "../categories/category.model";
 import {TransactionsService} from "../transactions/transactions.service";
 import {Budget, BudgetWithTransactions, DisplayedBudget} from "./budget.model";
-import {CategoriesService} from "../shared/categories.service";
+import {CategoriesService} from "../categories/categories.service";
 import {map, mergeMap, take, toArray} from "rxjs/operators";
 import "rxjs/add/operator/defaultIfEmpty";
 

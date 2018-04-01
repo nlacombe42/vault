@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Category} from "../shared/category.model";
+import {Category} from "../categories/category.model";
 
 @Component({
 	selector: 'category-dropdown',

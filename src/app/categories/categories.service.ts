@@ -7,6 +7,7 @@ import 'rxjs/add/observable/of';
 import "rxjs/add/observable/from";
 import "rxjs/add/observable/empty";
 import {mergeMap, share, toArray} from "rxjs/operators";
+import {CategoryCreationRequest} from "./category-creation-request";
 
 @Injectable()
 export class CategoriesService {
@@ -45,6 +46,14 @@ export class CategoriesService {
 						observer.complete();
 					});
 		});
+	}
+
+	createCategory(newCategoryName: string) {
+		let categoryCreationRequest: CategoryCreationRequest = {
+			name: newCategoryName
+		};
+
+		return this.http.post<void>(this.vaultCategoriesUrl, categoryCreationRequest);
 	}
 
 	private createCategoriesObservable(): Observable<Category> {

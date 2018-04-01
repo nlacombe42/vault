@@ -9,6 +9,7 @@ import {ImportsComponent} from "../imports/imports.component";
 import {BudgetComponent} from "../budget/budget.component";
 import {TransactionComponent} from "../transaction/transaction.component";
 import {UncategorizedTransactionsComponent} from "../uncategorized-transactions/uncategorized-transactions.component";
+import {CategoriesComponent} from "../categories/categories.component";
 
 const vaultRoutes: Routes = [
 	{path: '', redirectTo: '/uncategorizedTransactions', pathMatch: 'full'},
@@ -19,6 +20,7 @@ const vaultRoutes: Routes = [
 	{path: 'budget/:budgetId', component: BudgetComponent, canActivate: [AuthGuard]},
 	{path: 'transaction/:transactionId', component: TransactionComponent, canActivate: [AuthGuard]},
 	{path: 'imports', component: ImportsComponent, canActivate: [AuthGuard]},
+	{path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard]},
 	{path: '**', component: PageNotFoundComponent}
 ];
 
