@@ -12,13 +12,10 @@
 		<div class="dialog-form-element">
 			For the month of {{month | localmonth}}
 		</div>
-		<mat-form-field class="dialog-form-element">
-			<mat-select [(ngModel)]="category" placeholder="Category" required name="category">
-				<mat-option *ngFor="let category of categories" [value]="category">
-					{{category.name}}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
+		<category-dropdown [categories]="categories"
+						   (selectedCategory)="category"
+						   class="dialog-form-element"
+		></category-dropdown>
 		<div class="dialog-form-checkbox">
 			<mat-checkbox [(ngModel)]="incomeBudget" name="incomeBudget">
 				Income budget

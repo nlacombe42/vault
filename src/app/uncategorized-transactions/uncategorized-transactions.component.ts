@@ -28,7 +28,11 @@ export class UncategorizedTransactionsComponent implements OnInit {
 
 	ngOnInit() {
 		this.categoriesService.getUserCategories()
-			.subscribe(category => this.categories.push(category));
+			.subscribe(category => this.categories.push(category),
+				undefined,
+				() => {
+					this.categories = this.categories.slice(0);
+				});
 
 		this.refreshDisplayedTransactions();
 	}

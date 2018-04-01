@@ -35,7 +35,7 @@ export class TransactionComponent implements OnInit {
 		this.categoriesService.getUserCategories()
 			.subscribe(category => this.categories.push(category),
 				undefined,
-				() => this.categories = this.categories.splice(0));
+				() => this.categories = this.categories.sort(((a, b) => b.numberOfUses - a.numberOfUses)));
 	}
 
 	categorizeTransaction(transaction: Transaction, categoryId: string | number): void {

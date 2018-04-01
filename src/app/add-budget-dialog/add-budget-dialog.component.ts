@@ -33,7 +33,11 @@ export class AddBudgetDialogComponent implements OnInit {
 
 	ngOnInit() {
 		this.budgetService.getUnbudgetedCategories(this.month)
-			.subscribe(category => this.categories.push(category));
+			.subscribe(category => this.categories.push(category),
+				undefined,
+				() => {
+					this.categories = this.categories.splice(0);
+				});
 	}
 
 	addBudget() {

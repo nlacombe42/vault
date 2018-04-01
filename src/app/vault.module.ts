@@ -35,6 +35,7 @@ import {BudgetComponent} from "./budget/budget.component";
 import {TransactionComponent} from "./transaction/transaction.component";
 import {environment} from '../environments/environment';
 import {ServiceWorkerModule} from '@angular/service-worker';
+import {CategoryDropdownComponent} from "./category-dropdown/category-dropdown.component";
 
 @NgModule({
 	declarations: [
@@ -53,6 +54,7 @@ import {ServiceWorkerModule} from '@angular/service-worker';
 		ImportsComponent,
 		BudgetComponent,
 		TransactionComponent,
+		CategoryDropdownComponent,
 		LocalDatePipe,
 		LocalMonthPipe
 	],

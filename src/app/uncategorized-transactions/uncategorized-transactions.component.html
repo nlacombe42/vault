@@ -11,13 +11,9 @@
 				<p mat-line class="align-left">
 					<amount [amount]="transaction.amount"></amount>
 				</p>
-				<mat-form-field (click)="$event.stopPropagation()">
-					<mat-select placeholder="Categories" (change)="categorizeTransaction(transaction, $event.value)">
-						<mat-option *ngFor="let category of categories" [value]="category.categoryId">
-							{{category.name}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
+				<category-dropdown [categories]="categories"
+								   (selectedCategoryChange)="categorizeTransaction(transaction, $event.value)"
+				></category-dropdown>
 			</mat-list-item>
 		</ng-template>
 		<p *ngIf="transactionsByDate.length === 0">
