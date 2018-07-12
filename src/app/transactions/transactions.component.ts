@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TransactionsService} from "./transactions.service";
-import "rxjs/add/observable/merge";
 import {Grouping} from "../shared/array.util";
 import {DisplayedTransaction} from "./displayed-transaction.model";
 

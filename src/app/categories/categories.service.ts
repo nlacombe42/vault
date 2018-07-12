@@ -1,11 +1,8 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
+import {Observable, of, from, empty} from "rxjs";
 import {Category} from "./category.model";
-import 'rxjs/add/observable/of';
-import "rxjs/add/observable/from";
-import "rxjs/add/observable/empty";
 import {mergeMap, share, toArray} from "rxjs/operators";
 import {CategoryCreationRequest} from "./category-creation-request";
 
@@ -22,7 +19,7 @@ export class CategoriesService {
 
 	getUserCategories(): Observable<Category> {
 		if (this.categories !== undefined)
-			return Observable.from(this.categories);
+			return from(this.categories);
 
 		if (this.categoriesObservable === undefined)
 			this.categoriesObservable = this.createCategoriesObservable();
@@ -32,7 +29,7 @@ export class CategoriesService {
 
 	getCategory(categoryId: number): Observable<Category> {
 		if (this.categoriesById !== undefined)
-			return Observable.of(this.categoriesById.get(categoryId));
+			return of(this.categoriesById.get(categoryId));
 
 		let categoriesById = new Map<number, Category>();
 
@@ -60,7 +57,7 @@ export class CategoriesService {
 		let getCategoriesObservable =
 			this.http.get<Category[]>(this.vaultCategoriesUrl)
 				.pipe(
-					mergeMap((categories: Category[]) => Observable.from(categories)),
+					mergeMap((categories: Category[]) => from(categories)),
 					share());
 
 		getCategoriesObservable.pipe(toArray()).subscribe((categories: Category[]) => this.categories = categories);

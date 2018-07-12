@@ -14,7 +14,7 @@
 			<div class="field">
 				<label for="category" class="mat-body-2">Category</label>
 				<mat-form-field id="category">
-					<mat-select (change)="categorizeTransaction(transaction, $event.value)" [value]="selectedCategoryId">
+					<mat-select (selectionChange)="categorizeTransaction(transaction, $event.value)" [value]="selectedCategoryId">
 						<mat-option *ngIf="selectedCategoryId === 'uncategorized'" value="uncategorized">Uncategorized</mat-option>
 						<mat-option *ngFor="let category of categories" [value]="category.categoryId">
 							{{category.name}}

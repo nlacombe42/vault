@@ -4,9 +4,8 @@ import {HttpClient} from "@angular/common/http";
 import {StorageService} from "../shared/storage.service";
 import {AutoImportConfig} from "./auto-import-config";
 import {DateUtils} from "../shared/date.util";
-import {Observable} from "rxjs/Observable";
+import {Observable, of, throwError} from "rxjs";
 import {catchError, mergeMap} from "rxjs/operators";
-import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class ImportsService {
@@ -36,7 +35,7 @@ export class ImportsService {
 						errorMessage: undefined
 					});
 					this.importObservable = undefined;
-					return Observable.of();
+					return of();
 				}),
 				catchError((error) => {
 					this.stopAutoImports();
@@ -45,7 +44,7 @@ export class ImportsService {
 						errorMessage: 'Error during import.'
 					});
 					this.importObservable = undefined;
-					return Observable.throw(error);
+					return throwError(error);
 				}));
 
 		this.importObservable.subscribe();

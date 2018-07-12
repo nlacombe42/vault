@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {StorageService} from "../shared/storage.service";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 import * as jwtDecode from 'jwt-decode';
 

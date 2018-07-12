@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ImportsService} from "./imports.service";
-import "rxjs/add/operator/finally";
 
 @Component({
 	selector: 'imports',

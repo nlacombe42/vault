@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import "rxjs/add/observable/from";
-import 'rxjs/add/observable/forkJoin'
-import {Observable} from "rxjs/Observable";
+import {Observable, from, forkJoin} from "rxjs";
 import {DatePipe} from "@angular/common";
 import {DisplayedMonthBudgetsInfo, MonthBudgetsInfo} from "./month-budgets-info";
 import {MonthBudgetCreationRequest} from "./month-budget-creation-request";
@@ -11,8 +9,9 @@ import {Category} from "../categories/category.model";
 import {TransactionsService} from "../transactions/transactions.service";
 import {Budget, BudgetWithTransactions, DisplayedBudget} from "./budget.model";
 import {CategoriesService} from "../categories/categories.service";
-import {map, mergeMap, take, toArray} from "rxjs/operators";
-import "rxjs/add/operator/defaultIfEmpty";
+import {map, mergeMap, take, toArray, defaultIfEmpty} from "rxjs/operators";
+import {Grouping} from "../shared/array.util";
+import {DisplayedTransaction} from "../transactions/displayed-transaction.model";
 
 @Injectable()
 export class BudgetsService {
@@ -48,7 +47,7 @@ export class BudgetsService {
 		let url = this.vaultBudgetsUrl + `/month/${monthIsoString}/unbudgetedCategories`;
 
 		return this.http.get<Category[]>(url)
-			.pipe(mergeMap((categories: Category[]) => Observable.from(categories)));
+			.pipe(mergeMap((categories: Category[]) => from(categories)));
 	}
 
 	getBudget(budgetId: number): Observable<BudgetWithTransactions> {
@@ -66,12 +65,12 @@ export class BudgetsService {
 
 	private toDisplayedMonthBudgetsInfo(monthBudgetsInfo: MonthBudgetsInfo): Observable<DisplayedMonthBudgetsInfo> {
 		let unbudgetedDisplayedBudgetObservable = this.toDisplayedBudget(monthBudgetsInfo.unbudgeted).pipe(take(1));
-		let incomeDisplayedBudgetsObservable = Observable.from(monthBudgetsInfo.incomeBudgets)
+		let incomeDisplayedBudgetsObservable = from(monthBudgetsInfo.incomeBudgets)
 			.pipe(mergeMap((incomeBudget: Budget) => this.toDisplayedBudget(incomeBudget)), toArray());
-		let spendingDisplayedBudgetsObservable = Observable.from(monthBudgetsInfo.spendingBudgets)
+		let spendingDisplayedBudgetsObservable = from(monthBudgetsInfo.spendingBudgets)
 			.pipe(mergeMap((spendingBudget: Budget) => this.toDisplayedBudget(spendingBudget)), toArray());
 
-		return Observable.forkJoin(unbudgetedDisplayedBudgetObservable, incomeDisplayedBudgetsObservable, spendingDisplayedBudgetsObservable)
+		return forkJoin(unbudgetedDisplayedBudgetObservable, incomeDisplayedBudgetsObservable, spendingDisplayedBudgetsObservable)
 			.pipe(map(results => {
 				return {
 					monthStats: monthBudgetsInfo.monthStats,
@@ -102,11 +101,14 @@ export class BudgetsService {
 	private toBudgetWithTransactions(rawBudgetWithTransactions: any): Observable<BudgetWithTransactions> {
 		let displayedTransactionsByDateObservable =
 			this.transactionsService.rawTransactionToDisplayedTransactionsByDate(rawBudgetWithTransactions.transactions)
-				.defaultIfEmpty(undefined);
+				.pipe(defaultIfEmpty(undefined));
 		let categoryObservable = this.categoryService.getCategory(rawBudgetWithTransactions.categoryId);
 
-		return Observable.forkJoin(displayedTransactionsByDateObservable, categoryObservable)
+		return forkJoin(displayedTransactionsByDateObservable, categoryObservable)
 			.pipe(map(results => {
+
+				let transactionsByDate: Grouping<Date, DisplayedTransaction>[] = results[0];
+
 				return {
 					budgetId: rawBudgetWithTransactions.budgetId,
 					categoryId: rawBudgetWithTransactions.categoryId,
@@ -116,7 +118,7 @@ export class BudgetsService {
 					currentAmount: rawBudgetWithTransactions.currentAmount,
 					income: rawBudgetWithTransactions.income,
 					investment: rawBudgetWithTransactions.investment,
-					transactionsByDate: results[0],
+					transactionsByDate: transactionsByDate,
 					category: results[1],
 				};
 			}));
