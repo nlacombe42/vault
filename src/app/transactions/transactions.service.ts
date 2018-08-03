@@ -2,9 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Transaction} from "./transaction.model";
-import {Observable} from "rxjs/Observable";
-import "rxjs/add/observable/from";
-import "rxjs/add/observable/forkJoin";
+import {forkJoin, from, Observable} from "rxjs";
 import {PaginationResponse} from "../shared/pagination-response.model";
 import {SearchTransactionsRequest} from "./search-transactions-request.model";
 import {DisplayedTransaction} from "./displayed-transaction.model";
@@ -25,7 +23,7 @@ export class TransactionsService {
 	getUncategorizedTransactions(): Observable<Transaction> {
 		return this.http.get<any[]>(this.vaultUncategorizedTransactionsUrl)
 			.pipe(
-				mergeMap((rawTransactions: any[]) => Observable.from(rawTransactions)),
+				mergeMap((rawTransactions: any[]) => from(rawTransactions)),
 				map(rawTransaction => this.toTransaction(rawTransaction)));
 	}
 
@@ -39,7 +37,7 @@ export class TransactionsService {
 				}, (errorResponse: HttpErrorResponse) => {
 					observer.error(errorResponse.error);
 				}, () => {
-					Observable.from(rawPaginationResponse.elements)
+					from(rawPaginationResponse.elements)
 						.pipe(
 							map(rawTransaction => this.toTransaction(rawTransaction)),
 							toArray())
@@ -64,7 +62,7 @@ export class TransactionsService {
 		return this.searchTransactions(searchRequest)
 			.pipe(
 				map((paginationResponse: PaginationResponse<Transaction>) => paginationResponse.elements),
-				mergeMap((transactions: Transaction[]) => Observable.from(transactions)),
+				mergeMap((transactions: Transaction[]) => from(transactions)),
 				mergeMap((transaction: Transaction) => this.toDisplayedTransaction(transaction)),
 				toArray(),
 				map((displayedTransactions: DisplayedTransaction[]) => this.toDisplayedTransactionsByDate(displayedTransactions)));
@@ -92,7 +90,7 @@ export class TransactionsService {
 	rawTransactionToDisplayedTransactionsByDate(rawTransactions: any[]): Observable<Grouping<Date, DisplayedTransaction>[]> {
 		let displayedTransactionsObservables = rawTransactions.map(rawTransaction => this.rawTransactionToDisplayedTransaction(rawTransaction));
 
-		return Observable.forkJoin(displayedTransactionsObservables)
+		return forkJoin(displayedTransactionsObservables)
 			.pipe(map((displayedTransactions: DisplayedTransaction[]) => this.toDisplayedTransactionsByDate(displayedTransactions)));
 	}
 

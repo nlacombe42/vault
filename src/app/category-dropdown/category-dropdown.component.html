@@ -1,5 +1,5 @@
 <mat-form-field (click)="$event.stopPropagation()">
-	<mat-select placeholder="Category" (change)="selectCategory($event.value)">
+	<mat-select placeholder="Category" (selectionChange)="selectCategory($event.value)">
 		<mat-option *ngFor="let category of _categories" [value]="category">
 			{{category.name}}
 		</mat-option>

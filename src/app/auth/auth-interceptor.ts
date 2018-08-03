@@ -1,9 +1,9 @@
 import {Injectable, Injector} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {AuthService} from "./auth.service";
 import {Router} from "@angular/router";
-import "rxjs/add/operator/do";
+import {tap} from "rxjs/operators";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -20,10 +20,10 @@ export class AuthInterceptor implements HttpInterceptor {
 		if (authToken !== null)
 			authReq = req.clone({headers: req.headers.set('Authorization', 'auth-token ' + authToken)});
 
-		return next.handle(authReq).do(() => {}, errorResponse => {
+		return next.handle(authReq).pipe(tap(() => {}, errorResponse => {
 			if (errorResponse instanceof HttpErrorResponse && errorResponse.status == 401)
 				this.router.navigate(['/login']);
-		});
+		}));
 	}
 
 }
