@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {StorageService} from "../shared/storage.service";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 import * as jwtDecode from 'jwt-decode';
+import {catchError, map} from "rxjs/operators";
+import {throwError} from "rxjs/internal/observable/throwError";
 
 class AuthToken {
 	token: string
@@ -23,25 +25,24 @@ class JwtUser extends Jwt {
 
 @Injectable()
 export class AuthService {
-	private readonly authenticateUrl: string = environment.apiBaseUrls.userWs + '/v1/authentication/usernameAndPassword';
+	private readonly jwtAuthenticateUrl: string = environment.apiBaseUrls.userWs + '/v1/authentication/jwt';
 
 	constructor(private http: HttpClient, private router: Router, private storageService: StorageService) {
 	}
 
-	login(username: string, password: string): Observable<boolean> {
-		return new Observable<boolean>((observer) => {
-			this.http.post<AuthToken>(this.authenticateUrl, {
-				username,
-				password
-			}).subscribe(response => {
+	jwtLogin(jwt: string): Observable<void> {
+		return this.http.post<AuthToken>(this.jwtAuthenticateUrl, {
+			token: jwt
+		}).pipe(
+			map(response => {
 				this.storageService.setAuthToken(response.token);
-				observer.next(true);
-				observer.complete();
-			}, (errorResponse: HttpErrorResponse) => {
-				this.storageService.setAuthToken(null);
-				observer.error(errorResponse.error);
-			});
-		});
+				return;
+			}),
+			catchError(errorResponse => {
+				this.storageService.clearAuthToken();
+				return throwError(errorResponse.error);
+			})
+		);
 	}
 
 	logout(): void {
@@ -64,7 +65,7 @@ export class AuthService {
 	isAuthTokenExpired(): boolean {
 		let authToken = this.getAuthToken();
 
-		if (authToken === null)
+		if (!authToken)
 			return false;
 
 		let authJwt: JwtUser = jwtDecode<JwtUser>(authToken);
