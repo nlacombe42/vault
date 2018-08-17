@@ -1,6 +1,7 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnInit} from '@angular/core';
 import {AuthService} from "../auth/auth.service";
 import {Router} from "@angular/router";
+import {environment} from "../../environments/environment";
 
 declare const gapi: any;
 
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 	errorMessage: string = null;
 	private auth2: any;
 
-	constructor(private router: Router, private authService: AuthService) {
+	constructor(private ngZone: NgZone, private router: Router, private authService: AuthService) {
 	}
 
 	ngOnInit() {
@@ -26,24 +27,27 @@ export class LoginComponent implements OnInit, AfterViewInit {
 		this.googleInit();
 	}
 
+	googleSignIn() {
+		this.auth2.signIn().then((googleUser) => {
+			this.ngZone.run(() => {
+				this.authService.jwtLogin(googleUser.getAuthResponse().id_token).subscribe(() => {
+					this.router.navigate(['/budgets']);
+				}, () => this.errorMessage = 'Unknown error.');
+			});
+		}, (errorResponse) => {
+			this.ngZone.run(() => {
+				this.errorMessage = 'Unknown error.';
+			});
+		});
+	}
+
 	private googleInit() {
 		gapi.load('auth2', () => {
 			this.auth2 = gapi.auth2.init({
-				client_id: '885558423234-votp6uh6a3qavatk9h1cnpelt0o9rsos.apps.googleusercontent.com',
+				client_id: environment.googleOauthClientId,
 				cookiepolicy: 'single_host_origin',
 				scope: 'profile email'
 			});
-
-			let element = document.getElementById('googleSignIn');
-
-			this.auth2.attachClickHandler(element, {},
-				(googleUser) => {
-					this.authService.jwtLogin(googleUser.getAuthResponse().id_token).subscribe(() => {
-						this.router.navigate(['/budgets']);
-					}, () => this.errorMessage = 'Unknown error.');
-				}, (errorResponse) => {
-					this.errorMessage = 'Unknown error.';
-				});
 		});
 	}
 
