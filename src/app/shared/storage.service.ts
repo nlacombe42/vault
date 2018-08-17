@@ -17,7 +17,9 @@ export class StorageService {
 	}
 
 	getAuthToken(): string {
-		return localStorage.getItem('authToken');
+		let authToken = localStorage.getItem('authToken');
+
+		return authToken ? authToken : undefined;
 	}
 
 	setAutoImportConfig(autoImportConfig: AutoImportConfig): void {

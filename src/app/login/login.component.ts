@@ -1,34 +1,53 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnInit} from '@angular/core';
 import {AuthService} from "../auth/auth.service";
 import {Router} from "@angular/router";
-import {isRestException, RestExceptionErrorCodes} from "../shared/rest-exception.model";
+import {environment} from "../../environments/environment";
+
+declare const gapi: any;
 
 @Component({
 	selector: 'login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
 	username: string;
 	password: string;
 	errorMessage: string = null;
+	private auth2: any;
 
-	constructor(private router: Router, private authService: AuthService) {
+	constructor(private ngZone: NgZone, private router: Router, private authService: AuthService) {
 	}
 
 	ngOnInit() {
 		this.checkIfAuthTokenExpired();
 	}
 
-	login(username: string, password: string) {
-		this.authService.login(username, password).subscribe(() => {
-			this.router.navigate(['/budgets']);
+	ngAfterViewInit() {
+		this.googleInit();
+	}
+
+	googleSignIn() {
+		this.auth2.signIn().then((googleUser) => {
+			this.ngZone.run(() => {
+				this.authService.jwtLogin(googleUser.getAuthResponse().id_token).subscribe(() => {
+					this.router.navigate(['/budgets']);
+				}, () => this.errorMessage = 'Unknown error.');
+			});
 		}, (errorResponse) => {
-			if (isRestException(errorResponse.error) && errorResponse.error.errorCode === RestExceptionErrorCodes.NOT_FOUND) {
-				this.errorMessage = 'Username password combination does not match.';
-			} else {
+			this.ngZone.run(() => {
 				this.errorMessage = 'Unknown error.';
-			}
+			});
+		});
+	}
+
+	private googleInit() {
+		gapi.load('auth2', () => {
+			this.auth2 = gapi.auth2.init({
+				client_id: environment.googleOauthClientId,
+				cookiepolicy: 'single_host_origin',
+				scope: 'profile email'
+			});
 		});
 	}
 
