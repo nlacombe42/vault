@@ -37,6 +37,7 @@ import {environment} from '../environments/environment';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {CategoryDropdownComponent} from "./category-dropdown/category-dropdown.component";
 import {CategoriesComponent} from "./categories/categories.component";
+import {GoogleAuthService} from "./auth/google-auth.service";
 
 @NgModule({
 	declarations: [
@@ -75,7 +76,8 @@ import {CategoriesComponent} from "./categories/categories.component";
 			multi: true
 		},
 		DatePipe,
-		AuthGuard, AuthService, StorageService, TransactionsService, CategoriesService, BudgetsService, ImportsService
+		AuthGuard, AuthService, StorageService, TransactionsService, CategoriesService, BudgetsService, ImportsService,
+		GoogleAuthService
 	],
 	bootstrap: [VaultComponent]
 })

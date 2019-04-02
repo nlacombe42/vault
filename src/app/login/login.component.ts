@@ -1,9 +1,7 @@
-import {AfterViewInit, Component, NgZone, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AuthService} from "../auth/auth.service";
 import {Router} from "@angular/router";
-import {environment} from "../../environments/environment";
-
-declare const gapi: any;
+import {GoogleAuthService, GoogleUser} from "../auth/google-auth.service";
 
 @Component({
 	selector: 'login',
@@ -11,12 +9,9 @@ declare const gapi: any;
 	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-	username: string;
-	password: string;
 	errorMessage: string;
-	private auth2: any;
 
-	constructor(private ngZone: NgZone, private router: Router, private authService: AuthService) {
+	constructor(private googleAuthService: GoogleAuthService, private router: Router, private authService: AuthService) {
 	}
 
 	ngOnInit() {
@@ -24,51 +19,31 @@ export class LoginComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		this.googleInit();
+		this.googleAuthService.isUserLoggedInGoogle().subscribe(userLoggedInGoogle => {
+			if (userLoggedInGoogle) {
+				this.googleAuthService.getCurrentGoogleUser().subscribe(googleUser => {
+					this.loginWithGoogleUser(googleUser);
+				}, error => {
+					this.errorMessage = 'Unknown error. ' + JSON.stringify(error, undefined, 2);
+				});
+			}
+		}, error => {
+			this.errorMessage = 'Unknown error. ' + JSON.stringify(error, undefined, 2);
+		});
 	}
 
 	googleSignIn() {
-		if (this.auth2.isSignedIn.get()) {
-			let googleUser = this.auth2.currentUser.get();
-
-			this.ngZone.run(() => {
-				this.loginWithGoogleUser(googleUser);
-			});
-		} else {
-			this.auth2.signIn().then((googleUser) => {
-				this.ngZone.run(() => {
-					this.loginWithGoogleUser(googleUser);
-				});
-			}, (errorResponse) => {
-				this.ngZone.run(() => {
-					this.errorMessage = 'Unknown error. ' + JSON.stringify(errorResponse, undefined, 2);
-				});
-			});
-		}
+		this.googleAuthService.loginGoogleUser().subscribe(googleUser => {
+			this.loginWithGoogleUser(googleUser);
+		}, error => {
+			this.errorMessage = 'Unknown error. ' + JSON.stringify(error, undefined, 2);
+		});
 	}
 
-	private loginWithGoogleUser(googleUser: any) {
-		this.authService.jwtLogin(googleUser.getAuthResponse().id_token).subscribe(() => {
+	private loginWithGoogleUser(googleUser: GoogleUser) {
+		this.authService.jwtLogin(googleUser.jwt).subscribe(() => {
 			this.router.navigate(['/budgets']);
 		}, (errorResponse) => this.errorMessage = 'Unknown error. ' + errorResponse);
-	}
-
-	private googleInit() {
-		gapi.load('auth2', () => {
-			gapi.auth2.init({
-				client_id: environment.googleOauthClientId,
-				cookiepolicy: 'single_host_origin',
-				scope: 'profile email'
-			}).then((auth2) => {
-				this.ngZone.run(() => {
-					this.auth2 = auth2;
-				});
-			}, (error) => {
-				this.ngZone.run(() => {
-					this.errorMessage = 'Unknown error. ' + JSON.stringify(error, undefined, 2);
-				});
-			});
-		});
 	}
 
 	private checkIfAuthTokenExpired() {

@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from "@angular/material";
 import {AuthService} from "../auth/auth.service";
+import {GoogleAuthService} from "../auth/google-auth.service";
 
 @Component({
 	selector: 'side-menu',
@@ -11,7 +12,7 @@ export class SideMenuComponent implements OnInit {
 
 	@ViewChild(MatSidenav) sideNav;
 
-	constructor(private authService: AuthService) {
+	constructor(private authService: AuthService, private googleAuthService: GoogleAuthService) {
 	}
 
 	ngOnInit() {
@@ -22,6 +23,10 @@ export class SideMenuComponent implements OnInit {
 	}
 
 	logout() {
-		this.authService.logout();
+		this.googleAuthService.logoutGoogleUser().subscribe(() => {
+			this.authService.logout();
+		}, error => {
+			console.error('Error logging out: ', error);
+		});
 	}
 }
