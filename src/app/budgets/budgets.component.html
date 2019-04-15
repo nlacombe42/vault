@@ -5,14 +5,20 @@
 		<p *ngIf="cashFlowLabel">
 			{{cashFlowLabel}} :
 			<span [ngClass]="{'amount-green': cashFlow >= 0, 'amount-red': cashFlow < 0}">
-			{{cashFlow | number:'1.2-2'}}
-		</span>
+				{{cashFlow | number:'1.2-2'}}
+			</span>
+		</p>
 		<p *ngIf="cashFlowWithoutInvestmentLabel">
 			{{cashFlowWithoutInvestmentLabel}} :
-			<span
-				[ngClass]="{'amount-green': cashFlowWithoutInvestment >= 0, 'amount-red': cashFlowWithoutInvestment < 0}">
-			{{cashFlowWithoutInvestment | number:'1.2-2'}}
-		</span>
+			<span [ngClass]="{'amount-green': cashFlowWithoutInvestment >= 0, 'amount-red': cashFlowWithoutInvestment < 0}">
+				{{cashFlowWithoutInvestment | number:'1.2-2'}}
+			</span>
+		</p>
+		<p>
+			Month's Total Planned Max Amount Minus Investments:
+			<span [ngClass]="{'amount-green': totalPlannedMaxAmountMinusInvestments >= 0, 'amount-red': totalPlannedMaxAmountMinusInvestments < 0}">
+				{{totalPlannedMaxAmountMinusInvestments | number:'1.2-2'}}
+			</span>
 		</p>
 		<mat-list class="list">
 			<mat-list-item *ngIf="monthStats" class="list-box">

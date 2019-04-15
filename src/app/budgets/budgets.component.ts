@@ -26,6 +26,7 @@ export class BudgetsComponent implements OnInit {
 	cashFlowWithoutInvestmentLabel: string;
 	cashFlowWithoutInvestment: number;
 	spendingTotal: number;
+	totalPlannedMaxAmountMinusInvestments: number;
 
 	constructor(public dialog: MatDialog, private budgetService: BudgetsService,
 				private categoryService: CategoriesService, private storageService: StorageService) {
@@ -87,11 +88,15 @@ export class BudgetsComponent implements OnInit {
 		}
 
 		if (DateUtils.isPastMonth(this.monthDisplayed)) {
+			let investmentTotal = this.getCurrentInvestmentTotal();
 			this.cashFlowWithoutInvestmentLabel = 'Current cash flow (without investment)';
-			this.cashFlowWithoutInvestment = this.cashFlow + this.getCurrentInvestmentTotal();
+			this.cashFlowWithoutInvestment = this.cashFlow + investmentTotal;
+			this.totalPlannedMaxAmountMinusInvestments = this.monthStats.totalPlannedMaxAmount - investmentTotal;
 		} else {
+			let investmentTotal = this.getPlannedInvestmentTotal();
 			this.cashFlowWithoutInvestmentLabel = 'Planed cash flow (without investment)';
-			this.cashFlowWithoutInvestment = this.cashFlow + this.getPlannedInvestmentTotal();
+			this.cashFlowWithoutInvestment = this.cashFlow + investmentTotal;
+			this.totalPlannedMaxAmountMinusInvestments = this.monthStats.totalPlannedMaxAmount - investmentTotal;
 		}
 	}
 
