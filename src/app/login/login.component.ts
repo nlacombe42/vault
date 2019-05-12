@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AuthService} from "../auth/auth.service";
 import {Router} from "@angular/router";
 import {GoogleAuthService, GoogleUser} from "../auth/google-auth.service";
+import {EventService, Event, EventType} from "../shared/event.service";
 
 @Component({
 	selector: 'login',
@@ -11,7 +12,10 @@ import {GoogleAuthService, GoogleUser} from "../auth/google-auth.service";
 export class LoginComponent implements OnInit, AfterViewInit {
 	errorMessage: string;
 
-	constructor(private googleAuthService: GoogleAuthService, private router: Router, private authService: AuthService) {
+	constructor(private googleAuthService: GoogleAuthService,
+				private router: Router,
+				private authService: AuthService,
+				private eventService: EventService) {
 	}
 
 	ngOnInit() {
@@ -42,6 +46,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
 	private loginWithGoogleUser(googleUser: GoogleUser) {
 		this.authService.jwtLogin(googleUser.jwt).subscribe(() => {
+			this.eventService.publish(new Event(EventType.USER_LOGGED_IN));
 			this.router.navigate(['/budgets']);
 		}, (errorResponse) => this.errorMessage = 'Unknown error. ' + errorResponse);
 	}

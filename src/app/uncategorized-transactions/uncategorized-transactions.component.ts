@@ -5,6 +5,7 @@ import {Category} from "../categories/category.model";
 import {CategoriesService} from "../categories/categories.service";
 import {ArrayUtils, Grouping} from "../shared/array.util";
 import {Router} from "@angular/router";
+import {EventService, EventType} from "../shared/event.service";
 
 class DisplayedTransaction extends Transaction {
 	dateOnly: Date;
@@ -21,7 +22,8 @@ export class UncategorizedTransactionsComponent implements OnInit {
 	transactionsByDate: Grouping<Date, DisplayedTransaction>[];
 
 	constructor(private transactionService: TransactionsService, private categoriesService: CategoriesService,
-				private router: Router) {
+				private router: Router, private eventService: EventService) {
+
 		this.categories = [];
 		this.transactionsByDate = [];
 	}
@@ -35,6 +37,10 @@ export class UncategorizedTransactionsComponent implements OnInit {
 				});
 
 		this.refreshDisplayedTransactions();
+
+		this.eventService.getEventObservableForType(EventType.TRANSACTION_IMPORT_FINISHED).subscribe(() => {
+			this.refreshDisplayedTransactions();
+		});
 	}
 
 	categorizeTransaction(transaction: Transaction, categoryId: number) {

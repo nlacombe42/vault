@@ -4,8 +4,8 @@ import {HttpClient} from "@angular/common/http";
 import {StorageService} from "../shared/storage.service";
 import {AutoImportConfig} from "./auto-import-config";
 import {DateUtils} from "../shared/date.util";
-import {Observable, of, throwError} from "rxjs";
-import {catchError, mergeMap} from "rxjs/operators";
+import {Observable} from "rxjs";
+import {Event, EventService, EventType} from "../shared/event.service";
 
 @Injectable()
 export class ImportsService {
@@ -14,40 +14,43 @@ export class ImportsService {
 
 	private importObservable: Observable<void>;
 
-	constructor(private http: HttpClient, private storageService: StorageService) {
+	constructor(private http: HttpClient, private storageService: StorageService, private eventService: EventService) {
+		this.eventService.getEventObservableForType(EventType.USER_LOGGED_IN).subscribe(() => {
+			this.startAutoImportIfNeeded();
+		});
+	}
+
+	private startAutoImportIfNeeded() {
 		let autoImportConfig = this.storageService.getAutoImportConfig();
 		let lastImportInfo = this.storageService.getLastImportInfo();
 
 		if (autoImportConfig.password !== undefined) {
-			if (autoImportConfig.passwordStorageExpireDate > new Date()) {
+			if (autoImportConfig.passwordStorageExpireDate <= new Date()) {
 				this.stopAutoImports();
-			} else if (!lastImportInfo.importDate || DateUtils.addMinutes(lastImportInfo.importDate, this.minMinutesBetweenImport) < new Date()) {
+			} else if (!lastImportInfo.importDate || DateUtils.addMinutes(lastImportInfo.importDate, this.minMinutesBetweenImport) <= new Date()) {
 				this.startImport(autoImportConfig.password);
 			}
 		}
 	}
 
 	startImport(password: string): Observable<void> {
-		this.importObservable = this.http.post<void>(this.vaultDesjardinsImportUrl, {importPassword: password})
-			.pipe(mergeMap(() => {
-					this.storageService.setLastImportInfo({
-						importDate: new Date(),
-						errorMessage: undefined
-					});
-					this.importObservable = undefined;
-					return of();
-				}),
-				catchError((error) => {
-					this.stopAutoImports();
-					this.storageService.setLastImportInfo({
-						importDate: new Date(),
-						errorMessage: 'Error during import.'
-					});
-					this.importObservable = undefined;
-					return throwError(error);
-				}));
+		this.importObservable = this.http.post<void>(this.vaultDesjardinsImportUrl, {importPassword: password});
 
-		this.importObservable.subscribe();
+		this.importObservable.subscribe(() => {
+			this.storageService.setLastImportInfo({
+				importDate: new Date(),
+				errorMessage: undefined
+			});
+		}, () => {
+			this.stopAutoImports();
+			this.storageService.setLastImportInfo({
+				importDate: new Date(),
+				errorMessage: 'Error during import.'
+			});
+		}, () => {
+			this.importObservable = undefined;
+			this.eventService.publish(new Event(EventType.TRANSACTION_IMPORT_FINISHED));
+		});
 
 		return this.importObservable;
 	}
@@ -62,10 +65,7 @@ export class ImportsService {
 	}
 
 	stopAutoImports(): void {
-		this.storageService.setAutoImportConfig({
-			password: undefined,
-			passwordStorageExpireDate: undefined
-		});
+		this.storageService.clearAutoImportConfig();
 	}
 
 	isImportInProgress(): boolean {
