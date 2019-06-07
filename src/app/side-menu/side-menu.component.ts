@@ -10,7 +10,7 @@ import {GoogleAuthService} from "../auth/google-auth.service";
 })
 export class SideMenuComponent implements OnInit {
 
-	@ViewChild(MatSidenav) sideNav;
+	@ViewChild(MatSidenav, {static: true}) sideNav;
 
 	constructor(private authService: AuthService, private googleAuthService: GoogleAuthService) {
 	}
