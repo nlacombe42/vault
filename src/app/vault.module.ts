@@ -65,7 +65,8 @@ import {EventService} from "./shared/event.service";
 	imports: [
 		BrowserModule, environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : [],
 		BrowserAnimationsModule, HttpClientModule, FormsModule, VaultRoutingModule, VaultMatModule,
-		InfiniteScrollModule
+		InfiniteScrollModule,
+		ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
 	],
 	entryComponents: [
 		AddBudgetDialogComponent
