@@ -4,23 +4,11 @@ import {HttpClient} from "@angular/common/http";
 import {StorageService} from "../shared/storage.service";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
-import * as jwtDecode from 'jwt-decode';
 import {catchError, map} from "rxjs/operators";
-import {throwError} from "rxjs/internal/observable/throwError";
+import {JwtHelperService} from "@auth0/angular-jwt";
 
 class AuthToken {
 	token: string
-}
-
-class Jwt {
-	iss: string;
-	iat: number;
-	exp: number;
-	sub: string;
-}
-
-class JwtUser extends Jwt {
-	userId: number
 }
 
 @Injectable()
@@ -40,7 +28,7 @@ export class AuthService {
 			}),
 			catchError(errorResponse => {
 				this.storageService.clearAuthToken();
-				return throwError(errorResponse.error);
+				throw errorResponse.error;
 			})
 		);
 	}
@@ -68,8 +56,9 @@ export class AuthService {
 		if (!authToken)
 			return false;
 
-		let authJwt: JwtUser = jwtDecode<JwtUser>(authToken);
+		let helper = new JwtHelperService();
+		let expirationDate = helper.getTokenExpirationDate(authToken);
 
-		return new Date() >= new Date(authJwt.exp * 1000);
+		return new Date() >= expirationDate;
 	}
 }

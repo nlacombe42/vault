@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {MatDialog} from "@angular/material";
 import {AddBudgetDialogComponent, AddBudgetDialogConfig} from "../add-budget-dialog/add-budget-dialog.component";
 import {DisplayedBudget} from "./budget.model";
 import {BudgetsService} from "./budgets.service";
@@ -8,6 +7,7 @@ import {CategoriesService} from "../categories/categories.service";
 import {Category} from "../categories/category.model";
 import {MonthStats} from "./month-stats.model";
 import {StorageService} from "../shared/storage.service";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
 	selector: 'budgets',
