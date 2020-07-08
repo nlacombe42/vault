@@ -20,3 +20,9 @@ export class DisplayedBudget extends Budget {
 export class BudgetWithTransactions extends DisplayedBudget {
 	transactionsByDate: Grouping<Date, DisplayedTransaction>[];
 }
+
+export class BudgetUpdateRequest {
+	plannedMaxAmount: number;
+	income: boolean;
+	investment: boolean;
+}

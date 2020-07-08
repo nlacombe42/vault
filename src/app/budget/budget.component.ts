@@ -26,7 +26,11 @@ export class BudgetComponent implements OnInit {
 			});
 	}
 
-	updatePlannedMaxAmount(): void {
-		this.budgetsService.updateBudgetPlannedMaxAmount(this.budget.budgetId, this.budget.plannedMaxAmount).subscribe();
+	updateBudget(): void {
+		this.budgetsService.updateBudget(this.budget.budgetId, {
+			plannedMaxAmount: this.budget.plannedMaxAmount,
+			income: this.budget.income,
+			investment: this.budget.investment
+		}).subscribe();
 	}
 }

@@ -6,11 +6,17 @@
 							[currentAmount]="budget.currentAmount"
 							[plannedMaxAmount]="budget.plannedMaxAmount">
 			</budgetProgress>
-			<div class="field">
+			<div class="fields">
+				<mat-checkbox [(ngModel)]="budget.income" name="income">
+					Income budget
+				</mat-checkbox>
+				<mat-checkbox [(ngModel)]="budget.investment" name="investment">
+					investment budget
+				</mat-checkbox>
 				<mat-form-field>
 					<input matInput [(ngModel)]="budget.plannedMaxAmount" type="number" placeholder="Planned Max Amount">
 				</mat-form-field>
-				<button (click)="updatePlannedMaxAmount()" mat-raised-button color="primary">
+				<button (click)="updateBudget()" mat-raised-button color="primary">
 					Update
 				</button>
 			</div>

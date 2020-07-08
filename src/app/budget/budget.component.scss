@@ -2,6 +2,10 @@
 	margin: 10px 20px;
 }
 
-.field {
+.fields {
 	margin-top: 30px;
+}
+
+.fields > * {
+	margin: 10px;
 }

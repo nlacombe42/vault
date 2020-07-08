@@ -7,7 +7,7 @@ import {DisplayedMonthBudgetsInfo, MonthBudgetsInfo} from "./month-budgets-info"
 import {MonthBudgetCreationRequest} from "./month-budget-creation-request";
 import {Category} from "../categories/category.model";
 import {TransactionsService} from "../transactions/transactions.service";
-import {Budget, BudgetWithTransactions, DisplayedBudget} from "./budget.model";
+import {Budget, BudgetUpdateRequest, BudgetWithTransactions, DisplayedBudget} from "./budget.model";
 import {CategoriesService} from "../categories/categories.service";
 import {map, mergeMap, take, toArray, defaultIfEmpty} from "rxjs/operators";
 import {Grouping} from "../shared/array.util";
@@ -57,10 +57,10 @@ export class BudgetsService {
 			.pipe(mergeMap(rawBudgetWithTransactions => this.toBudgetWithTransactions(rawBudgetWithTransactions)));
 	}
 
-	updateBudgetPlannedMaxAmount(budgetId: number, plannedMaxAmount: number): Observable<void> {
-		let url = this.vaultBudgetsUrl + `/${budgetId}/plannedMaxAmount`;
+	updateBudget(budgetId: number, budgetUpdateRequest: BudgetUpdateRequest): Observable<void> {
+		let url = this.vaultBudgetsUrl + `/${budgetId}`;
 
-		return this.http.put<void>(url, plannedMaxAmount);
+		return this.http.put<void>(url, budgetUpdateRequest);
 	}
 
 	private toDisplayedMonthBudgetsInfo(monthBudgetsInfo: MonthBudgetsInfo): Observable<DisplayedMonthBudgetsInfo> {
