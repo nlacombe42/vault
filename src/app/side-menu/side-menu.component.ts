@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatSidenav} from "@angular/material";
 import {AuthService} from "../auth/auth.service";
 import {GoogleAuthService} from "../auth/google-auth.service";
+import {MatSidenav} from "@angular/material/sidenav";
 
 @Component({
 	selector: 'side-menu',
