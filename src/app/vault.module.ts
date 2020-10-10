@@ -39,6 +39,7 @@ import {CategoryDropdownComponent} from "./category-dropdown/category-dropdown.c
 import {CategoriesComponent} from "./categories/categories.component";
 import {GoogleAuthService} from "./auth/google-auth.service";
 import {EventService} from "./shared/event.service";
+import {BudgetListItemComponent} from "./budget-list-item/budget-list-item.component";
 
 @NgModule({
 	declarations: [
@@ -60,7 +61,8 @@ import {EventService} from "./shared/event.service";
 		CategoryDropdownComponent,
 		CategoriesComponent,
 		LocalDatePipe,
-		LocalMonthPipe
+		LocalMonthPipe,
+		BudgetListItemComponent,
 	],
 	imports: [
 		BrowserModule, environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : [],

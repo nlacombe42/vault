@@ -3,7 +3,7 @@
   "version": "1.4.2",
   "license": "MIT",
   "scripts": {
-    "serve": "ng serve",
+    "start": "ng serve",
     "build": "ng build",
     "deploy": "s3-deploy './dist/**' --cwd './dist/' --bucket vault-nlacombe-net --cache 0 --deleteRemoved",
     "buildAndDeploy": "ng build --prod && npm run deploy"

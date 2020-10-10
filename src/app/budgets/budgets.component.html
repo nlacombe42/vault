@@ -14,70 +14,46 @@
 				{{cashFlowWithoutInvestment | number:'1.2-2'}}
 			</span>
 		</p>
-		<p>
-			Month's Total Planned Max Amount Minus Investments:
-			<span [ngClass]="{'amount-green': totalPlannedMaxAmountMinusInvestments >= 0, 'amount-red': totalPlannedMaxAmountMinusInvestments < 0}">
-				{{totalPlannedMaxAmountMinusInvestments | number:'1.2-2'}}
-			</span>
-		</p>
+		<mat-list *ngIf="monthStats" class="list">
+			<budget-list-item [name]="'Month\'s total budget'"
+							  [currentAmount]="spendingTotal"
+							  [plannedMaxAmount]="monthStats.totalPlannedMaxAmount"
+			></budget-list-item>
+			<budget-list-item [name]="'Month\'s total budget minus investments'"
+							  [currentAmount]="spendingTotalMinusInvestments"
+							  [plannedMaxAmount]="totalPlannedMaxAmountMinusInvestments"
+			></budget-list-item>
+		</mat-list>
+		<ng-container *ngIf="incomeBudgets.length > 0">
+			<h3>Income</h3>
+			<mat-list class="list">
+				<budget-list-item *ngFor="let budget of incomeBudgets"
+								  [name]="budget.category.name"
+								  [currentAmount]="budget.currentAmount"
+								  [plannedMaxAmount]="budget.plannedMaxAmount"
+								  [routerLink]="['/budget', budget.budgetId]"
+								  [income]="true"
+				></budget-list-item>
+			</mat-list>
+		</ng-container>
+		<ng-container *ngIf="spendingBudgets.length > 0">
+			<h3>Spending</h3>
+			<mat-list class="list">
+				<budget-list-item *ngFor="let budget of spendingBudgets"
+								  [name]="budget.category.name"
+								  [currentAmount]="budget.currentAmount"
+								  [plannedMaxAmount]="budget.plannedMaxAmount"
+								  [routerLink]="['/budget', budget.budgetId]"
+				></budget-list-item>
+			</mat-list>
+		</ng-container>
 		<mat-list class="list">
-			<mat-list-item *ngIf="monthStats" class="list-box">
-				<p mat-line>
-					<span class="budget-title">Month's Total Budget</span>
-					<span class="budget-amount">
-					{{ (monthStats.totalPlannedMaxAmount - spendingTotal) |  number:'1.2-2'}} left
-				</span>
-				</p>
-				<budgetProgress mat-line [currentAmount]="spendingTotal"
-								[plannedMaxAmount]="monthStats.totalPlannedMaxAmount">
-				</budgetProgress>
-			</mat-list-item>
-		</mat-list>
-		<h3 *ngIf="incomeBudgets.length > 0">Income</h3>
-		<mat-list *ngIf="incomeBudgets.length > 0" class="list">
-			<a *ngFor="let budget of incomeBudgets" [routerLink]="['/budget', budget.budgetId]">
-				<mat-list-item class="list-box">
-					<p mat-line>
-						<span class="budget-title">{{budget.category.name}}</span>
-					</p>
-					<budgetProgress mat-line
-									[income]="true"
-									[currentAmount]="budget.currentAmount"
-									[plannedMaxAmount]="budget.plannedMaxAmount">
-					</budgetProgress>
-				</mat-list-item>
-			</a>
-		</mat-list>
-		<h3>Spending</h3>
-		<mat-list *ngIf="spendingBudgets.length > 0" class="list">
-			<a *ngFor="let budget of spendingBudgets" [routerLink]="['/budget', budget.budgetId]">
-				<mat-list-item class="list-box">
-					<p mat-line>
-						<span class="budget-title">{{budget.category.name}}</span>
-						<span class="budget-amount">
-						{{ (budget.plannedMaxAmount - budget.currentAmount) |  number:'1.2-2'}} left
-					</span>
-					</p>
-					<budgetProgress mat-line [currentAmount]="budget.currentAmount"
-									[plannedMaxAmount]="budget.plannedMaxAmount">
-					</budgetProgress>
-				</mat-list-item>
-			</a>
-		</mat-list>
-		<mat-list class="list">
-			<a *ngIf="everythingElseBudget" [routerLink]="['/budget', everythingElseBudget.budgetId]">
-				<mat-list-item class="list-box">
-					<p mat-line>
-						<span class="budget-title">Everything Else</span>
-						<span class="budget-amount">
-					{{ (everythingElseBudget.plannedMaxAmount - everythingElseBudget.currentAmount) |  number:'1.2-2'}} left
-				</span>
-					</p>
-					<budgetProgress mat-line [currentAmount]="everythingElseBudget.currentAmount"
-									[plannedMaxAmount]="everythingElseBudget.plannedMaxAmount">
-					</budgetProgress>
-				</mat-list-item>
-			</a>
+			<budget-list-item *ngIf="everythingElseBudget"
+							  [name]="'Everything else'"
+							  [currentAmount]="everythingElseBudget.currentAmount"
+							  [plannedMaxAmount]="everythingElseBudget.plannedMaxAmount"
+							  [routerLink]="['/budget', everythingElseBudget.budgetId]"
+			></budget-list-item>
 		</mat-list>
 	</section>
 	<button mat-fab (click)="showAddBudgetDialog()" class="main-fab">

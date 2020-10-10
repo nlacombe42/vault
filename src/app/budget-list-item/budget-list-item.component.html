@@ -1,0 +1,22 @@
+<a *ngIf="routerLink; else noLink" [routerLink]="routerLink">
+	<mat-list-item class="list-box">
+		<p mat-line>
+			<span class="budget-title">{{name}}</span>
+			<span class="budget-amount">
+			{{ (plannedMaxAmount - currentAmount) |  number:'1.2-2'}} left
+		</span>
+		</p>
+		<budgetProgress mat-line [currentAmount]="currentAmount" [plannedMaxAmount]="plannedMaxAmount" [income]="income"></budgetProgress>
+	</mat-list-item>
+</a>
+<ng-template #noLink>
+	<mat-list-item class="list-box">
+		<p mat-line>
+			<span class="budget-title">{{name}}</span>
+			<span class="budget-amount">
+				{{ (plannedMaxAmount - currentAmount) |  number:'1.2-2'}} left
+			</span>
+		</p>
+		<budgetProgress mat-line [currentAmount]="currentAmount" [plannedMaxAmount]="plannedMaxAmount" [income]="income"></budgetProgress>
+	</mat-list-item>
+</ng-template>

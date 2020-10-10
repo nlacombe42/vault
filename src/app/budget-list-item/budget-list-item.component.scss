@@ -1,0 +1,18 @@
+.budget-title {
+	display: inline-block;
+	width: calc(100% - 150px);
+	float: left;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.budget-amount {
+	display: inline;
+	float: right;
+}
+
+a {
+	text-decoration: none;
+}

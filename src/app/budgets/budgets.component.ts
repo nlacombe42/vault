@@ -27,6 +27,7 @@ export class BudgetsComponent implements OnInit {
 	cashFlowWithoutInvestment: number;
 	spendingTotal: number;
 	totalPlannedMaxAmountMinusInvestments: number;
+	spendingTotalMinusInvestments: number;
 
 	constructor(public dialog: MatDialog, private budgetService: BudgetsService,
 				private categoryService: CategoriesService, private storageService: StorageService) {
@@ -72,12 +73,12 @@ export class BudgetsComponent implements OnInit {
 				this.incomeBudgets = monthBudgetsInfo.incomeBudgets;
 				this.monthStats = monthBudgetsInfo.monthStats;
 				this.everythingElseBudget = monthBudgetsInfo.unbudgeted;
-				this.updateCashFlow();
-				this.updateSpendingTotal();
+				this.spendingTotal = this.getSpendingTotal();
+				this.updateMonthStats(this.spendingTotal);
 			});
 	}
 
-	private updateCashFlow() {
+	private updateMonthStats(spendingTotal: number) {
 		if (DateUtils.isPastMonth(this.monthDisplayed)) {
 			this.cashFlowLabel = 'Current cash flow';
 			this.cashFlow = this.monthStats.currentAmount;
@@ -87,17 +88,20 @@ export class BudgetsComponent implements OnInit {
 			this.cashFlow = planedTotalIncome - Math.max(this.monthStats.totalPlannedMaxAmount, this.monthStats.currentAmount);
 		}
 
+		let investmentTotal: number;
+
 		if (DateUtils.isPastMonth(this.monthDisplayed)) {
-			let investmentTotal = this.getCurrentInvestmentTotal();
+			investmentTotal = this.getCurrentInvestmentTotal();
 			this.cashFlowWithoutInvestmentLabel = 'Current cash flow (without investment)';
-			this.cashFlowWithoutInvestment = this.cashFlow + investmentTotal;
-			this.totalPlannedMaxAmountMinusInvestments = this.monthStats.totalPlannedMaxAmount - investmentTotal;
+
 		} else {
-			let investmentTotal = this.getPlannedInvestmentTotal();
+			investmentTotal = this.getPlannedInvestmentTotal();
 			this.cashFlowWithoutInvestmentLabel = 'Planed cash flow (without investment)';
-			this.cashFlowWithoutInvestment = this.cashFlow + investmentTotal;
-			this.totalPlannedMaxAmountMinusInvestments = this.monthStats.totalPlannedMaxAmount - investmentTotal;
 		}
+
+		this.cashFlowWithoutInvestment = this.cashFlow + investmentTotal;
+		this.totalPlannedMaxAmountMinusInvestments = this.monthStats.totalPlannedMaxAmount - investmentTotal;
+		this.spendingTotalMinusInvestments = spendingTotal - this.getCurrentInvestmentTotal();
 	}
 
 	private getCurrentInvestmentTotal(): number {
@@ -124,8 +128,8 @@ export class BudgetsComponent implements OnInit {
 		return spendingInvestmentTotal - incomeInvestmentTotal;
 	}
 
-	private updateSpendingTotal() {
-		this.spendingTotal = this.getSpendingBudgetTotal() + this.everythingElseBudget.currentAmount;
+	private getSpendingTotal(): number {
+		 return this.getSpendingBudgetTotal() + this.everythingElseBudget.currentAmount;
 	}
 
 	private getSpendingBudgetTotal(): number {
