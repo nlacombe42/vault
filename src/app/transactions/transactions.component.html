@@ -8,7 +8,7 @@
 			   [routerLink]="['/transaction', transaction.transactionId]">
 
 				<mat-list-item infiniteScroll [infiniteScrollDistance]="1" (scrolled)="fetchNextTransactionPage()"
-							   class="list-box">
+							   class="list-box" [class]="{'temporary-transaction': transaction.temporary}">
 					<p mat-line class="align-left">{{transaction.description}}</p>
 					<p mat-line class="align-left">{{transaction.category.name}}</p>
 					<amount [amount]="transaction.amount"></amount>

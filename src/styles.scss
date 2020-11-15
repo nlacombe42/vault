@@ -4,6 +4,7 @@ html, body {
 	margin: 0;
 	width: 100%;
 	height: 100%;
+	color: #000;
 }
 
 .align-right {
@@ -47,4 +48,8 @@ html, body {
 
 .amount-red {
 	color: #800;
+}
+
+.temporary-transaction {
+	color: #666 !important;
 }

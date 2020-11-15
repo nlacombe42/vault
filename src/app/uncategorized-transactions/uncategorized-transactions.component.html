@@ -6,7 +6,7 @@
 
 			<mat-list-item *ngFor="let transaction of transactionByDate.values"
 						   (click)="goToTransactionDetail(transaction.transactionId)"
-						   class="list-box">
+						   class="list-box" [class]="{'temporary-transaction': transaction.temporary}">
 				<p mat-line class="align-left">{{transaction.description}}</p>
 				<p mat-line class="align-left">
 					<amount [amount]="transaction.amount"></amount>

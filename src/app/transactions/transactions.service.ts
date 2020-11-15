@@ -120,20 +120,21 @@ export class TransactionsService {
 					datetime: transaction.datetime,
 					description: transaction.description,
 					amount: transaction.amount,
+					temporary: transaction.temporary,
 					dateOnly: new Date(transaction.datetime.toDateString())
 				};
 			}));
 	}
 
 	private toTransaction(rawTransaction: any): Transaction {
-		let transaction = new Transaction();
-		transaction.accountId = rawTransaction.accountId;
-		transaction.transactionId = rawTransaction.transactionId;
-		transaction.datetime = new Date(rawTransaction.datetime * 1000);
-		transaction.description = rawTransaction.description;
-		transaction.amount = rawTransaction.amount;
-		transaction.categoryId = rawTransaction.categoryId;
-
-		return transaction;
+		return {
+			accountId: rawTransaction.accountId,
+			transactionId: rawTransaction.transactionId,
+			datetime: new Date(rawTransaction.datetime * 1000),
+			description: rawTransaction.description,
+			amount: rawTransaction.amount,
+			categoryId: rawTransaction.categoryId,
+			temporary: rawTransaction.temporary
+		};
 	}
 }

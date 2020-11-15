@@ -23,6 +23,10 @@
 				</mat-form-field>
 			</div>
 			<div class="field">
+				<label for="amount" class="mat-body-2">Temporary</label>
+				{{transaction.temporary ? 'Yes' : 'No'}}
+			</div>
+			<div class="field">
 				<button (click)="deleteTransaction(transaction)" mat-raised-button color="primary">
 					Delete
 				</button>

@@ -6,4 +6,5 @@ export class Transaction {
 	datetime: Date;
 	description: string;
 	amount: number;
+	temporary: boolean;
 }

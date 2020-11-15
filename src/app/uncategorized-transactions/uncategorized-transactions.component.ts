@@ -71,16 +71,15 @@ export class UncategorizedTransactionsComponent implements OnInit {
 	}
 
 	private toDisplayedTransaction(transaction: Transaction): DisplayedTransaction {
-		let displayedTransaction = new DisplayedTransaction();
-
-		displayedTransaction.transactionId = transaction.transactionId;
-		displayedTransaction.accountId = transaction.accountId;
-		displayedTransaction.categoryId = transaction.categoryId;
-		displayedTransaction.datetime = transaction.datetime;
-		displayedTransaction.description = transaction.description;
-		displayedTransaction.amount = transaction.amount;
-		displayedTransaction.dateOnly = new Date(transaction.datetime.toDateString());
-
-		return displayedTransaction;
+		return {
+			transactionId: transaction.transactionId,
+			accountId: transaction.accountId,
+			categoryId: transaction.categoryId,
+			datetime: transaction.datetime,
+			description: transaction.description,
+			amount: transaction.amount,
+			dateOnly: new Date(transaction.datetime.toDateString()),
+			temporary: transaction.temporary
+		};
 	}
 }
