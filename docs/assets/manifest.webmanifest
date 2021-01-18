@@ -1,0 +1,21 @@
+{
+	"name": "Vault",
+	"short_name": "Vault",
+	"start_url": "/budgets",
+	"display": "standalone",
+	"theme_color": "#3f51b5",
+	"background_color": "#fff",
+	"description": "Personal budget app.",
+	"icons": [
+		{
+			"src": "/assets/vault-icon.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "/assets/vault-icon.svg",
+			"sizes": "48x48 192x192 512x512",
+			"type": "image/svg+xml"
+		}
+	]
+}
