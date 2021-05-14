@@ -4,9 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ng serve",
-    "build": "ng build",
-    "deploy": "s3-deploy './dist/**' --cwd './dist/' --bucket vault-nlacombe-net --cache 0 --deleteRemoved",
-    "buildAndDeploy": "ng build --prod && npm run deploy"
+    "build": "ng build"
   },
   "private": true,
   "dependencies": {
