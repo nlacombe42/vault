@@ -7,4 +7,5 @@ export class Transaction {
 	description: string;
 	amount: number;
 	temporary: boolean;
+	parentTransactionId: number;
 }

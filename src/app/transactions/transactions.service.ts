@@ -121,7 +121,8 @@ export class TransactionsService {
 					description: transaction.description,
 					amount: transaction.amount,
 					temporary: transaction.temporary,
-					dateOnly: new Date(transaction.datetime.toDateString())
+					dateOnly: new Date(transaction.datetime.toDateString()),
+					parentTransactionId: transaction.parentTransactionId,
 				};
 			}));
 	}
@@ -134,7 +135,8 @@ export class TransactionsService {
 			description: rawTransaction.description,
 			amount: rawTransaction.amount,
 			categoryId: rawTransaction.categoryId,
-			temporary: rawTransaction.temporary
+			temporary: rawTransaction.temporary,
+			parentTransactionId: rawTransaction.parentTransactionId,
 		};
 	}
 }

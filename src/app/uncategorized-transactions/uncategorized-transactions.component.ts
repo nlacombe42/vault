@@ -79,7 +79,8 @@ export class UncategorizedTransactionsComponent implements OnInit {
 			description: transaction.description,
 			amount: transaction.amount,
 			dateOnly: new Date(transaction.datetime.toDateString()),
-			temporary: transaction.temporary
+			temporary: transaction.temporary,
+			parentTransactionId: transaction.parentTransactionId,
 		};
 	}
 }

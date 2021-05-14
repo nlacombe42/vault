@@ -3,6 +3,10 @@
 	<mat-card *ngIf="transaction">
 		<mat-card-content>
 			<p>{{transaction.datetime | localdate}}</p>
+			<div *ngIf="transaction.parentTransactionId" class="field">
+				<label for="parentTransactionId" class="mat-body-2">Parent transaction id</label>
+				<p id="parentTransactionId">{{transaction.parentTransactionId}}</p>
+			</div>
 			<div class="field">
 				<label for="description" class="mat-body-2">Description</label>
 				<p id="description">{{transaction.description}}</p>
@@ -26,7 +30,7 @@
 				<label for="amount" class="mat-body-2">Temporary</label>
 				{{transaction.temporary ? 'Yes' : 'No'}}
 			</div>
-			<div class="field">
+			<div *ngIf="!transaction.parentTransactionId" class="field">
 				<button (click)="deleteTransaction(transaction)" mat-raised-button color="primary">
 					Delete
 				</button>
