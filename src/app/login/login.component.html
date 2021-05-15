@@ -2,7 +2,9 @@
 	<mat-card class="login-box">
 		<mat-card-title class="title">Login</mat-card-title>
 		<mat-card-content>
-			<div (click)="googleSignIn()" class="g-signin2"></div>
+			<button (click)="googleSignIn()" class="g-signin2" type="button">
+                Login with google
+            </button>
 			<p *ngIf="errorMessage" class="message-error">{{errorMessage}}</p>
 		</mat-card-content>
 	</mat-card>

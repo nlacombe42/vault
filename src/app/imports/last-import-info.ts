@@ -1,4 +1,4 @@
-export class LastImportInfo {
-	importDate: Date;
-	errorMessage: string;
+export interface LastImportInfo {
+	importDate: Date | undefined;
+	errorMessage: string | undefined;
 }

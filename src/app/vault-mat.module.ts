@@ -12,22 +12,22 @@ import {MatInputModule} from "@angular/material/input";
 import {MatDialogModule} from "@angular/material/dialog";
 
 const MatImports = [
-	MatToolbarModule,
-	MatButtonModule,
-	MatIconModule,
-	MatSidenavModule,
-	MatInputModule,
-	MatCardModule,
-	MatListModule,
-	MatSelectModule,
-	MatDialogModule,
-	MatCheckboxModule,
-	MatProgressSpinnerModule
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatInputModule,
+    MatCardModule,
+    MatListModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule
 ];
 
 @NgModule({
-	imports: MatImports,
-	exports: MatImports
+    imports: MatImports,
+    exports: MatImports
 })
 export class VaultMatModule {
 }

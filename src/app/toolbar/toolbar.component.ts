@@ -9,7 +9,7 @@ import {ImportsService} from "../imports/imports.service";
 })
 export class ToolbarComponent implements OnInit {
 
-	@Input() sideMenu: SideMenuComponent;
+	@Input() sideMenu: SideMenuComponent | undefined;
 
 	constructor(private importsService: ImportsService) {
 	}
@@ -18,6 +18,10 @@ export class ToolbarComponent implements OnInit {
 	}
 
 	toggleSideMenu() {
+	    if (!this.sideMenu) {
+	        return;
+        }
+
 		this.sideMenu.toggle();
 	}
 

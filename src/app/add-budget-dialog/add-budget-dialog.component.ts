@@ -3,7 +3,7 @@ import {Category} from "../categories/category.model";
 import {BudgetsService} from "../budgets/budgets.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
-export class AddBudgetDialogConfig {
+export interface AddBudgetDialogConfig {
 	month: Date;
 }
 
@@ -16,8 +16,8 @@ export class AddBudgetDialogComponent implements OnInit {
 
 	categories: Category[];
 	month: Date;
-	category: Category;
-	amount: number;
+	category: Category | undefined;
+	amount: number | undefined;
 	incomeBudget: boolean;
 	investmentBudget: boolean;
 
@@ -29,6 +29,8 @@ export class AddBudgetDialogComponent implements OnInit {
 		this.month = data.month;
 		this.incomeBudget = false;
 		this.investmentBudget = false;
+		this.category = undefined;
+		this.amount = undefined;
 	}
 
 	ngOnInit() {
@@ -41,6 +43,10 @@ export class AddBudgetDialogComponent implements OnInit {
 	}
 
 	addBudget() {
+	    if (!this.category || !this.amount) {
+	        throw 'category or amount not set';
+        }
+
 		this.budgetService.createBudget(this.category.categoryId, this.month, this.amount, this.incomeBudget, this.investmentBudget)
 			.subscribe(() => {
 				this.dialog.close();

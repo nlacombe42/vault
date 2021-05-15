@@ -8,16 +8,16 @@ import {Component, Input} from '@angular/core';
 export class BudgetListItemComponent {
 
 	@Input()
-	name: string;
+	name: string = '';
 
 	@Input()
-	currentAmount: number;
+	currentAmount: number = 0;
 
 	@Input()
-	plannedMaxAmount: number;
+	plannedMaxAmount: number = 0;
 
 	@Input()
-	routerLink: any[];
+	routerLink: any[] = [];
 
 	@Input()
 	income: boolean = false;

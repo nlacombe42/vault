@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AutoImportConfig} from "../imports/auto-import-config";
 import {LastImportInfo} from "../imports/last-import-info";
+import {getValueOrThrowIfFalsy} from "./lang.util";
 
 @Injectable()
 export class StorageService {
@@ -21,21 +22,21 @@ export class StorageService {
 		localStorage.setItem('authToken', authToken);
 	}
 
-	getAuthToken(): string {
+	getAuthToken(): string | undefined {
 		let authToken = localStorage.getItem('authToken');
 
 		return authToken ? authToken : undefined;
 	}
 
 	setAutoImportConfig(autoImportConfig: AutoImportConfig): void {
-		localStorage.setItem(StorageService.AUTO_IMPORT_CONFIG_PASSWORD_KEY, this.encodeBase64(autoImportConfig.password));
-		localStorage.setItem(StorageService.AUTO_IMPORT_CONFIG_EXPIRY_KEY, this.dateToTimestampString(autoImportConfig.passwordStorageExpireDate));
+		localStorage.setItem(StorageService.AUTO_IMPORT_CONFIG_PASSWORD_KEY, JSON.stringify(this.encodeBase64(autoImportConfig.password)));
+		localStorage.setItem(StorageService.AUTO_IMPORT_CONFIG_EXPIRY_KEY, JSON.stringify(this.dateToTimestampString(autoImportConfig.passwordStorageExpireDate)));
 	}
 
 	getAutoImportConfig(): AutoImportConfig {
 		return {
-			password: this.decodeBase64(localStorage.getItem(StorageService.AUTO_IMPORT_CONFIG_PASSWORD_KEY)),
-			passwordStorageExpireDate: this.timestampStringToDate(localStorage.getItem(StorageService.AUTO_IMPORT_CONFIG_EXPIRY_KEY))
+			password: this.decodeBase64(getValueOrThrowIfFalsy(StorageService.parseJsonThrowOnFalsy(localStorage.getItem(StorageService.AUTO_IMPORT_CONFIG_PASSWORD_KEY)))),
+			passwordStorageExpireDate: this.timestampStringToDate(StorageService.parseJsonThrowOnFalsy(localStorage.getItem(StorageService.AUTO_IMPORT_CONFIG_EXPIRY_KEY)))
 		}
 	}
 
@@ -45,14 +46,14 @@ export class StorageService {
 	}
 
 	setLastImportInfo(lastImportInfo: LastImportInfo): void {
-		localStorage.setItem(StorageService.LAST_IMPORT_DATE_KEY, this.dateToTimestampString(lastImportInfo.importDate));
-		localStorage.setItem(StorageService.LAST_IMPORT_MESSAGE_KEY, lastImportInfo.errorMessage);
+		localStorage.setItem(StorageService.LAST_IMPORT_DATE_KEY, JSON.stringify(this.dateToTimestampString(lastImportInfo.importDate)));
+		localStorage.setItem(StorageService.LAST_IMPORT_MESSAGE_KEY, JSON.stringify(lastImportInfo.errorMessage));
 	}
 
 	getLastImportInfo(): LastImportInfo {
 		return {
-			importDate: this.timestampStringToDate(localStorage.getItem(StorageService.LAST_IMPORT_DATE_KEY)),
-			errorMessage: this.getTextOrUndefined(localStorage.getItem(StorageService.LAST_IMPORT_MESSAGE_KEY))
+			importDate: this.timestampStringToDate(StorageService.parseJsonThrowOnFalsy(localStorage.getItem(StorageService.LAST_IMPORT_DATE_KEY))),
+			errorMessage: this.getTextOrUndefined(StorageService.parseJsonThrowOnFalsy(localStorage.getItem(StorageService.LAST_IMPORT_MESSAGE_KEY)))
 		}
 	}
 
@@ -60,7 +61,7 @@ export class StorageService {
 		localStorage.setItem('displayedMonthForBudgets', month.getTime().toString());
 	}
 
-	getDisplayedMonthForBudgets(): Date {
+	getDisplayedMonthForBudgets(): Date | undefined {
 		let displayedMonthTimestamp = localStorage.getItem('displayedMonthForBudgets');
 
 		if (displayedMonthTimestamp === null)
@@ -69,26 +70,26 @@ export class StorageService {
 		return new Date(+displayedMonthTimestamp);
 	}
 
-	private getTextOrUndefined(text: any): string {
+	private getTextOrUndefined(text: any): string | undefined {
 		if (!text)
 			return undefined;
 
 		return text === 'undefined' ? undefined : text;
 	}
 
-	private encodeBase64(text: string): string {
+	private encodeBase64(text: string | undefined): string | undefined {
 		return text ? this.stringToHexString(text) : undefined;
 	}
 
-	private decodeBase64(base64EncodedString: string): string {
+	private decodeBase64(base64EncodedString: string | undefined): string | undefined {
 		return base64EncodedString ? this.hexStringToString(base64EncodedString) : undefined;
 	}
 
-	private dateToTimestampString(date: Date): string {
+	private dateToTimestampString(date: Date | undefined): string | undefined {
 		return date ? date.getTime().toString() : undefined;
 	}
 
-	private timestampStringToDate(timestamp: any): Date {
+	private timestampStringToDate(timestamp: any): Date | undefined {
 		return timestamp ? new Date(+timestamp) : undefined;
 	}
 
@@ -114,4 +115,12 @@ export class StorageService {
 
 		return back;
 	}
+
+	private static parseJsonThrowOnFalsy(json: string | null): any {
+	    if (!json) {
+	        throw 'argument is falsy';
+        }
+
+	    return JSON.parse(json);
+    }
 }

@@ -5,8 +5,20 @@ import {map, shareReplay} from "rxjs/operators";
 
 declare const gapi: any;
 
-export class GoogleUser {
+export interface GoogleUser {
 	jwt: string;
+}
+
+interface RawGoogleUser {
+    getAuthResponse(): RawGoogleUserAuthResponse
+}
+
+interface RawGoogleUserAuthResponse {
+    id_token: string;
+}
+
+interface GoogleAuth2 {
+
 }
 
 @Injectable()
@@ -35,16 +47,16 @@ export class GoogleAuthService {
 	loginGoogleUser(): Observable<GoogleUser> {
 		return new Observable(observer => {
 			this.googleAuth2Observable.subscribe(auth2 => {
-				auth2.signIn().then((rawGoogleUser) => {
-					this.ngZone.run(() => {
-						observer.next(this.mapRawGoogleUserToGoogleUser(rawGoogleUser));
-						observer.complete();
-					});
-				}, (errorResponse) => {
-					this.ngZone.run(() => {
-						observer.error(errorResponse);
-					});
-				});
+                auth2.signIn().then((rawGoogleUser: RawGoogleUser) => {
+                    this.ngZone.run(() => {
+                        observer.next(this.mapRawGoogleUserToGoogleUser(rawGoogleUser));
+                        observer.complete();
+                    });
+                }, (errorResponse: unknown) => {
+                    this.ngZone.run(() => {
+                        observer.error(errorResponse);
+                    });
+                });
 
 				let googleUser = auth2.currentUser.get();
 
@@ -63,7 +75,7 @@ export class GoogleAuthService {
 						observer.next();
 						observer.complete();
 					});
-				}, (error) => {
+				}, (error: unknown) => {
 					this.ngZone.run(() => {
 						observer.error(error);
 					});
@@ -74,25 +86,25 @@ export class GoogleAuthService {
 		});
 	}
 
-	private mapRawGoogleUserToGoogleUser(rawGoogleUser: any): GoogleUser {
+	private mapRawGoogleUserToGoogleUser(rawGoogleUser: RawGoogleUser): GoogleUser {
 		return {
 			jwt: rawGoogleUser.getAuthResponse().id_token
 		};
 	}
 
-	private getGoogleAuth2Observable(): Observable<any> {
-		return new Observable(observer => {
+	private getGoogleAuth2Observable(): Observable<GoogleAuth2> {
+		return new Observable<GoogleAuth2>(observer => {
 			gapi.load('auth2', () => {
 				gapi.auth2.init({
 					client_id: environment.googleOauthClientId,
 					cookiepolicy: 'single_host_origin',
 					scope: 'profile email'
-				}).then((auth2) => {
+				}).then((auth2: GoogleAuth2) => {
 					this.ngZone.run(() => {
 						observer.next(auth2);
 						observer.complete();
 					});
-				}, (error) => {
+				}, (error: unknown) => {
 					this.ngZone.run(() => {
 						observer.error(error);
 					});

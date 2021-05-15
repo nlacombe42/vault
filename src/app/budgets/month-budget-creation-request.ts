@@ -1,4 +1,4 @@
-export class MonthBudgetCreationRequest {
+export interface MonthBudgetCreationRequest {
 	categoryId: number;
 	month: string;
 	plannedMaxAmount: number;

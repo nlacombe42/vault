@@ -9,14 +9,10 @@ export class Grouping<Key, Value> {
 }
 
 export class ArrayUtils {
-	public static groupByField<Value>(values: Value[], property: string, getComparableKey?: (value: Value) => any): Grouping<any, Value>[] {
-		if (!getComparableKey)
-			getComparableKey = function (value: Value): any {
-				return value[property];
-			};
-
+	public static groupByField<Value extends object>(values: Value[], property: keyof Value, getComparableKey?: (value: Value) => any): Grouping<any, Value>[] {
+		const _getComparableKey = !!getComparableKey ? getComparableKey : (value: Value) => value[property];
 		const map = values.reduce((map, value) => {
-			let comparableKey = getComparableKey(value);
+			let comparableKey = _getComparableKey(value);
 
 			ArrayUtils.addToMapValues(map, comparableKey, value);
 

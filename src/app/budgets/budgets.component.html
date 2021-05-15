@@ -28,7 +28,7 @@
 			<h3>Income</h3>
 			<mat-list class="list">
 				<budget-list-item *ngFor="let budget of incomeBudgets"
-								  [name]="budget.category.name"
+								  [name]="budget.category?.name || ''"
 								  [currentAmount]="budget.currentAmount"
 								  [plannedMaxAmount]="budget.plannedMaxAmount"
 								  [routerLink]="['/budget', budget.budgetId]"
@@ -40,7 +40,7 @@
 			<h3>Spending</h3>
 			<mat-list class="list">
 				<budget-list-item *ngFor="let budget of spendingBudgets"
-								  [name]="budget.category.name"
+								  [name]="budget.category?.name || ''"
 								  [currentAmount]="budget.currentAmount"
 								  [plannedMaxAmount]="budget.plannedMaxAmount"
 								  [routerLink]="['/budget', budget.budgetId]"

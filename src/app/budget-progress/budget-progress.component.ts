@@ -8,9 +8,9 @@ import {DateUtils} from "../shared/date.util";
 })
 export class BudgetProgressComponent {
 
-	budgetPlannedMaxAmount: number;
-	budgetCurrentAmount: number;
-	budgetPercentComplete: number;
+	budgetPlannedMaxAmount: number = 0;
+	budgetCurrentAmount: number = 0;
+	budgetPercentComplete: number = 0;
 	dayProgressPercent: number;
 	progressBarClasses: string;
 

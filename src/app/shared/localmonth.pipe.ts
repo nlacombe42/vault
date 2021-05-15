@@ -2,10 +2,14 @@ import {Pipe} from '@angular/core';
 import {DatePipe} from "@angular/common";
 
 @Pipe({
-	name: 'localmonth'
+    name: 'localmonth'
 })
-export class LocalMonthPipe extends DatePipe {
-	transform(date: Date, term: string): any {
-		return super.transform(date, 'y-MM');
-	}
+export class LocalMonthPipe {
+
+    constructor(private datePipe: DatePipe) {
+    }
+
+    transform(date: Date): any {
+        return this.datePipe.transform(date, 'y-MM');
+    }
 }

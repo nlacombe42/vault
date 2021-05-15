@@ -1,6 +1,6 @@
 import {PaginationRequest} from "../shared/pagination-request.model";
 
-export class SearchTransactionsRequest {
+export interface SearchTransactionsRequest {
 	paginationRequest: PaginationRequest;
 	categorizedOnly: boolean;
 }

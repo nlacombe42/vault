@@ -1,5 +1,5 @@
 
-export class Transaction {
+export interface Transaction {
 	transactionId: number;
 	accountId: number;
 	categoryId: number;

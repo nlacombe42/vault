@@ -8,8 +8,8 @@ import {ImportsService} from "./imports.service";
 })
 export class ImportsComponent implements OnInit {
 
-	password: string;
-	rememberPassword: number;
+	password: string = '';
+	rememberPassword: number = 0;
 
 	constructor(private importsService: ImportsService) {
 	}
@@ -26,7 +26,7 @@ export class ImportsComponent implements OnInit {
 		this.importsService.stopAutoImports();
 	}
 
-	getLastImportErrorMessage(): string {
+	getLastImportErrorMessage(): string | undefined {
 		return this.importsService.getLastImportErrorMessage();
 	}
 

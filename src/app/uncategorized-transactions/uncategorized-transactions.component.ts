@@ -7,7 +7,7 @@ import {ArrayUtils, Grouping} from "../shared/array.util";
 import {Router} from "@angular/router";
 import {EventService, EventType} from "../shared/event.service";
 
-class DisplayedTransaction extends Transaction {
+interface DisplayedTransaction extends Transaction {
 	dateOnly: Date;
 }
 

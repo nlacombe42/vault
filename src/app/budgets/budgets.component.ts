@@ -18,16 +18,16 @@ export class BudgetsComponent implements OnInit {
 	monthDisplayed: Date;
 	incomeBudgets: DisplayedBudget[];
 	spendingBudgets: DisplayedBudget[];
-	everythingElseBudget: DisplayedBudget;
-	monthStats: MonthStats;
+	everythingElseBudget: DisplayedBudget | undefined;
+	monthStats: MonthStats | undefined;
 	categories: Category[];
-	cashFlowLabel: string;
-	cashFlow: number;
-	cashFlowWithoutInvestmentLabel: string;
-	cashFlowWithoutInvestment: number;
-	spendingTotal: number;
-	totalPlannedMaxAmountMinusInvestments: number;
-	spendingTotalMinusInvestments: number;
+	cashFlowLabel: string = '';
+	cashFlow: number = 0;
+	cashFlowWithoutInvestmentLabel: string = '';
+	cashFlowWithoutInvestment: number = 0;
+	spendingTotal: number = 0;
+	totalPlannedMaxAmountMinusInvestments: number = 0;
+	spendingTotalMinusInvestments: number = 0;
 
 	constructor(public dialog: MatDialog, private budgetService: BudgetsService,
 				private categoryService: CategoriesService, private storageService: StorageService) {
@@ -79,6 +79,10 @@ export class BudgetsComponent implements OnInit {
 	}
 
 	private updateMonthStats(spendingTotal: number) {
+	    if (!this.monthStats) {
+	        return;
+        }
+
 		if (DateUtils.isPastMonth(this.monthDisplayed)) {
 			this.cashFlowLabel = 'Current cash flow';
 			this.cashFlow = this.monthStats.currentAmount;
@@ -129,6 +133,10 @@ export class BudgetsComponent implements OnInit {
 	}
 
 	private getSpendingTotal(): number {
+	    if (!this.everythingElseBudget) {
+            throw 'this.everythingElseBudget is undefined';
+        }
+
 		 return this.getSpendingBudgetTotal() + this.everythingElseBudget.currentAmount;
 	}
 

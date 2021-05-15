@@ -8,7 +8,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class AmountComponent implements OnInit {
 
 	@Input()
-	amount: number;
+	amount: number = 0;
 
 	constructor() {
 	}

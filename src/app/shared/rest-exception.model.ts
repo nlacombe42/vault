@@ -12,8 +12,16 @@ export enum RestExceptionErrorCodes {
 	NOT_FOUND = "not-found"
 }
 
-export function isRestException(object): object is RestException {
-	let restException = new RestException("", "");
+export function isRestException(object: unknown): object is RestException {
+	const restException = new RestException("", "");
+
+    if (typeof object !== 'object') {
+        return false;
+    }
+
+    if (!object) {
+        return false;
+    }
 
 	for (let prop in restException)
 		if (!(prop in object))

@@ -8,7 +8,7 @@ import {Category} from "../categories/category.model";
 })
 export class CategoryDropdownComponent {
 
-	_categories: Category[];
+	_categories: Category[] = [];
 
 	@Output()
 	selectedCategoryChange: EventEmitter<Category>;

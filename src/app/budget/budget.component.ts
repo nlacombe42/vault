@@ -10,14 +10,20 @@ import {BudgetWithTransactions} from "../budgets/budget.model";
 })
 export class BudgetComponent implements OnInit {
 
-	budget: BudgetWithTransactions;
-	budgetName: string;
+	budget: BudgetWithTransactions | undefined = undefined;
+	budgetName: string = '';
 
 	constructor(private route: ActivatedRoute, private budgetsService: BudgetsService) {
 	}
 
 	ngOnInit() {
-		let budgetId = +this.route.snapshot.paramMap.get('budgetId');
+        let budgetIdParam = this.route.snapshot.paramMap.get('budgetId');
+
+        if (!budgetIdParam) {
+            throw 'required budgetId not found';
+        }
+
+        const budgetId = + budgetIdParam;
 
 		this.budgetsService.getBudget(budgetId)
 			.subscribe(budget => {
@@ -27,6 +33,10 @@ export class BudgetComponent implements OnInit {
 	}
 
 	updateBudget(): void {
+	    if (!this.budget) {
+            return;
+        }
+
 		this.budgetsService.updateBudget(this.budget.budgetId, {
 			plannedMaxAmount: this.budget.plannedMaxAmount,
 			income: this.budget.income,

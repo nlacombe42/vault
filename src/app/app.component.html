@@ -1,0 +1,9 @@
+<section class="app mat-typography">
+    <toolbar [sideMenu]="sideMenu"></toolbar>
+    <mat-sidenav-container>
+        <side-menu #sideMenu></side-menu>
+        <main>
+            <router-outlet></router-outlet>
+        </main>
+    </mat-sidenav-container>
+</section>

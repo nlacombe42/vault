@@ -2,9 +2,9 @@ import {Category} from "../categories/category.model";
 import {DisplayedTransaction} from "../transactions/displayed-transaction.model";
 import {Grouping} from "../shared/array.util";
 
-export class Budget {
+export interface Budget {
 	budgetId: number;
-	categoryId: number;
+	categoryId: number | undefined;
 	startDate: Date;
 	endDate: Date;
 	plannedMaxAmount: number;
@@ -13,15 +13,15 @@ export class Budget {
 	investment: boolean;
 }
 
-export class DisplayedBudget extends Budget {
-	category: Category;
+export interface DisplayedBudget extends Budget {
+	category: Category | undefined;
 }
 
-export class BudgetWithTransactions extends DisplayedBudget {
+export interface BudgetWithTransactions extends DisplayedBudget {
 	transactionsByDate: Grouping<Date, DisplayedTransaction>[];
 }
 
-export class BudgetUpdateRequest {
+export interface BudgetUpdateRequest {
 	plannedMaxAmount: number;
 	income: boolean;
 	investment: boolean;

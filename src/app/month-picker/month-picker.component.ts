@@ -7,7 +7,7 @@ import {DateUtils} from "../shared/date.util";
 	styleUrls: ['./month-picker.component.scss']
 })
 export class MonthPickerComponent implements OnInit {
-	monthDate: Date;
+	monthDate: Date = new Date();
 	@Output() monthChange = new EventEmitter();
 
 	constructor() {

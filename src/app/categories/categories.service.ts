@@ -1,49 +1,42 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import {Observable, of, from, empty} from "rxjs";
+import {Observable, of, from, empty, throwError} from "rxjs";
 import {Category} from "./category.model";
-import {mergeMap, share, toArray} from "rxjs/operators";
+import {filter, flatMap, mergeMap, share, shareReplay, toArray} from "rxjs/operators";
 import {CategoryCreationRequest} from "./category-creation-request";
 
 @Injectable()
 export class CategoriesService {
 	private readonly vaultCategoriesUrl: string = environment.apiBaseUrls.vaultWs + '/v1/categories';
 
-	private categories: Category[];
-	private categoriesById: Map<number, Category>;
-	private categoriesObservable: Observable<Category>;
+	private categoriesById: Map<number, Category> | undefined;
+	private categoriesObservable: Observable<Category[]>;
 
 	constructor(private http: HttpClient) {
+	    this.categoriesObservable = this.http.get<Category[]>(this.vaultCategoriesUrl).pipe(shareReplay(1));
 	}
 
 	getUserCategories(): Observable<Category> {
-		if (this.categories !== undefined)
-			return from(this.categories);
-
-		if (this.categoriesObservable === undefined)
-			this.categoriesObservable = this.createCategoriesObservable();
-
-		return this.categoriesObservable;
+		return this.categoriesObservable.pipe(
+		    mergeMap(categories => of(...categories)),
+        );
 	}
 
 	getCategory(categoryId: number): Observable<Category> {
-		if (this.categoriesById !== undefined)
-			return of(this.categoriesById.get(categoryId));
+	    return this.getUserCategories().pipe(
+	        toArray(),
+            mergeMap(categories => {
+                const category = categories.find(c => c.categoryId === categoryId);
 
-		let categoriesById = new Map<number, Category>();
-
-		return new Observable(observer => {
-			this.getUserCategories()
-				.subscribe(category => categoriesById.set(category.categoryId, category),
-					observer.error,
-					() => {
-						this.categoriesById = categoriesById;
-						observer.next(this.categoriesById.get(categoryId));
-						observer.complete();
-					});
-		});
+                return category ? of(category) : throwError('category with id not found: ' + categoryId);
+            }),
+        );
 	}
+
+    getCategoryOrUndefinedIfArgumentUndefined(categoryId: number | undefined): Observable<Category | undefined> {
+        return !categoryId ? of(undefined) : this.getCategory(categoryId);
+    }
 
 	createCategory(newCategoryName: string) {
 		let categoryCreationRequest: CategoryCreationRequest = {
@@ -51,17 +44,5 @@ export class CategoriesService {
 		};
 
 		return this.http.post<void>(this.vaultCategoriesUrl, categoryCreationRequest);
-	}
-
-	private createCategoriesObservable(): Observable<Category> {
-		let getCategoriesObservable =
-			this.http.get<Category[]>(this.vaultCategoriesUrl)
-				.pipe(
-					mergeMap((categories: Category[]) => from(categories)),
-					share());
-
-		getCategoriesObservable.pipe(toArray()).subscribe((categories: Category[]) => this.categories = categories);
-
-		return getCategoriesObservable;
 	}
 }

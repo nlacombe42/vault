@@ -7,7 +7,7 @@ import {Router} from "@angular/router";
 import {catchError, map} from "rxjs/operators";
 import {JwtHelperService} from "@auth0/angular-jwt";
 
-class AuthToken {
+interface AuthToken {
 	token: string
 }
 
@@ -46,7 +46,7 @@ export class AuthService {
 		return this.getAuthToken() !== null && !this.isAuthTokenExpired();
 	}
 
-	getAuthToken(): string {
+	getAuthToken(): string | undefined {
 		return this.storageService.getAuthToken();
 	}
 
@@ -59,6 +59,6 @@ export class AuthService {
 		let helper = new JwtHelperService();
 		let expirationDate = helper.getTokenExpirationDate(authToken);
 
-		return new Date() >= expirationDate;
+		return !expirationDate || new Date() >= expirationDate;
 	}
 }

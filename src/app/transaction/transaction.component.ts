@@ -14,8 +14,8 @@ import {Transaction} from "../transactions/transaction.model";
 })
 export class TransactionComponent implements OnInit {
 
-	transaction: DisplayedTransaction;
-	selectedCategoryId: string | number;
+	transaction: DisplayedTransaction | undefined;
+	selectedCategoryId: string | number | undefined;
 	categories: Category[];
 
 	constructor(private route: ActivatedRoute, private location: Location,
@@ -26,7 +26,13 @@ export class TransactionComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		let transactionId: number = +this.route.snapshot.paramMap.get('transactionId');
+        const transactionIdParam = this.route.snapshot.paramMap.get('transactionId');
+
+        if (!transactionIdParam) {
+            throw 'required param transactionId not found';
+        }
+
+        let transactionId: number = + transactionIdParam;
 		this.transactionsService.getTransaction(transactionId)
 			.subscribe(transaction => {
 				this.transaction = transaction;

@@ -10,7 +10,7 @@ import {MatSidenav} from "@angular/material/sidenav";
 })
 export class SideMenuComponent implements OnInit {
 
-	@ViewChild(MatSidenav, {static: true}) sideNav;
+	@ViewChild(MatSidenav, {static: true}) sideNav: MatSidenav | undefined;
 
 	constructor(private authService: AuthService, private googleAuthService: GoogleAuthService) {
 	}
@@ -19,6 +19,10 @@ export class SideMenuComponent implements OnInit {
 	}
 
 	toggle() {
+	    if (!this.sideNav) {
+	        return;
+        }
+
 		this.sideNav.toggle();
 	}
 

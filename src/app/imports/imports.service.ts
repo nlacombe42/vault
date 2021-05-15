@@ -12,7 +12,7 @@ export class ImportsService {
 	private readonly vaultDesjardinsImportUrl: string = environment.apiBaseUrls.vaultImportsWs + '/v1/import/desjardins';
 	private readonly minMinutesBetweenImport: number = 60;
 
-	private importObservable: Observable<void>;
+	private importObservable: Observable<void> | undefined;
 
 	constructor(private http: HttpClient, private storageService: StorageService, private eventService: EventService) {
 		this.eventService.getEventObservableForType(EventType.USER_LOGGED_IN).subscribe(() => {
@@ -25,7 +25,7 @@ export class ImportsService {
 		let lastImportInfo = this.storageService.getLastImportInfo();
 
 		if (autoImportConfig.password !== undefined) {
-			if (autoImportConfig.passwordStorageExpireDate <= new Date()) {
+			if (!!autoImportConfig.passwordStorageExpireDate && autoImportConfig.passwordStorageExpireDate <= new Date()) {
 				this.stopAutoImports();
 			} else if (!lastImportInfo.importDate || DateUtils.addMinutes(lastImportInfo.importDate, this.minMinutesBetweenImport) <= new Date()) {
 				this.startImport(autoImportConfig.password);
@@ -72,7 +72,7 @@ export class ImportsService {
 		return this.importObservable != undefined;
 	}
 
-	getLastImportErrorMessage(): string {
+	getLastImportErrorMessage(): string | undefined {
 		return this.storageService.getLastImportInfo().errorMessage;
 	}
 }

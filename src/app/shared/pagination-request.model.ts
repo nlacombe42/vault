@@ -1,4 +1,4 @@
-export class PaginationRequest {
+export interface PaginationRequest {
 	pageNumber: number;
 	size: number;
 }

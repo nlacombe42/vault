@@ -1,4 +1,4 @@
-export class AutoImportConfig {
-	password: string;
-	passwordStorageExpireDate: Date;
+export interface AutoImportConfig {
+	password: string | undefined;
+	passwordStorageExpireDate: Date  | undefined;
 }

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Transaction} from "./transaction.model";
-import {forkJoin, from, Observable} from "rxjs";
+import {forkJoin, from, Observable, of} from "rxjs";
 import {PaginationResponse} from "../shared/pagination-response.model";
 import {SearchTransactionsRequest} from "./search-transactions-request.model";
 import {DisplayedTransaction} from "./displayed-transaction.model";
@@ -84,11 +84,17 @@ export class TransactionsService {
 		let url = this.vaultTransactionsUrl + transactionId;
 
 		return this.http.get<any>(url)
-			.pipe(mergeMap((rawTransaction: any) => this.toDisplayedTransaction(this.toTransaction(rawTransaction))));
+			.pipe(
+			    mergeMap((rawTransaction: any) => this.toDisplayedTransaction(this.toTransaction(rawTransaction))),
+            );
 	}
 
 	rawTransactionToDisplayedTransactionsByDate(rawTransactions: any[]): Observable<Grouping<Date, DisplayedTransaction>[]> {
 		let displayedTransactionsObservables = rawTransactions.map(rawTransaction => this.rawTransactionToDisplayedTransaction(rawTransaction));
+
+		if (displayedTransactionsObservables.length === 0) {
+		    return of([]);
+        }
 
 		return forkJoin(displayedTransactionsObservables)
 			.pipe(map((displayedTransactions: DisplayedTransaction[]) => this.toDisplayedTransactionsByDate(displayedTransactions)));
@@ -116,7 +122,7 @@ export class TransactionsService {
 					transactionId: transaction.transactionId,
 					accountId: transaction.accountId,
 					categoryId: transaction.categoryId,
-					category: category,
+					category: category || undefined,
 					datetime: transaction.datetime,
 					description: transaction.description,
 					amount: transaction.amount,

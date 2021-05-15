@@ -5,7 +5,7 @@ export class PaginationResponse<ElementType> {
 	elements: ElementType[];
 	total: number;
 
-	constructor(paginationRequest?: PaginationRequest, total?: number, elements?: ElementType[]) {
+	constructor(paginationRequest: PaginationRequest, total: number, elements: ElementType[]) {
 		this.paginationRequest = paginationRequest;
 		this.total = total;
 		this.elements = elements;

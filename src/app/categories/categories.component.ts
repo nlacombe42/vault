@@ -11,9 +11,9 @@ import {isRestException} from "../shared/rest-exception.model";
 export class CategoriesComponent implements OnInit {
 
 	categories: Category[];
-	newCategoryName: string;
+	newCategoryName: string = '';
 	createCategoryInProgress: boolean;
-	errorMessage: string;
+	errorMessage: string | undefined;
 
 	constructor(private categoriesService: CategoriesService) {
 		this.categories = [];

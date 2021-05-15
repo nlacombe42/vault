@@ -10,7 +10,7 @@ import {EventService, Event, EventType} from "../shared/event.service";
 	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-	errorMessage: string;
+	errorMessage: string | undefined;
 
 	constructor(private googleAuthService: GoogleAuthService,
 				private router: Router,
