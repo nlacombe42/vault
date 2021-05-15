@@ -10,6 +10,7 @@ import {TransactionComponent} from "./transaction/transaction.component";
 import {ImportsComponent} from "./imports/imports.component";
 import {CategoriesComponent} from "./categories/categories.component";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
+import {SplitTransactionPageComponent} from "./split-transaction-page/split-transaction-page.component";
 
 const routes: Routes = [
     {path: '', redirectTo: '/uncategorizedTransactions', pathMatch: 'full'},
@@ -19,6 +20,7 @@ const routes: Routes = [
     {path: 'budgets', component: BudgetsComponent, canActivate: [AuthGuard]},
     {path: 'budget/:budgetId', component: BudgetComponent, canActivate: [AuthGuard]},
     {path: 'transaction/:transactionId', component: TransactionComponent, canActivate: [AuthGuard]},
+    {path: 'split-transaction/:transactionId', component: SplitTransactionPageComponent, canActivate: [AuthGuard]},
     {path: 'imports', component: ImportsComponent, canActivate: [AuthGuard]},
     {path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard]},
     {path: '**', component: PageNotFoundComponent}

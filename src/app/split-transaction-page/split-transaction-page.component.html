@@ -1,0 +1,42 @@
+<section>
+	<h2>Split transaction</h2>
+	<mat-card *ngIf="transactionObservable | async as transaction">
+		<mat-card-content>
+			<p>{{transaction.datetime | localdate}}</p>
+			<div *ngIf="transaction.parentTransactionId" class="field">
+				<label for="parentTransactionId" class="mat-body-2">Parent transaction id</label>
+				<p id="parentTransactionId">{{transaction.parentTransactionId}}</p>
+			</div>
+			<div class="field">
+				<label for="description" class="mat-body-2">Description</label>
+				<p id="description">{{transaction.description}}</p>
+			</div>
+			<div class="field">
+				<label for="amount" class="mat-body-2">Amount</label>
+				<amount id="amount" [amount]="transaction.amount"></amount>
+			</div>
+			<div class="field">
+				<label for="category" class="mat-body-2">Category</label>
+                <p id="category">{{transaction.category?.name}}</p>
+			</div>
+            <section>
+                <h3>Child transactions</h3>
+                <button (click)="addChildTransaction()" mat-raised-button><mat-icon>add</mat-icon></button>
+                <div *ngFor="let childTransaction of childTransactions" class="child-transaction">
+                    <mat-form-field [style.width.px]="300">
+                        <input [(ngModel)]="childTransaction.description" matInput type="text" placeholder="Description" required>
+                    </mat-form-field>
+                    <mat-form-field [style.width.px]="80">
+                        <input [(ngModel)]="childTransaction.amount" matInput type="number" placeholder="Amount" required>
+                    </mat-form-field>
+                </div>
+            </section>
+            <button (click)="splitTransaction(childTransactions)" mat-raised-button color="primary">
+                Split
+            </button>
+            <p *ngIf="errorMessage" style="color: red; margin: 10px 0">
+                {{errorMessage}}
+            </p>
+		</mat-card-content>
+	</mat-card>
+</section>

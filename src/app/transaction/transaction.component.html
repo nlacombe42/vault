@@ -30,7 +30,12 @@
 				<label for="amount" class="mat-body-2">Temporary</label>
 				{{transaction.temporary ? 'Yes' : 'No'}}
 			</div>
-			<div *ngIf="!transaction.parentTransactionId" class="field">
+			<div *ngIf="!transaction.parentTransactionId && !transaction.temporary" class="field">
+                <a [routerLink]="'/split-transaction/' + transaction.transactionId">
+                    <p>
+                        Split transaction
+                    </p>
+                </a>
 				<button (click)="deleteTransaction(transaction)" mat-raised-button color="primary">
 					Delete
 				</button>

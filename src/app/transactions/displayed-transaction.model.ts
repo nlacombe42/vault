@@ -3,5 +3,5 @@ import {Transaction} from "./transaction.model";
 
 export interface DisplayedTransaction extends Transaction {
 	dateOnly: Date;
-	category: Category
+	category: Category | undefined
 }

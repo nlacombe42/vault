@@ -38,6 +38,7 @@ import {VaultMatModule} from "./vault-mat.module";
 import {InfiniteScrollModule} from "ngx-infinite-scroll";
 import {BudgetComponent} from "./budget/budget.component";
 import {TransactionComponent} from "./transaction/transaction.component";
+import {SplitTransactionPageComponent} from "./split-transaction-page/split-transaction-page.component";
 
 @NgModule({
     declarations: [
@@ -61,6 +62,7 @@ import {TransactionComponent} from "./transaction/transaction.component";
         LocalDatePipe,
         LocalMonthPipe,
         BudgetListItemComponent,
+        SplitTransactionPageComponent,
     ],
     imports: [
         BrowserModule,

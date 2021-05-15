@@ -9,6 +9,7 @@ import {DisplayedTransaction} from "./displayed-transaction.model";
 import {CategoriesService} from "../categories/categories.service";
 import {ArrayUtils, Grouping} from "../shared/array.util";
 import {map, mergeMap, toArray} from "rxjs/operators";
+import {SplitTransactionRequest} from "../shared/vault-ws-server.model";
 
 @Injectable()
 export class TransactionsService {
@@ -104,6 +105,10 @@ export class TransactionsService {
 		return this.toDisplayedTransaction(this.toTransaction(rawTransaction));
 	}
 
+	public splitTransaction(splitTransactionRequest: SplitTransactionRequest): Observable<void> {
+        return this.http.post<void>(`${environment.apiBaseUrls.vaultWs}/v1/transactions/split`, splitTransactionRequest);
+    }
+
 	private toDisplayedTransactionsByDate(displayedTransactions: DisplayedTransaction[]): Grouping<Date, DisplayedTransaction>[] {
 		let displayedTransactionsByDate = ArrayUtils.groupByField(displayedTransactions, 'dateOnly',
 			displayedTransaction => displayedTransaction.dateOnly.getTime());
@@ -116,13 +121,13 @@ export class TransactionsService {
 	}
 
 	private toDisplayedTransaction(transaction: Transaction): Observable<DisplayedTransaction> {
-		return this.categoriesService.getCategory(transaction.categoryId)
+		return this.categoriesService.getCategoryOrUndefinedIfArgumentUndefined(transaction.categoryId)
 			.pipe(map(category => {
 				return {
 					transactionId: transaction.transactionId,
 					accountId: transaction.accountId,
 					categoryId: transaction.categoryId,
-					category: category || undefined,
+					category: category,
 					datetime: transaction.datetime,
 					description: transaction.description,
 					amount: transaction.amount,
